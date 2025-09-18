@@ -1,7 +1,7 @@
 {
   "name": "findinmap-backend",
   "version": "1.0.0",
-  "description": "FindInMap backend API with Express, TypeScript, PostgreSQL and PostGIS",
+  "description": "MapVest backend API with Express, TypeScript, PostgreSQL and PostGIS",
   "main": "dist/main/server.js",
   "scripts": {
     "build": "tsc",

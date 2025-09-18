@@ -1,7 +1,7 @@
 {
   "name": "find-in-map",
   "version": "1.0.0",
-  "description": "FindInMap monorepo with frontend and backend",
+  "description": "MapVest monorepo with frontend and backend",
   "private": true,
   "scripts": {
     "check-formatting": "prettier --list-different .",

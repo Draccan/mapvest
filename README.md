@@ -1,4 +1,4 @@
-# FindInMap
+# MapVest
 
 A full-stack application for mapping and tracking crime incidents with an
 interactive map interface.

@@ -4,7 +4,7 @@ export default function getInfoSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
         properties: {
-            appName: { type: "string", example: "FindInMap" },
+            appName: { type: "string", example: "MapVest" },
             version: { type: "string", example: "1.0.0" },
             description: {
                 type: "string",

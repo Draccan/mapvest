@@ -1,7 +1,7 @@
 {
   "name": "findinmap-frontend",
   "version": "1.0.0",
-  "description": "Frontend for FindInMap application",
+  "description": "Frontend for MapVest application",
   "type": "module",
   "scripts": {
     "dev": "vite",

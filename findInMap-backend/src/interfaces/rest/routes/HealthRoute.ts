@@ -30,7 +30,7 @@ export default (): Route<void, void, void, HealthResponse> => ({
     handler: async (_req, res) => {
         res.status(200).json({
             status: "ok",
-            message: "FindInMap Backend API is running",
+            message: "MapVest Backend API is running",
             timestamp: new Date().toISOString(),
             version: config.appVersion,
         });

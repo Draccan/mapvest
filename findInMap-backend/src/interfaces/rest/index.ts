@@ -45,7 +45,7 @@ export default class RestInterface {
                 title: this.serverTitle,
                 version: this.serverVersion,
                 description:
-                    "FindInMap Backend API for managing crime map points",
+                    "MapVest Backend API for managing crime map points",
             },
             servers: [{ url: this.publicUrl }],
             paths: this.makePaths(),

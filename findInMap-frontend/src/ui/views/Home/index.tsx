@@ -40,7 +40,7 @@ export const Home: React.FC = () => {
 
     return (
         <div className="v-home-container">
-            <h1>FindInMap</h1>
+            <h1>MapVest</h1>
             <div className="v-main-content">
                 <div className="v-map-section">
                     <MapContainer

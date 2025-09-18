@@ -12,7 +12,7 @@ export default function getHealthSchema(): OpenAPIV3.SchemaObject {
             message: {
                 type: "string",
                 description: "Detailed health message",
-                example: "FindInMap Backend API is running",
+                example: "MapVest Backend API is running",
             },
             version: {
                 type: "string",

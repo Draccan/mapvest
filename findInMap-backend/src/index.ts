@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/api/map-points", mapPointsRouter);
 
 app.get("/health", (req, res) => {
-    res.json({ status: "ok", message: "FindInMap Backend is running" });
+    res.json({ status: "ok", message: "MapVest Backend is running" });
 });
 
 app.listen(PORT, () => {

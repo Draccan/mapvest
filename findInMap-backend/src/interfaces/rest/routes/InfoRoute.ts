@@ -31,7 +31,7 @@ export default (): Route<void, void, void, HealthResponse> => ({
         res.status(200).json({
             name: config.appName,
             version: config.appVersion,
-            description: "FindInMap Backend API for managing crime map points",
+            description: "MapVest Backend API for managing crime map points",
             swagger: `${config.publicUrl}/swagger`,
         });
     },
