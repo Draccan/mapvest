@@ -133,3 +133,7 @@ To disable mocking and use the real backend:
 ## License
 
 CC-BY-NC-SA-4.0
+
+## Owner
+
+Paolo Dell'Aguzzo
