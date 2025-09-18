@@ -1,0 +1,51 @@
+{
+  "name": "findinmap-backend",
+  "version": "1.0.0",
+  "description": "FindInMap backend API with Express, TypeScript, PostgreSQL and PostGIS",
+  "main": "dist/main/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/main/server.ts",
+    "start": "node dist/main/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate dev",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "setup": "pnpm docker:up && sleep 5 && pnpm prisma:generate && pnpm prisma:migrate"
+  },
+  "keywords": [
+    "map",
+    "crime", 
+    "backend",
+    "express",
+    "postgis"
+  ],
+  "author": "Paolo Dell'Aguzzo",
+  "license": "CC-BY-NC-SA-4.0",
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "@prisma/client": "^6.0.1",
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "helmet": "^8.0.0",
+    "compression": "^1.7.4",
+    "express-openapi-validator": "^5.3.7",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.0.3",
+    "winston": "^3.15.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/compression": "^1.7.5",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.7.2",
+    "tsx": "^4.19.2",
+    "prisma": "^6.0.1"
+  }
+}

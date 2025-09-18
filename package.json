@@ -1,0 +1,25 @@
+{
+  "name": "find-in-map",
+  "version": "1.0.0",
+  "description": "FindInMap monorepo with frontend and backend",
+  "private": true,
+  "scripts": {
+    "check-formatting": "prettier --list-different .",
+    "fix-formatting": "prettier --write .",
+    "dev": "pnpm --parallel run dev",
+    "build": "pnpm --parallel run build",
+    "frontend": "pnpm --filter findinmap-frontend run dev",
+    "backend": "pnpm --filter findinmap-backend run dev"
+  },
+  "keywords": [
+    "map",
+    "crime",
+    "monorepo"
+  ],
+  "author": "Paolo Dell'Aguzzo",
+  "license": "CC-BY-NC-SA-4.0",
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}

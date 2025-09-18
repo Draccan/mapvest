@@ -1,0 +1,21 @@
+# yarn files
+.yarn/*
+.pnp.*
+node_modules
+pnpm-lock.yaml
+
+# Output directories
+dist
+build
+build-dev
+build-test
+*.local
+
+# k8s configs files
+k8s/*
+
+# Our folders
+public
+
+# Others
+.vscode

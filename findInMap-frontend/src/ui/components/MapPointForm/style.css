@@ -1,0 +1,100 @@
+.c-mapPoint-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.c-mapPoint-form h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.c-form-group {
+    margin-bottom: 15px;
+}
+
+.c-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.c-coordinate-input {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    color: #666;
+    font-family: monospace;
+}
+
+.c-type-select,
+.c-date-input {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.c-type-select:focus,
+.c-date-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.c-save-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.c-save-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.c-save-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.c-errors {
+    margin-bottom: 15px;
+}
+
+.c-error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.c-instructions {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+}
+
+.c-instructions p {
+    margin: 0;
+    color: #1976d2;
+    font-size: 14px;
+}

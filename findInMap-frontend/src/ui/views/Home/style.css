@@ -1,0 +1,44 @@
+.v-home-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.v-home-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.v-main-content {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.v-map-section {
+    flex: 2;
+    min-width: 400px;
+}
+
+.v-form-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.v-loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .v-main-content {
+        flex-direction: column;
+    }
+
+    .v-map-section,
+    .v-form-section {
+        min-width: auto;
+    }
+}

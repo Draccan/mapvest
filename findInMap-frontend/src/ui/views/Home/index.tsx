@@ -1,0 +1,65 @@
+import React, { useState, useEffect } from "react";
+
+import { MapContainer } from "../../components/MapContainer";
+import { MapPointForm } from "../../components/MapPointForm";
+import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
+import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
+import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
+import "./style.css";
+
+export const Home: React.FC = () => {
+    const [selectedCoordinates, setSelectedCoordinates] = useState<{
+        x: number;
+        y: number;
+    } | null>(null);
+    const {
+        data: mapPointsData,
+        fetch: fetchMapPoints,
+        loading: loadingPoints,
+        error,
+    } = useGetMapPoints();
+    const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
+
+    useEffect(() => {
+        if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();
+    }, [fetchMapPoints]);
+
+    const handleMapClick = (lng: number, lat: number) => {
+        setSelectedCoordinates({ x: lng, y: lat });
+    };
+
+    const handleSavePoint = async (pointData: CreateMapPointDto) => {
+        const result = await createMapPoint(pointData);
+        if (result?.success) {
+            await fetchMapPoints();
+            setSelectedCoordinates(null);
+        }
+    };
+
+    const mapPoints = mapPointsData?.data || [];
+
+    return (
+        <div className="v-home-container">
+            <h1>FindInMap</h1>
+            <div className="v-main-content">
+                <div className="v-map-section">
+                    <MapContainer
+                        mapPoints={mapPoints}
+                        onMapClick={handleMapClick}
+                        selectedCoordinates={selectedCoordinates}
+                    />
+                </div>
+                <div className="v-form-section">
+                    <MapPointForm
+                        selectedCoordinates={selectedCoordinates}
+                        onSave={handleSavePoint}
+                        loading={creatingPoint}
+                    />
+                </div>
+            </div>
+            {loadingPoints && (
+                <div className="v-loading">Loading map points...</div>
+            )}
+        </div>
+    );
+};
