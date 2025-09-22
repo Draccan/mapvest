@@ -1,7 +1,9 @@
 # MapVest
 
-A full-stack application for mapping and tracking crime incidents with an
-interactive map interface.
+A full-stack application for mapping and tracking points with an interactive map
+interface.
+
+You can find it [here](https://mapvest-test.up.railway.app/)
 
 ## Project Structure
 
