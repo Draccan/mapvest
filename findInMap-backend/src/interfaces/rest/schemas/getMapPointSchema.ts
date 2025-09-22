@@ -16,7 +16,7 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
                 type: "string",
                 description: "Date in DD/MM/YYYY format",
             },
-            created_at: {
+            createdAt: {
                 type: "string",
                 format: "date-time",
                 description: "Creation timestamp",
