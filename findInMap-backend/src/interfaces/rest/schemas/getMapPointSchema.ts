@@ -1,5 +1,7 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
+import { MapPointType } from "../../../core/commons/enums";
+
 export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
@@ -9,7 +11,7 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
             y: { type: "number", description: "Latitude coordinate" },
             type: {
                 type: "string",
-                enum: ["Furto", "Aggressione", "Rapina"],
+                enum: Object.values(MapPointType),
                 description: "Type of crime",
             },
             date: {
