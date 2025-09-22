@@ -22,6 +22,8 @@ export const useGetMapPoints = (): UseGetMapPoints => {
             setLoading(true);
             setError(null);
 
+            console.log("Calling API:", `${API_URL}/api/map-points`); // Debug
+
             const response = await fetch(`${API_URL}/api/map-points`, {
                 method: "GET",
                 headers: {
