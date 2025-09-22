@@ -4,7 +4,7 @@
   "description": "MapVest backend API with Express, TypeScript, PostgreSQL and PostGIS",
   "main": "dist/main/server.js",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "dev": "tsx watch src/main/server.ts",
     "start": "node dist/main/server.js",
     "prisma:generate": "prisma generate",
@@ -13,7 +13,9 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "setup": "pnpm docker:up && sleep 5 && pnpm prisma:generate && pnpm prisma:migrate"
+    "setup": "pnpm docker:up && sleep 5 && pnpm prisma:generate && pnpm prisma:migrate",
+    "deploy": "prisma migrate deploy && node dist/main/server.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [
     "map",

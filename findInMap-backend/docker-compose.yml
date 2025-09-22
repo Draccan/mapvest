@@ -6,7 +6,7 @@ services:
     container_name: findinmap-postgres
     environment:
       POSTGRES_DB: findinmap
-      POSTGRES_USER: findinmap
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: findinmap
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
@@ -25,7 +25,7 @@ services:
     build: .
     container_name: findinmap
     environment:
-      DATABASE_URL: postgresql://findinmap:findinmap@postgres:5432/findinmap?schema=public
+      DATABASE_URL: postgresql://postgres:findinmap@postgres:5432/findinmap?schema=public
       NODE_ENV: production
       PORT: 3001
     ports:
