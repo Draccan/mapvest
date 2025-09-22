@@ -22,7 +22,7 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
                 description: "Creation timestamp",
             },
         },
-        required: ["id", "x", "y", "type", "date", "created_at"],
+        required: ["id", "x", "y", "type", "date", "createdAt"],
         additionalProperties: false,
     };
 }
