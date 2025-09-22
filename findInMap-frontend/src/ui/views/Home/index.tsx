@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
+import routes from "../../commons/routes";
 import "./style.css";
 
 export const Home: React.FC = () => {
@@ -40,7 +42,14 @@ export const Home: React.FC = () => {
 
     return (
         <div className="v-home-container">
-            <h1>MapVest</h1>
+            <header className="v-header">
+                <h1>MapVest</h1>
+                <nav className="v-navigation">
+                    <Link to={routes.about()} className="v-nav-link">
+                        About
+                    </Link>
+                </nav>
+            </header>
             <div className="v-main-content">
                 <div className="v-map-section">
                     <MapContainer
