@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import routes from "../../commons/routes";
 import "./style.css";
+
+const fm = getFormattedMessageWithScope("views.NotFound");
 
 const NotFound: React.FC = () => {
     return (
@@ -11,20 +14,20 @@ const NotFound: React.FC = () => {
                 <div className="v-notfound-animation">
                     <div className="v-floating-404">404</div>
                 </div>
-                <h1 className="v-notfound-title">Oops! You're lost!</h1>
+                <h1 className="v-notfound-title">{fm("title")}</h1>
                 <p className="v-notfound-description">
-                    It looks like you took a wrong turn.
+                    {fm("description")}
                     <br />
-                    This location hasn't been mapped yet!
+                    {fm("description2")}
                 </p>
                 <div className="v-notfound-actions">
                     <Link to={routes.home()} className="v-home-button">
-                        🧭 Back to Map
+                        🧭 {fm("backToMap")}
                     </Link>
                 </div>
                 <div className="v-notfound-footer">
                     <p>
-                        Don't worry, even the best explorers get lost sometimes!
+                        {fm("footerMessage")}
                         🔎
                     </p>
                 </div>

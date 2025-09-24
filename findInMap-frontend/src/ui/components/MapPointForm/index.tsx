@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { MapPointType } from "../../../core/commons/enums";
 import type { CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
+import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import "./style.css";
+
+const fm = getFormattedMessageWithScope("components.MapPointForm");
 
 interface MapPointFormProps {
     selectedCoordinates: { x: number; y: number } | null;
@@ -57,7 +60,6 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     date,
                 });
 
-                // Reset form after successful save
                 setType(MapPointType.Theft);
                 const formattedToday = new Date().toLocaleDateString("it-IT");
                 setDate(formattedToday);
@@ -69,10 +71,12 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
 
     return (
         <div className="c-mapPoint-form">
-            <h2>Add Map Point</h2>
+            <h2>{fm("addMapPoint")}</h2>
             <form onSubmit={handleSubmit}>
                 <div className="c-form-group">
-                    <label htmlFor="Xcoordinate">X Coordinate:</label>
+                    <label htmlFor="Xcoordinate">
+                        {fm("XCoordinateLabel")}
+                    </label>
                     <input
                         type="text"
                         id="Xcoordinate"
@@ -83,7 +87,9 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 </div>
 
                 <div className="c-form-group">
-                    <label htmlFor="Ycoordinate">Y Coordinate:</label>
+                    <label htmlFor="Ycoordinate">
+                        {fm("YCoordinateLabel")}
+                    </label>
                     <input
                         type="text"
                         id="Ycoordinate"
@@ -94,7 +100,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 </div>
 
                 <div className="c-form-group">
-                    <label htmlFor="type">Type:</label>
+                    <label htmlFor="type">{fm("type")}:</label>
                     <select
                         id="type"
                         value={type}
@@ -103,16 +109,20 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         }
                         className="c-type-select"
                     >
-                        <option value={MapPointType.Theft}>Theft</option>
-                        <option value={MapPointType.Aggression}>
-                            Aggression
+                        <option value={MapPointType.Theft}>
+                            {fm("options.theft")}
                         </option>
-                        <option value={MapPointType.Robbery}>Robbery</option>
+                        <option value={MapPointType.Aggression}>
+                            {fm("options.aggression")}
+                        </option>
+                        <option value={MapPointType.Robbery}>
+                            {fm("options.robbery")}
+                        </option>
                     </select>
                 </div>
 
                 <div className="c-form-group">
-                    <label htmlFor="date">Date (DD/MM/YYYY):</label>
+                    <label htmlFor="date">{fm("date")} (DD/MM/YYYY):</label>
                     <input
                         type="text"
                         id="date"
@@ -138,12 +148,12 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     disabled={loading || !selectedCoordinates}
                     className="c-save-button"
                 >
-                    {loading ? "Saving..." : "Save"}
+                    {loading ? fm("saving") : fm("save")}
                 </button>
             </form>
 
             <div className="c-instructions">
-                <p>📍 Click on the map to select a point</p>
+                <p>📍 {fm("clickOnMapInstructions")}</p>
             </div>
         </div>
     );

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
+import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
+import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
+import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import routes from "../../commons/routes";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
-import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
-import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
-import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
-import routes from "../../commons/routes";
 import "./style.css";
+
+const fm = getFormattedMessageWithScope("views.Home");
 
 export const Home: React.FC = () => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
@@ -47,7 +50,7 @@ export const Home: React.FC = () => {
                     <h1>MapVest</h1>
                     <nav className="v-navigation">
                         <Link to={routes.about()} className="v-nav-link">
-                            About
+                            {fm("about")}
                         </Link>
                     </nav>
                 </header>
@@ -68,7 +71,7 @@ export const Home: React.FC = () => {
                     </div>
                 </div>
                 {loadingPoints && (
-                    <div className="v-loading">Loading map points...</div>
+                    <div className="v-loading">{fm("loadingMapPoints")}</div>
                 )}
             </div>
         </div>

@@ -10,6 +10,9 @@ import {
 
 import { MapPointType } from "../../../core/commons/enums";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
+import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+
+const fm = getFormattedMessageWithScope("components.MapContainer");
 
 interface MapContainerProps {
     mapPoints: MapPointDto[];
@@ -68,12 +71,13 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 >
                     <Popup>
                         <div>
-                            <strong>Type:</strong> {point.type}
+                            <strong>{fm("type")}:</strong>{" "}
+                            {fm(`types.${point.type}`)}
                             <br />
-                            <strong>Date:</strong> {point.date}
+                            <strong>{fm("date")}:</strong> {point.date}
                             <br />
-                            <strong>Coordinate:</strong> {point.x.toFixed(4)},{" "}
-                            {point.y.toFixed(4)}
+                            <strong>{fm("coordinates")}:</strong>{" "}
+                            {point.x.toFixed(4)}, {point.y.toFixed(4)}
                         </div>
                     </Popup>
                 </CircleMarker>
@@ -82,7 +86,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 <Marker
                     position={[selectedCoordinates.y, selectedCoordinates.x]}
                 >
-                    <Popup>Selected Point</Popup>
+                    <Popup>{fm("selectedPoint")}</Popup>
                 </Marker>
             )}
         </LeafletMapContainer>
