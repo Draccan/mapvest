@@ -102,8 +102,6 @@ export default (
 
             res.status(201).json(response);
         } catch (error) {
-            console.error("Error creating map point:", error);
-
             if (error instanceof RateLimitError) {
                 const response: RateLimitErrorResponseDto = {
                     success: false,

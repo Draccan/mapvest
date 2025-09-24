@@ -59,7 +59,6 @@ export default (
 
             res.status(200).json(response);
         } catch (error) {
-            console.error("Error fetching map points:", error);
             res.status(500).json({
                 success: false,
                 data: [],

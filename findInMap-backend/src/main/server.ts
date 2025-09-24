@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import LoggerService from "../core/services/LoggerService";
 import { InMemoryRateLimitService } from "../core/services/RateLimitService";
 import GetMapPoints from "../core/usecases/GetMapPoints";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
@@ -39,14 +40,14 @@ const restInterface = new RestInterface(
 );
 
 process.on("SIGINT", async () => {
-    console.log("Received SIGINT. Shutting down gracefully...");
+    LoggerService.info("Received SIGINT. Shutting down gracefully...");
     rateLimitService.destroy();
     await prisma.$disconnect();
     process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
-    console.log("Received SIGTERM. Shutting down gracefully...");
+    LoggerService.info("Received SIGTERM. Shutting down gracefully...");
     rateLimitService.destroy();
     await prisma.$disconnect();
     process.exit(0);
@@ -55,16 +56,16 @@ process.on("SIGTERM", async () => {
 // Start server
 (async () => {
     try {
-        console.log(`Starting ${config.appName} v${config.appVersion}`);
-        console.log(`Environment: ${config.nodeEnv}`);
+        LoggerService.info(`Starting ${config.appName} v${config.appVersion}`);
+        LoggerService.info(`Environment: ${config.nodeEnv}`);
 
         await prisma.$connect();
-        console.log("Database connected successfully");
+        LoggerService.info("Database connected successfully");
 
         await restInterface.start();
-        console.log(`${config.appName} is ready!`);
+        LoggerService.info(`${config.appName} is ready!`);
     } catch (error) {
-        console.error("Failed to start server:", error);
+        LoggerService.error("Failed to start server:", error);
         await prisma.$disconnect();
         process.exit(1);
     }

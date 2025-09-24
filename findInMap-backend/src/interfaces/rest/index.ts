@@ -3,10 +3,12 @@ import cors from "cors";
 import express from "express";
 import { middleware as openapiValidator } from "express-openapi-validator";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import expressWinston from "express-winston";
 import helmet from "helmet";
 import * as http from "http";
 import * as swaggerUi from "swagger-ui-express";
 
+import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import Route from "./Route";
@@ -68,6 +70,16 @@ export default class RestInterface {
         );
 
         // Middlewares
+        this.app.use(
+            expressWinston.logger({
+                winstonInstance: LoggerService,
+                meta: true,
+                msg: "HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms",
+                expressFormat: false,
+                colorize: false,
+                ignoreRoute: (req) => req.url === "/health",
+            }),
+        );
         this.app.use(helmet());
         this.app.use(compression());
         this.app.use(express.json({ limit: "10mb" }));
@@ -109,7 +121,7 @@ export default class RestInterface {
                 res: express.Response,
                 _next: express.NextFunction,
             ) => {
-                console.error("Unhandled error:", error);
+                LoggerService.error("Unhandled error:", error);
                 res.status(500).json({
                     success: false,
                     error: "Internal server error",
@@ -122,10 +134,12 @@ export default class RestInterface {
         const server = http.createServer(this.app);
         await new Promise<void>((resolve) =>
             server.listen(this.port, () => {
-                console.log(`Server listening on port ${this.port}`);
-                console.log(`Swagger documentation: ${this.publicUrl}/swagger`);
-                console.log(`Server info: ${this.publicUrl}/info`);
-                console.log(`Health check: ${this.publicUrl}/health`);
+                LoggerService.info(`Server listening on port ${this.port}`);
+                LoggerService.info(
+                    `Swagger documentation: ${this.publicUrl}/swagger`,
+                );
+                LoggerService.info(`Server info: ${this.publicUrl}/info`);
+                LoggerService.info(`Health check: ${this.publicUrl}/health`);
                 resolve();
             }),
         );
