@@ -11,6 +11,7 @@ import * as swaggerUi from "swagger-ui-express";
 import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
+import errorHandler from "./errorHandler";
 import Route from "./Route";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
@@ -114,20 +115,7 @@ export default class RestInterface {
         });
 
         // Error handler
-        this.app.use(
-            (
-                error: any,
-                _req: express.Request,
-                res: express.Response,
-                _next: express.NextFunction,
-            ) => {
-                LoggerService.error("Unhandled error:", error);
-                res.status(500).json({
-                    success: false,
-                    error: "Internal server error",
-                });
-            },
-        );
+        this.app.use(errorHandler);
     }
 
     async start() {
