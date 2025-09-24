@@ -41,34 +41,36 @@ export const Home: React.FC = () => {
     const mapPoints = mapPointsData?.data || [];
 
     return (
-        <div className="v-home-container">
-            <header className="v-header">
-                <h1>MapVest</h1>
-                <nav className="v-navigation">
-                    <Link to={routes.about()} className="v-nav-link">
-                        About
-                    </Link>
-                </nav>
-            </header>
-            <div className="v-main-content">
-                <div className="v-map-section">
-                    <MapContainer
-                        mapPoints={mapPoints}
-                        onMapClick={handleMapClick}
-                        selectedCoordinates={selectedCoordinates}
-                    />
+        <div className="v-home">
+            <div className="v-home-container">
+                <header className="v-header">
+                    <h1>MapVest</h1>
+                    <nav className="v-navigation">
+                        <Link to={routes.about()} className="v-nav-link">
+                            About
+                        </Link>
+                    </nav>
+                </header>
+                <div className="v-main-content">
+                    <div className="v-map-section">
+                        <MapContainer
+                            mapPoints={mapPoints}
+                            onMapClick={handleMapClick}
+                            selectedCoordinates={selectedCoordinates}
+                        />
+                    </div>
+                    <div className="v-form-section">
+                        <MapPointForm
+                            selectedCoordinates={selectedCoordinates}
+                            onSave={handleSavePoint}
+                            loading={creatingPoint}
+                        />
+                    </div>
                 </div>
-                <div className="v-form-section">
-                    <MapPointForm
-                        selectedCoordinates={selectedCoordinates}
-                        onSave={handleSavePoint}
-                        loading={creatingPoint}
-                    />
-                </div>
+                {loadingPoints && (
+                    <div className="v-loading">Loading map points...</div>
+                )}
             </div>
-            {loadingPoints && (
-                <div className="v-loading">Loading map points...</div>
-            )}
         </div>
     );
 };
