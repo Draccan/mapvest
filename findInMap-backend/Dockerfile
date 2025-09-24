@@ -6,10 +6,10 @@ RUN npm install -g pnpm
 # Set working directory
 WORKDIR /app
 
-# Copy package.json (senza pnpm-lock.yaml)
+# Copy package.json
 COPY package.json ./
 
-# Install dependencies (senza lockfile)
+# Install dependencies
 RUN pnpm install
 
 # Copy Prisma schema

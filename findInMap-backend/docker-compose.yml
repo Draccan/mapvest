@@ -15,7 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U findinmap -d findinmap"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d findinmap"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,6 +28,10 @@ services:
       DATABASE_URL: postgresql://postgres:findinmap@postgres:5432/findinmap?schema=public
       NODE_ENV: production
       PORT: 3001
+      PUBLIC_URL: http://localhost:3001
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001
+      LOG_LEVEL: INFO
+      VALIDATE_API_RESPONSES: true
     ports:
       - "3001:3001"
     depends_on:
