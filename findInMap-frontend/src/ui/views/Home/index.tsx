@@ -4,6 +4,7 @@ import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import LogoSvg from "../../assets/logo.svg";
 import routes from "../../commons/routes";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
@@ -46,23 +47,25 @@ export const Home: React.FC = () => {
     return (
         <div className="v-home">
             <div className="v-home-container">
-                <header className="v-header">
-                    <h1>MapVest</h1>
-                    <nav className="v-navigation">
+                <header className="v-home-header">
+                    <div className="v-home-logo">
+                        <img src={LogoSvg} alt="MapVest" />
+                    </div>
+                    <nav className="v-home-navigation">
                         <Link to={routes.about()} kind="nav">
                             {fm("about")}
                         </Link>
                     </nav>
                 </header>
-                <div className="v-main-content">
-                    <div className="v-map-section">
+                <div className="v-home-content">
+                    <div className="v-home-map-section">
                         <MapContainer
                             mapPoints={mapPoints}
                             onMapClick={handleMapClick}
                             selectedCoordinates={selectedCoordinates}
                         />
                     </div>
-                    <div className="v-form-section">
+                    <div className="v-home-form-section">
                         <MapPointForm
                             selectedCoordinates={selectedCoordinates}
                             onSave={handleSavePoint}
@@ -71,7 +74,9 @@ export const Home: React.FC = () => {
                     </div>
                 </div>
                 {loadingPoints && (
-                    <div className="v-loading">{fm("loadingMapPoints")}</div>
+                    <div className="v-home-loading">
+                        {fm("loadingMapPoints")}
+                    </div>
                 )}
             </div>
         </div>
