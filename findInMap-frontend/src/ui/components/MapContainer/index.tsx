@@ -52,7 +52,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     return (
         <LeafletMapContainer
             center={[41.9028, 12.4964]}
-            zoom={13}
+            zoom={3}
             style={{ height: "100%", width: "100%" }}
         >
             <TileLayer
