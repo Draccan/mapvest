@@ -53,7 +53,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         <LeafletMapContainer
             center={[41.9028, 12.4964]}
             zoom={13}
-            style={{ height: "500px", width: "100%" }}
+            style={{ height: "100%", width: "100%" }}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
