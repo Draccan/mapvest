@@ -35,13 +35,13 @@ export const Home: React.FC = () => {
 
     const handleSavePoint = async (pointData: CreateMapPointDto) => {
         const result = await createMapPoint(pointData);
-        if (result?.success) {
+        if (result) {
             await fetchMapPoints();
             setSelectedCoordinates(null);
         }
     };
 
-    const mapPoints = mapPointsData?.data || [];
+    const mapPoints = mapPointsData || [];
 
     return (
         <div className="v-home">

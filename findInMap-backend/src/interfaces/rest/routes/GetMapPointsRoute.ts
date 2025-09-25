@@ -1,11 +1,11 @@
+import { MapPointDto } from "../../../core/dtos/MapPointDto";
 import GetMapPoints from "../../../core/usecases/GetMapPoints";
-import { MapPointsResponseDto } from "../../../core/dtos/MapPointDto";
 import Route from "../Route";
 import getMapPointSchema from "../schemas/getMapPointSchema";
 
 export default (
     getMapPoints: GetMapPoints,
-): Route<void, void, void, MapPointsResponseDto> => ({
+): Route<void, void, void, MapPointDto[]> => ({
     path: "/api/map-points",
     method: "get",
     operationObject: {
@@ -18,16 +18,8 @@ export default (
                 content: {
                     "application/json": {
                         schema: {
-                            type: "object",
-                            properties: {
-                                success: { type: "boolean" },
-                                data: {
-                                    type: "array",
-                                    items: getMapPointSchema(),
-                                },
-                                error: { type: "string" },
-                            },
-                            required: ["success", "data"],
+                            type: "array",
+                            items: getMapPointSchema(),
                         },
                     },
                 },
@@ -49,21 +41,8 @@ export default (
         },
     },
     handler: async (_req, res) => {
-        try {
-            const mapPoints = await getMapPoints.exec();
+        const mapPoints = await getMapPoints.exec();
 
-            const response: MapPointsResponseDto = {
-                success: true,
-                data: mapPoints,
-            };
-
-            res.status(200).json(response);
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                data: [],
-                error: "Failed to fetch map points",
-            });
-        }
+        res.status(200).json(mapPoints);
     },
 });

@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
 
 import { API_URL } from "../../config";
-import { type MapPointsResponseDto } from "../dtos/MapPointDto";
+import { type MapPointDto } from "../dtos/MapPointDto";
 
 interface UseGetMapPoints {
     loading: boolean;
     error: any;
-    data: MapPointsResponseDto | null;
+    data: MapPointDto[] | null;
     fetch: () => Promise<void>;
     hasFetched: boolean;
 }
@@ -14,7 +14,7 @@ interface UseGetMapPoints {
 export const useGetMapPoints = (): UseGetMapPoints => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
-    const [data, setData] = useState<MapPointsResponseDto | null>(null);
+    const [data, setData] = useState<MapPointDto[] | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
     const fetchMapPoints = useCallback(async () => {
@@ -33,7 +33,7 @@ export const useGetMapPoints = (): UseGetMapPoints => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const result: MapPointsResponseDto = await response.json();
+            const result: MapPointDto[] = await response.json();
             setData(result);
             setHasFetched(true);
         } catch (err) {

@@ -1,9 +1,5 @@
-import {
-    CreateMapPointDto,
-    CreateMapPointResponseDto,
-} from "../../../core/dtos/CreateMapPointDto";
-import { RateLimitErrorResponseDto } from "../../../core/dtos/RateLimitErrorResponseDto";
-import { RateLimitError } from "../../../core/errors/RateLimitError";
+import { CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
+import { MapPointDto } from "../../../core/dtos/MapPointDto";
 import CreateMapPoint from "../../../core/usecases/CreateMapPoint";
 import Route from "../Route";
 import getCreateMapPointSchema from "../schemas/getCreateMapPointSchema";
@@ -12,7 +8,7 @@ import getClientIp from "./common/getClientIp";
 
 export default (
     createMapPoint: CreateMapPoint,
-): Route<void, void, CreateMapPointDto, CreateMapPointResponseDto> => ({
+): Route<void, void, CreateMapPointDto, MapPointDto> => ({
     path: "/api/map-points",
     method: "post",
     operationObject: {
@@ -33,15 +29,7 @@ export default (
                 description: "Map point created successfully",
                 content: {
                     "application/json": {
-                        schema: {
-                            type: "object",
-                            properties: {
-                                success: { type: "boolean" },
-                                data: getMapPointSchema(),
-                                error: { type: "string" },
-                            },
-                            required: ["success", "data"],
-                        },
+                        schema: getMapPointSchema(),
                     },
                 },
             },
@@ -91,46 +79,9 @@ export default (
         },
     },
     handler: async (req, res) => {
-        try {
-            const clientIp = getClientIp(req);
-            const mapPoint = await createMapPoint.exec(req.body, clientIp);
+        const clientIp = getClientIp(req);
+        const mapPoint = await createMapPoint.exec(req.body, clientIp);
 
-            const response: CreateMapPointResponseDto = {
-                success: true,
-                data: mapPoint,
-            };
-
-            res.status(201).json(response);
-        } catch (error) {
-            if (error instanceof RateLimitError) {
-                const response: RateLimitErrorResponseDto = {
-                    success: false,
-                    error: error.message,
-                    remainingTime: error.remainingTime,
-                };
-                res.status(429).json(response);
-            } else if (
-                error instanceof Error &&
-                error.message.includes("required")
-            ) {
-                res.status(400).json({
-                    success: false,
-                    error: error.message,
-                });
-            } else if (
-                error instanceof Error &&
-                error.message.includes("Invalid")
-            ) {
-                res.status(400).json({
-                    success: false,
-                    error: error.message,
-                });
-            } else {
-                res.status(500).json({
-                    success: false,
-                    error: "Failed to create map point",
-                });
-            }
-        }
+        res.status(201).json(mapPoint);
     },
 });

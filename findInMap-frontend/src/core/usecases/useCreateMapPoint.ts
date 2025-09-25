@@ -1,17 +1,13 @@
 import { useState, useCallback } from "react";
 
 import { API_URL } from "../../config";
-import {
-    type CreateMapPointDto,
-    type CreateMapPointResponseDto,
-} from "../dtos/CreateMapPointDto";
+import { type CreateMapPointDto } from "../dtos/CreateMapPointDto";
+import type { MapPointDto } from "../dtos/MapPointDto";
 
 interface UseCreateMapPoint {
     loading: boolean;
     error: any;
-    createMapPoint: (
-        data: CreateMapPointDto,
-    ) => Promise<CreateMapPointResponseDto | null>;
+    createMapPoint: (data: CreateMapPointDto) => Promise<MapPointDto | null>;
 }
 
 export const useCreateMapPoint = (): UseCreateMapPoint => {
@@ -19,9 +15,7 @@ export const useCreateMapPoint = (): UseCreateMapPoint => {
     const [error, setError] = useState<any>(null);
 
     const createMapPoint = useCallback(
-        async (
-            data: CreateMapPointDto,
-        ): Promise<CreateMapPointResponseDto | null> => {
+        async (data: CreateMapPointDto): Promise<MapPointDto | null> => {
             try {
                 setLoading(true);
                 setError(null);
@@ -41,7 +35,7 @@ export const useCreateMapPoint = (): UseCreateMapPoint => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const result: CreateMapPointResponseDto = await response.json();
+                const result: MapPointDto = await response.json();
                 return result;
             } catch (err) {
                 setError(err);

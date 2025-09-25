@@ -31,10 +31,7 @@ let mockMapPoints: MapPointDto[] = [
 
 export const handlers = [
     http.get("http://localhost:3001/api/map-points", () => {
-        return HttpResponse.json({
-            success: true,
-            data: mockMapPoints,
-        });
+        return HttpResponse.json(mockMapPoints);
     }),
 
     // POST /api/map-points
@@ -52,12 +49,6 @@ export const handlers = [
 
         mockMapPoints.push(mapPoint);
 
-        return HttpResponse.json(
-            {
-                success: true,
-                data: mapPoint,
-            },
-            { status: 201 },
-        );
+        return HttpResponse.json(mapPoint, { status: 201 });
     }),
 ];

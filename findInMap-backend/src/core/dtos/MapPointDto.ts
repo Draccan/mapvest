@@ -20,9 +20,3 @@ export function makeMapPointDto(mapPoint: MapPointEntity): MapPointDto {
         createdAt: mapPoint.created_at,
     };
 }
-
-export interface MapPointsResponseDto {
-    success: boolean;
-    data: MapPointDto[];
-    error?: string;
-}

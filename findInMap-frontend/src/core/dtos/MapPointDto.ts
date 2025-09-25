@@ -8,9 +8,3 @@ export interface MapPointDto {
     date: string;
     createdAt: Date;
 }
-
-export interface MapPointsResponseDto {
-    success: boolean;
-    data: MapPointDto[];
-    error?: string;
-}
