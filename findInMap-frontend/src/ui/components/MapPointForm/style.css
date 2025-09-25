@@ -1,100 +1,111 @@
 .c-mapPoint-form {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
 }
 
 .c-mapPoint-form h2 {
-    margin-top: 0;
-    color: #333;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
+    margin: 0 0 1.5rem 0;
+    color: #1a202c;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    border: none;
+    padding: 0;
 }
 
 .c-form-group {
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
 }
 
 .c-form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #555;
+    color: #2d3748;
+    font-size: 0.95rem;
+    letter-spacing: 0.025em;
 }
 
 .c-coordinate-input {
-    width: 90%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f5f5f5;
-    color: #666;
-    font-family: monospace;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background-color: #f7fafc;
+    color: #4a5568;
+    font-family: "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono", monospace;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+}
+
+.c-coordinate-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
 }
 
 .c-type-select,
 .c-date-input {
-    width: 90%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+    color: #2d3748;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
 }
 
 .c-type-select:focus,
 .c-date-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.c-save-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.c-save-button:hover:not(:disabled) {
-    background-color: #0056b3;
-}
-
-.c-save-button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
 }
 
 .c-errors {
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
 }
 
 .c-error {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    font-size: 14px;
+    color: #e53e3e;
+    background: linear-gradient(135deg, #fed7d7, #feb2b2);
+    border: 2px solid #fc8181;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.15);
 }
 
 .c-instructions {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    border-radius: 4px;
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+    border-left: 4px solid #38b2ac;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(56, 178, 172, 0.1);
 }
 
 .c-instructions p {
     margin: 0;
-    color: #1976d2;
-    font-size: 14px;
+    color: #234e52;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.5;
 }

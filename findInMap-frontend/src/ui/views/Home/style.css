@@ -1,24 +1,20 @@
 .v-home {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1160864a 0%, #1e2aaf91 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 8s ease infinite;
-}
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e0 100%);
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+    color: #2d3748;
+    line-height: 1.6;
 }
 
 .v-home-container {
-    padding: 20px;
-    max-width: 1200px;
+    padding: 2rem;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -26,64 +22,181 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 2.5rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .v-header h1 {
-    color: #333;
+    color: #1a202c;
     margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
 }
 
 .v-navigation {
     display: flex;
-    gap: 20px;
-}
-
-.v-nav-link {
-    color: #666;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-.v-nav-link:hover {
-    color: #333;
-    background-color: #f5f5f5;
+    gap: 1.5rem;
 }
 
 .v-main-content {
     display: flex;
-    gap: 20px;
+    gap: 2rem;
     flex-wrap: wrap;
 }
 
 .v-map-section {
     flex: 2;
-    min-width: 400px;
+    min-width: 500px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
 }
 
 .v-form-section {
     flex: 1;
-    min-width: 300px;
+    min-width: 400px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Modern Map Container Styling */
+.v-map-section .leaflet-container {
+    border-radius: 16px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.v-map-section .leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.v-map-section .leaflet-control-zoom a {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #4a5568 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.v-map-section .leaflet-control-zoom a:hover {
+    background: #667eea !important;
+    color: white !important;
+    transform: scale(1.1);
 }
 
 .v-loading {
     text-align: center;
-    padding: 20px;
-    color: #666;
+    padding: 3rem;
+    color: #718096;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.v-loading::before {
+    content: "";
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .v-home-container {
+        padding: 1.5rem;
+    }
+
+    .v-header {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .v-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .v-main-content {
+        gap: 1.5rem;
+    }
 }
 
 @media (max-width: 768px) {
+    .v-home-container {
+        padding: 1rem;
+    }
+
+    .v-header {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+    }
+
+    .v-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .v-navigation {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .v-nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
     .v-main-content {
         flex-direction: column;
+        gap: 1rem;
     }
 
     .v-map-section,
     .v-form-section {
         min-width: auto;
+        padding: 1rem;
     }
+}
+
+/* Enhanced Visual Effects */
+.v-map-section,
+.v-form-section {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v-map-section:hover,
+.v-form-section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
 }

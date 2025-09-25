@@ -34,7 +34,6 @@ export const handlers = [
         return HttpResponse.json(mockMapPoints);
     }),
 
-    // POST /api/map-points
     http.post("http://localhost:3001/api/map-points", async ({ request }) => {
         const newPoint = (await request.json()) as Omit<
             MapPointDto,

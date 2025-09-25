@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { MapPointType } from "../../../core/commons/enums";
 import type { CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import { Button } from "../Button";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapPointForm");
@@ -85,7 +86,6 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         className="c-coordinate-input"
                     />
                 </div>
-
                 <div className="c-form-group">
                     <label htmlFor="Ycoordinate">
                         {fm("YCoordinateLabel")}
@@ -98,7 +98,6 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         className="c-coordinate-input"
                     />
                 </div>
-
                 <div className="c-form-group">
                     <label htmlFor="type">{fm("type")}:</label>
                     <select
@@ -120,7 +119,6 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         </option>
                     </select>
                 </div>
-
                 <div className="c-form-group">
                     <label htmlFor="date">{fm("date")} (DD/MM/YYYY):</label>
                     <input
@@ -132,7 +130,6 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         className="c-date-input"
                     />
                 </div>
-
                 {errors.length > 0 && (
                     <div className="c-errors">
                         {errors.map((error, index) => (
@@ -142,16 +139,15 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         ))}
                     </div>
                 )}
-
-                <button
+                <Button
                     type="submit"
-                    disabled={loading || !selectedCoordinates}
-                    className="c-save-button"
+                    kind="primary"
+                    disabled={!selectedCoordinates}
+                    loading={loading}
                 >
                     {loading ? fm("saving") : fm("save")}
-                </button>
+                </Button>
             </form>
-
             <div className="c-instructions">
                 <p>📍 {fm("clickOnMapInstructions")}</p>
             </div>

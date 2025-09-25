@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import routes from "../../commons/routes";
+import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
 import "./style.css";
@@ -49,7 +49,7 @@ export const Home: React.FC = () => {
                 <header className="v-header">
                     <h1>MapVest</h1>
                     <nav className="v-navigation">
-                        <Link to={routes.about()} className="v-nav-link">
+                        <Link to={routes.about()} kind="nav">
                             {fm("about")}
                         </Link>
                     </nav>
