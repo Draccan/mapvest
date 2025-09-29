@@ -35,8 +35,8 @@ export const Home: React.FC = () => {
         if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();
     }, [fetchMapPoints]);
 
-    const handleMapClick = (lng: number, lat: number) => {
-        setSelectedCoordinates({ x: lng, y: lat });
+    const handleMapPointSelection = (lng: number, lat: number) => {
+        setSelectedCoordinates({ x: lng, y: lat, zoom: 15 });
     };
 
     const handleSavePoint = async (pointData: CreateMapPointDto) => {
@@ -45,10 +45,6 @@ export const Home: React.FC = () => {
             await fetchMapPoints();
             setSelectedCoordinates(null);
         }
-    };
-
-    const handleAddressSelect = (lat: number, lng: number) => {
-        setSelectedCoordinates({ x: lng, y: lat, zoom: 15 });
     };
 
     const mapPoints = mapPointsData || [];
@@ -70,14 +66,14 @@ export const Home: React.FC = () => {
                     <div className="v-home-map-section">
                         <div className="v-home-search-wrapper">
                             <AddressSearch
-                                onAddressSelect={handleAddressSelect}
+                                onAddressSelect={handleMapPointSelection}
                                 className="v-home-address-search"
                             />
                         </div>
                         <div className="v-home-map">
                             <MapContainer
                                 mapPoints={mapPoints}
-                                onMapClick={handleMapClick}
+                                onMapClick={handleMapPointSelection}
                                 selectedCoordinates={selectedCoordinates}
                             />
                         </div>
