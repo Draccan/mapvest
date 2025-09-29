@@ -18,14 +18,14 @@ interface UseGetGooglePlaces {
 const searchGooglePlaces = async (
     searchQuery: string,
 ): Promise<SearchResult[]> => {
-    const request = {
+    const query = {
         textQuery: searchQuery,
         fields: ["displayName", "location", "formattedAddress"],
         language: "it",
         maxResultCount: 10,
     };
 
-    const { places } = await google.maps.places.Place.searchByText(request);
+    const { places } = await google.maps.places.Place.searchByText(query);
 
     return places.map((place) => ({
         x: place.location!.lng(),
