@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     MapContainer as LeafletMapContainer,
     TileLayer,
@@ -6,6 +6,7 @@ import {
     Popup,
     Marker,
     useMapEvents,
+    useMap,
 } from "react-leaflet";
 
 import { MapPointType } from "../../../core/commons/enums";
@@ -17,7 +18,7 @@ const fm = getFormattedMessageWithScope("components.MapContainer");
 interface MapContainerProps {
     mapPoints: MapPointDto[];
     onMapClick: (lat: number, lng: number) => void;
-    selectedCoordinates: { x: number; y: number } | null;
+    selectedCoordinates: { x: number; y: number; zoom?: number } | null;
 }
 
 const MapClickHandler: React.FC<{
@@ -28,6 +29,21 @@ const MapClickHandler: React.FC<{
             onMapClick(e.latlng.lng, e.latlng.lat);
         },
     });
+    return null;
+};
+
+const MapController: React.FC<{
+    selectedCoordinates: { x: number; y: number; zoom?: number } | null;
+}> = ({ selectedCoordinates }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        if (selectedCoordinates) {
+            const zoom = selectedCoordinates.zoom || 3;
+            map.setView([selectedCoordinates.y, selectedCoordinates.x], zoom);
+        }
+    }, [selectedCoordinates, map]);
+
     return null;
 };
 
@@ -60,6 +76,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapClickHandler onMapClick={onMapClick} />
+            <MapController selectedCoordinates={selectedCoordinates} />
             {mapPoints.map((point) => (
                 <CircleMarker
                     key={point.id}

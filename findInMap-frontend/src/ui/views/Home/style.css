@@ -59,6 +59,22 @@
     overflow: hidden;
 }
 
+.v-home-search-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.v-home-address-search {
+    z-index: 1000;
+}
+
+.v-home-map {
+    height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
 .v-home-form-section {
     flex: 1;
     min-width: 400px;
@@ -126,7 +142,6 @@
     }
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
     .v-home-container {
         padding: 1.5rem;
@@ -181,7 +196,6 @@
     }
 }
 
-/* Enhanced Visual Effects */
 .v-home-map-section,
 .v-home-form-section {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

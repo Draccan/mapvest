@@ -6,6 +6,7 @@ import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import LogoSvg from "../../assets/logo.svg";
 import routes from "../../commons/routes";
+import { AddressSearch } from "../../components/AddressSearch";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
@@ -17,6 +18,7 @@ export const Home: React.FC = () => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
         x: number;
         y: number;
+        zoom?: number;
     } | null>(null);
     const {
         data: mapPointsData,
@@ -42,6 +44,10 @@ export const Home: React.FC = () => {
         }
     };
 
+    const handleAddressSelect = (lat: number, lng: number) => {
+        setSelectedCoordinates({ x: lng, y: lat, zoom: 15 });
+    };
+
     const mapPoints = mapPointsData || [];
 
     return (
@@ -59,11 +65,19 @@ export const Home: React.FC = () => {
                 </header>
                 <div className="v-home-content">
                     <div className="v-home-map-section">
-                        <MapContainer
-                            mapPoints={mapPoints}
-                            onMapClick={handleMapClick}
-                            selectedCoordinates={selectedCoordinates}
-                        />
+                        <div className="v-home-search-wrapper">
+                            <AddressSearch
+                                onAddressSelect={handleAddressSelect}
+                                className="v-home-address-search"
+                            />
+                        </div>
+                        <div className="v-home-map">
+                            <MapContainer
+                                mapPoints={mapPoints}
+                                onMapClick={handleMapClick}
+                                selectedCoordinates={selectedCoordinates}
+                            />
+                        </div>
                     </div>
                     <div className="v-home-form-section">
                         <MapPointForm
