@@ -31,7 +31,50 @@ let mockMapPoints: MapPointDto[] = [
 
 export const handlers = [
     http.all("https://maps.googleapis.com/*", () => passthrough()),
-    http.all("https://places.googleapis.com/*", () => passthrough()),
+
+    http.post(
+        "https://places.googleapis.com/$rpc/google.maps.places.v1.Places/SearchText",
+        () => {
+            return HttpResponse.json([
+                [
+                    [
+                        null,
+                        "ChIJMydZdn50LRMRzwch0BgnvaA",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        "Via degli Olmi, 18, 60019 Senigallia AN, Italia",
+                        null,
+                        null,
+                        [43.7009486, 13.2220985],
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        ["Via degli Olmi, 18"],
+                    ],
+                ],
+            ]);
+        },
+    ),
+
     http.get("http://localhost:3001/api/map-points", () => {
         return HttpResponse.json(mockMapPoints);
     }),
