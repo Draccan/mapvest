@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from "react";
-import { OpenStreetMapProvider } from "leaflet-geosearch";
-import { debounce } from "lodash-es";
+import React, { useEffect, useState } from "react";
 
+import useGetGooglePlaces from "../../../core/usecases/useGetGooglePlaces";
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import "./style.css";
 
@@ -21,67 +20,17 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
     className = "",
 }) => {
     const [query, setQuery] = useState("");
-    const [results, setResults] = useState<SearchResult[]>([]);
-    const [loading, setLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
+    const { debouncedFetch, loading, results } = useGetGooglePlaces();
 
-    const provider = useMemo(
-        () =>
-            new OpenStreetMapProvider({
-                params: {
-                    format: "json",
-                    addressdetails: 1,
-                    limit: 5,
-                    "accept-language": "it,en",
-                    extratags: 1,
-                    namedetails: 1,
-                },
-            }),
-        [],
-    );
-
-    // TODO capire se può essere uno usecase o un hook + vedere tutto il nuovo codice
-    // e pulirlo + Capire se usare come suggerito anche @googlemaps/js-api-loader
-    // che ha più dati. Altrimenti Via/Viale Degli Olmi 18, Senigallia non lo trova..
-    const debouncedSearchAddress = useMemo(() => {
-        const searchAddress = async (searchQuery: string) => {
-            if (searchQuery.length < 3) {
-                setResults([]);
-                setShowResults(false);
-                return;
-            }
-
-            setLoading(true);
-            try {
-                const searchResults = await provider.search({
-                    query: searchQuery,
-                });
-                const formattedResults: SearchResult[] = searchResults
-                    .slice(0, 5)
-                    .map((result) => ({
-                        x: result.x,
-                        y: result.y,
-                        label: result.label,
-                    }));
-
-                setResults(formattedResults);
-                setShowResults(true);
-            } catch (error) {
-                console.error("Address search error:", error);
-                setResults([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        return debounce(searchAddress, 300);
-    }, [provider]);
+    useEffect(() => {
+        setShowResults(results.length > 0);
+    }, [results]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setQuery(value);
-
-        debouncedSearchAddress(value);
+        debouncedFetch(value);
     };
 
     const handleResultSelect = (result: SearchResult) => {

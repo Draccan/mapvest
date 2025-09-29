@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, passthrough } from "msw";
 import { type MapPointDto } from "../src/core/dtos/MapPointDto";
 import { MapPointType } from "../src/core/commons/enums";
 
@@ -30,6 +30,8 @@ let mockMapPoints: MapPointDto[] = [
 ];
 
 export const handlers = [
+    http.all("https://maps.googleapis.com/*", () => passthrough()),
+    http.all("https://places.googleapis.com/*", () => passthrough()),
     http.get("http://localhost:3001/api/map-points", () => {
         return HttpResponse.json(mockMapPoints);
     }),

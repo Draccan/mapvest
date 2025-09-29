@@ -10,9 +10,12 @@ import { AddressSearch } from "../../components/AddressSearch";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
+import initializeGoogleMaps from "../../utils/initializeGoogleMaps";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("views.Home");
+
+initializeGoogleMaps();
 
 export const Home: React.FC = () => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
