@@ -36,7 +36,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
     const handleResultSelect = (result: SearchResult) => {
         setQuery(result.label);
         setShowResults(false);
-        onAddressSelect(result.y, result.x);
+        onAddressSelect(result.x, result.y);
     };
 
     const classNames = setMultipleClassNames("c-address-search", className);
