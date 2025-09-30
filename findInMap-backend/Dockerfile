@@ -12,11 +12,9 @@ COPY package.json ./
 # Install dependencies
 RUN pnpm install
 
-# Copy Prisma schema
-COPY prisma ./prisma
-
-# Generate Prisma client
-RUN pnpm prisma generate
+# Copy Drizzle configuration and migrations
+COPY drizzle.config.ts ./
+COPY drizzle ./drizzle
 
 # Copy source code
 COPY src ./src
@@ -29,4 +27,4 @@ RUN pnpm build
 EXPOSE 3001
 
 # Run migrations and start
-CMD ["sh", "-c", "pnpm prisma migrate deploy && pnpm start"]
+CMD ["sh", "-c", "pnpm db:migrate && pnpm start"]

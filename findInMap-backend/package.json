@@ -4,17 +4,18 @@
   "description": "MapVest backend API with Express, TypeScript, PostgreSQL and PostGIS",
   "main": "dist/main/server.js",
   "scripts": {
-    "build": "prisma generate && tsc",
+    "build": "tsc",
     "dev": "tsx watch src/main/server.ts",
     "start": "node dist/main/server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate dev",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "setup": "pnpm docker:up && sleep 5 && pnpm prisma:generate && pnpm prisma:migrate",
-    "deploy": "prisma migrate deploy && node dist/main/server.js"
+    "setup": "pnpm docker:up && sleep 5 && pnpm db:push",
+    "deploy": "pnpm build && drizzle-kit push && pnpm start"
   },
   "keywords": [
     "map",
@@ -23,7 +24,6 @@
     "postgis",
     "postgresql",
     "typescript",
-    "prisma",
     "api",
     "node.js"
   ],
@@ -31,14 +31,16 @@
   "license": "CC-BY-NC-SA-4.0",
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
-    "@prisma/client": "^6.0.1",
+    "@types/pg": "^8.15.5",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.44.5",
     "express": "^5.1.0",
     "express-openapi-validator": "^5.3.7",
     "express-winston": "^4.2.0",
     "helmet": "^8.0.0",
+    "postgres": "^3.4.7",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^11.0.3",
     "winston": "^3.17.0"
@@ -52,7 +54,7 @@
     "@types/swagger-ui-express": "^4.1.6",
     "@types/uuid": "^10.0.0",
     "@types/winston": "^2.4.4",
-    "prisma": "^6.0.1",
+    "drizzle-kit": "^0.31.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }

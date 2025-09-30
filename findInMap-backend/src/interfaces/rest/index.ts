@@ -10,10 +10,12 @@ import * as swaggerUi from "swagger-ui-express";
 
 import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
+import CreateUser from "../../core/usecases/CreateUser";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import errorHandler from "./errorHandler";
 import Route from "./Route";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
+import CreateUserRoute from "./routes/CreateUserRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
@@ -32,10 +34,12 @@ export default class RestInterface {
         usecases: {
             getMapPoints: GetMapPoints;
             createMapPoint: CreateMapPoint;
+            createUser: CreateUser;
         },
     ) {
         this.routes = [
             CreateMapPointRoute(usecases.createMapPoint),
+            CreateUserRoute(usecases.createUser),
             GetMapPointsRoute(usecases.getMapPoints),
             HealthRoute(),
             InfoRoute(),

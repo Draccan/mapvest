@@ -1,0 +1,32 @@
+import { eq } from "drizzle-orm";
+import UserRepository from "../../core/dependencies/UserRepository";
+import UserEntity from "../../core/entities/UserEntity";
+import CreateUserDto from "../../core/dtos/CreateUserDto";
+import { db } from "../../db";
+import { users } from "../../db/schema";
+import { makeUserEntity } from "./converters/makeUserEntity";
+
+export class DrizzleUserRepository implements UserRepository {
+    async create(userData: CreateUserDto): Promise<UserEntity> {
+        const [createdUser] = await db
+            .insert(users)
+            .values({
+                name: userData.name,
+                surname: userData.surname,
+                email: userData.email,
+                password: userData.password,
+            })
+            .returning();
+
+        return makeUserEntity(createdUser);
+    }
+
+    async findByEmail(email: string): Promise<UserEntity | null> {
+        const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.email, email));
+
+        return user ? makeUserEntity(user) : null;
+    }
+}
