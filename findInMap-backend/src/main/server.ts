@@ -50,7 +50,7 @@ process.on("SIGTERM", async () => {
     process.exit(0);
 });
 
-// Start server
+// Start
 (async () => {
     try {
         LoggerService.info(`Starting ${config.appName} v${config.appVersion}`);
