@@ -79,6 +79,10 @@ export default {
                 .map((origin) => origin.trim())
                 .filter((origin) => origin.length > 0),
     }),
+    jwtSecret: env("JWT_SECRET", {
+        required: true,
+        nonProductionDefault: "your-super-secret-jwt-key-for-development-only",
+    }),
 
     // Database
     databaseUrl: env("DATABASE_URL", {

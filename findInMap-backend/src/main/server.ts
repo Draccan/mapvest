@@ -1,8 +1,10 @@
 import LoggerService from "../core/services/LoggerService";
 import { InMemoryRateLimitService } from "../core/services/RateLimitService";
+import JwtService from "../core/services/JwtService";
 import GetMapPoints from "../core/usecases/GetMapPoints";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
+import LoginUser from "../core/usecases/LoginUser";
 import { client } from "../db";
 import { DrizzleMapPointRepository } from "../dependency-implementations/DrizzleMapPointRepository";
 import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUserRepository";
@@ -16,11 +18,13 @@ const userRepository = new DrizzleUserRepository();
 // Services
 // 15 seconds
 const rateLimitService = new InMemoryRateLimitService(15);
+const jwtService = new JwtService(config.jwtSecret);
 
 // Usecases
 const getMapPoints = new GetMapPoints(mapPointRepository);
 const createMapPoint = new CreateMapPoint(mapPointRepository, rateLimitService);
 const createUser = new CreateUser(userRepository);
+const loginUser = new LoginUser(userRepository, jwtService);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -33,6 +37,7 @@ const restInterface = new RestInterface(
         getMapPoints,
         createMapPoint,
         createUser,
+        loginUser,
     },
 );
 

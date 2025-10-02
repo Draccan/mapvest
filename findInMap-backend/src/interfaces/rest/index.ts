@@ -12,6 +12,7 @@ import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
+import LoginUser from "../../core/usecases/LoginUser";
 import errorHandler from "./errorHandler";
 import Route from "./Route";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
@@ -19,6 +20,7 @@ import CreateUserRoute from "./routes/CreateUserRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
+import LoginUserRoute from "./routes/LoginUserRoute";
 
 export default class RestInterface {
     private routes: Route[];
@@ -35,6 +37,7 @@ export default class RestInterface {
             getMapPoints: GetMapPoints;
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
+            loginUser: LoginUser;
         },
     ) {
         this.routes = [
@@ -43,6 +46,7 @@ export default class RestInterface {
             GetMapPointsRoute(usecases.getMapPoints),
             HealthRoute(),
             InfoRoute(),
+            LoginUserRoute(usecases.loginUser),
         ];
 
         // OpenAPI Spec
