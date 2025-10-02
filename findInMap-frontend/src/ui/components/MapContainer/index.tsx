@@ -18,7 +18,7 @@ const fm = getFormattedMessageWithScope("components.MapContainer");
 interface MapContainerProps {
     mapPoints: MapPointDto[];
     onMapClick: (lat: number, lng: number) => void;
-    selectedCoordinates: { x: number; y: number; zoom?: number } | null;
+    selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
 }
 
 const MapClickHandler: React.FC<{
@@ -33,14 +33,17 @@ const MapClickHandler: React.FC<{
 };
 
 const MapController: React.FC<{
-    selectedCoordinates: { x: number; y: number; zoom?: number } | null;
+    selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
 }> = ({ selectedCoordinates }) => {
     const map = useMap();
 
     useEffect(() => {
         if (selectedCoordinates) {
             const zoom = selectedCoordinates.zoom || 3;
-            map.setView([selectedCoordinates.y, selectedCoordinates.x], zoom);
+            map.setView(
+                [selectedCoordinates.lat, selectedCoordinates.long],
+                zoom,
+            );
         }
     }, [selectedCoordinates, map]);
 
@@ -85,6 +88,12 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                     color={getMarkerColor(point.type)}
                     fillColor={getMarkerColor(point.type)}
                     fillOpacity={1}
+                    eventHandlers={{
+                        click: (e) => {
+                            e.originalEvent.stopPropagation();
+                            onMapClick(point.x, point.y);
+                        },
+                    }}
                 >
                     <Popup>
                         <div>
@@ -94,14 +103,17 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                             <strong>{fm("date")}:</strong> {point.date}
                             <br />
                             <strong>{fm("coordinates")}:</strong>{" "}
-                            {point.x.toFixed(4)}, {point.y.toFixed(4)}
+                            {`Long: ${point.x.toFixed(4)}, Lat: ${point.y.toFixed(4)}`}
                         </div>
                     </Popup>
                 </CircleMarker>
             ))}
             {selectedCoordinates && (
                 <Marker
-                    position={[selectedCoordinates.y, selectedCoordinates.x]}
+                    position={[
+                        selectedCoordinates.lat,
+                        selectedCoordinates.long,
+                    ]}
                 >
                     <Popup>{fm("selectedPoint")}</Popup>
                 </Marker>

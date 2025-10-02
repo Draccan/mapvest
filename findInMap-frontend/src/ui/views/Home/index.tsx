@@ -19,8 +19,8 @@ initializeGoogleMaps();
 
 export const Home: React.FC = () => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
-        x: number;
-        y: number;
+        long: number;
+        lat: number;
         zoom?: number;
     } | null>(null);
     const {
@@ -36,7 +36,7 @@ export const Home: React.FC = () => {
     }, [fetchMapPoints]);
 
     const handleMapPointSelection = (lng: number, lat: number) => {
-        setSelectedCoordinates({ x: lng, y: lat, zoom: 15 });
+        setSelectedCoordinates({ long: lng, lat: lat, zoom: 15 });
     };
 
     const handleSavePoint = async (pointData: CreateMapPointDto) => {

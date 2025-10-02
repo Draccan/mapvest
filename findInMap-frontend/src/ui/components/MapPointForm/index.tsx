@@ -9,7 +9,7 @@ import "./style.css";
 const fm = getFormattedMessageWithScope("components.MapPointForm");
 
 interface MapPointFormProps {
-    selectedCoordinates: { x: number; y: number } | null;
+    selectedCoordinates: { long: number; lat: number } | null;
     onSave: (data: CreateMapPointDto) => Promise<void>;
     loading: boolean;
 }
@@ -55,8 +55,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
         if (newErrors.length === 0 && selectedCoordinates) {
             try {
                 await onSave({
-                    x: selectedCoordinates.x,
-                    y: selectedCoordinates.y,
+                    x: selectedCoordinates.long,
+                    y: selectedCoordinates.lat,
                     type,
                     date,
                 });
@@ -81,7 +81,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     <input
                         type="text"
                         id="Xcoordinate"
-                        value={selectedCoordinates?.x.toFixed(6) || ""}
+                        value={selectedCoordinates?.long.toFixed(6) || ""}
                         disabled
                         className="c-coordinate-input"
                     />
@@ -93,7 +93,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     <input
                         type="text"
                         id="Ycoordinate"
-                        value={selectedCoordinates?.y.toFixed(6) || ""}
+                        value={selectedCoordinates?.lat.toFixed(6) || ""}
                         disabled
                         className="c-coordinate-input"
                     />
