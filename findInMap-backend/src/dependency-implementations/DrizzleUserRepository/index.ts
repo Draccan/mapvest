@@ -13,7 +13,7 @@ export class DrizzleUserRepository implements UserRepository {
             .values({
                 name: userData.name,
                 surname: userData.surname,
-                email: userData.email,
+                email: userData.email.toLowerCase(),
                 password: userData.password,
             })
             .returning();
@@ -25,7 +25,7 @@ export class DrizzleUserRepository implements UserRepository {
         const [user] = await db
             .select()
             .from(users)
-            .where(eq(users.email, email));
+            .where(eq(users.email, email.toLowerCase()));
 
         return user ? makeUserEntity(user) : null;
     }

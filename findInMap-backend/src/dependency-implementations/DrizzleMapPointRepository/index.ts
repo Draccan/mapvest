@@ -28,7 +28,7 @@ export class DrizzleMapPointRepository implements MapPointRepository {
         const [createdMapPoint] = await db
             .insert(mapPoints)
             .values({
-                location: sql`ST_GeomFromText(${`POINT(${data.y} ${data.x})`}, 4326)`,
+                location: sql`ST_GeomFromText(${`POINT(${data.x} ${data.y})`}, 4326)`,
                 type: data.type,
                 date: data.date,
             })

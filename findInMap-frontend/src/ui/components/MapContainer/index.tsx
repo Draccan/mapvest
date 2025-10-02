@@ -80,7 +80,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
             {mapPoints.map((point) => (
                 <CircleMarker
                     key={point.id}
-                    center={[point.x, point.y]}
+                    center={[point.y, point.x]}
                     radius={8}
                     color={getMarkerColor(point.type)}
                     fillColor={getMarkerColor(point.type)}
