@@ -2,9 +2,9 @@ import debounce from "lodash-es/debounce";
 import mem from "mem";
 import { useCallback, useMemo, useState } from "react";
 
-interface SearchResult {
-    x: number;
-    y: number;
+export interface SearchResult {
+    long: number;
+    lat: number;
     label: string;
 }
 
@@ -28,8 +28,8 @@ const searchGooglePlaces = async (
     const { places } = await google.maps.places.Place.searchByText(query);
 
     return places.map((place) => ({
-        x: place.location!.lng(),
-        y: place.location!.lat(),
+        long: place.location!.lng(),
+        lat: place.location!.lat(),
         label: place.formattedAddress || place.displayName || searchQuery,
     }));
 };

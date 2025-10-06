@@ -3,8 +3,8 @@ import { MapPointEntity } from "../entities/MapPointEntity";
 
 export interface MapPointDto {
     id: number;
-    x: number;
-    y: number;
+    long: number;
+    lat: number;
     type: MapPointType;
     date: string;
     createdAt: Date;
@@ -13,8 +13,8 @@ export interface MapPointDto {
 export function makeMapPointDto(mapPoint: MapPointEntity): MapPointDto {
     return {
         id: mapPoint.id,
-        x: mapPoint.x,
-        y: mapPoint.y,
+        long: mapPoint.long,
+        lat: mapPoint.lat,
         type: mapPoint.type,
         date: mapPoint.date,
         createdAt: mapPoint.created_at,

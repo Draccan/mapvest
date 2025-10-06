@@ -7,8 +7,8 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
         type: "object",
         properties: {
             id: { type: "integer" },
-            x: { type: "number", description: "Longitude coordinate" },
-            y: { type: "number", description: "Latitude coordinate" },
+            long: { type: "number", description: "Longitude coordinate" },
+            lat: { type: "number", description: "Latitude coordinate" },
             type: {
                 type: "string",
                 enum: Object.values(MapPointType),
@@ -24,7 +24,7 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
                 description: "Creation timestamp",
             },
         },
-        required: ["id", "x", "y", "type", "date", "createdAt"],
+        required: ["id", "long", "lat", "type", "date", "createdAt"],
         additionalProperties: false,
     };
 }

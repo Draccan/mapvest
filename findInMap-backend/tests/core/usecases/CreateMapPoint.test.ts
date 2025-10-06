@@ -35,16 +35,16 @@ describe("CreateMapPoint", () => {
         it("should successfully create a map point", async () => {
             const clientIp = "192.168.1.1";
             const mapPointData: CreateMapPointDto = {
-                x: 45.0,
-                y: 9.0,
+                long: 45.0,
+                lat: 9.0,
                 type: MapPointType.Theft,
                 date: "2025-10-02",
             };
 
             const mockCreatedMapPoint: MapPointEntity = {
                 id: 1,
-                x: mapPointData.x,
-                y: mapPointData.y,
+                long: mapPointData.long,
+                lat: mapPointData.lat,
                 type: mapPointData.type,
                 date: mapPointData.date,
                 created_at: mockDate,
@@ -60,8 +60,8 @@ describe("CreateMapPoint", () => {
 
             expect(result).toEqual({
                 id: 1,
-                x: 45.0,
-                y: 9.0,
+                long: 45.0,
+                lat: 9.0,
                 type: MapPointType.Theft,
                 date: "2025-10-02",
                 createdAt: mockDate,
@@ -80,8 +80,8 @@ describe("CreateMapPoint", () => {
         it("should throw RateLimitError when rate limit exceeded", async () => {
             const clientIp = "192.168.1.2";
             const mapPointData: CreateMapPointDto = {
-                x: 45.0,
-                y: 9.0,
+                long: 45.0,
+                lat: 9.0,
                 type: MapPointType.Aggression,
                 date: "2025-10-02",
             };

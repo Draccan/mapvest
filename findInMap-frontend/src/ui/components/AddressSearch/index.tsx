@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-import useGetGooglePlaces from "../../../core/usecases/useGetGooglePlaces";
+import useGetGooglePlaces, {
+    type SearchResult,
+} from "../../../core/usecases/useGetGooglePlaces";
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import "./style.css";
 
 interface AddressSearchProps {
     onAddressSelect: (lat: number, lng: number) => void;
     className?: string;
-}
-
-interface SearchResult {
-    x: number;
-    y: number;
-    label: string;
 }
 
 export const AddressSearch: React.FC<AddressSearchProps> = ({
@@ -36,7 +32,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
     const handleResultSelect = (result: SearchResult) => {
         setQuery(result.label);
         setShowResults(false);
-        onAddressSelect(result.x, result.y);
+        onAddressSelect(result.long, result.lat);
     };
 
     const classNames = setMultipleClassNames("c-address-search", className);

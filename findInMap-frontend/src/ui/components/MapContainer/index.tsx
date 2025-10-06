@@ -83,7 +83,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
             {mapPoints.map((point) => (
                 <CircleMarker
                     key={point.id}
-                    center={[point.y, point.x]}
+                    center={[point.lat, point.long]}
                     radius={8}
                     color={getMarkerColor(point.type)}
                     fillColor={getMarkerColor(point.type)}
@@ -91,7 +91,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                     eventHandlers={{
                         click: (e) => {
                             e.originalEvent.stopPropagation();
-                            onMapClick(point.x, point.y);
+                            onMapClick(point.long, point.lat);
                         },
                     }}
                 >
@@ -103,7 +103,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                             <strong>{fm("date")}:</strong> {point.date}
                             <br />
                             <strong>{fm("coordinates")}:</strong>{" "}
-                            {`Long: ${point.x.toFixed(4)}, Lat: ${point.y.toFixed(4)}`}
+                            {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
                         </div>
                     </Popup>
                 </CircleMarker>

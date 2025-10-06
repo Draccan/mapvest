@@ -18,8 +18,8 @@ describe("DrizzleMapPointRepository", () => {
     describe("create", () => {
         it("should create a new map point in the database", async () => {
             const createMapPointDto: CreateMapPointDto = {
-                x: 12.4964,
-                y: 41.9028,
+                long: 12.4964,
+                lat: 41.9028,
                 type: MapPointType.Theft,
                 date: "2024-01-01",
             };
@@ -28,8 +28,8 @@ describe("DrizzleMapPointRepository", () => {
 
             expect(result).toBeDefined();
             expect(result.id).toBeDefined();
-            expect(result.x).toBe(createMapPointDto.x);
-            expect(result.y).toBe(createMapPointDto.y);
+            expect(result.long).toBe(createMapPointDto.long);
+            expect(result.lat).toBe(createMapPointDto.lat);
             expect(result.type).toBe(createMapPointDto.type);
             expect(result.created_at).toBeInstanceOf(Date);
             expect(result.updated_at).toBeInstanceOf(Date);
@@ -39,20 +39,20 @@ describe("DrizzleMapPointRepository", () => {
             const testCases = [
                 {
                     type: MapPointType.Theft,
-                    x: 10.0,
-                    y: 20.0,
+                    long: 10.0,
+                    lat: 20.0,
                     date: "2024-01-01",
                 },
                 {
                     type: MapPointType.Aggression,
-                    x: 15.0,
-                    y: 25.0,
+                    long: 15.0,
+                    lat: 25.0,
                     date: "2024-01-02",
                 },
                 {
                     type: MapPointType.Robbery,
-                    x: 20.0,
-                    y: 30.0,
+                    long: 20.0,
+                    lat: 30.0,
                     date: "2024-01-03",
                 },
             ];
@@ -60,8 +60,8 @@ describe("DrizzleMapPointRepository", () => {
             for (const testCase of testCases) {
                 const result = await repository.create(testCase);
                 expect(result.type).toBe(testCase.type);
-                expect(result.x).toBe(testCase.x);
-                expect(result.y).toBe(testCase.y);
+                expect(result.long).toBe(testCase.long);
+                expect(result.lat).toBe(testCase.lat);
             }
         });
     });
@@ -75,16 +75,21 @@ describe("DrizzleMapPointRepository", () => {
 
         it("should return all map points when they exist", async () => {
             const testPoints = [
-                { x: 10, y: 20, type: MapPointType.Theft, date: "2024-01-01" },
                 {
-                    x: 30,
-                    y: 40,
+                    long: 10,
+                    lat: 20,
+                    type: MapPointType.Theft,
+                    date: "2024-01-01",
+                },
+                {
+                    long: 30,
+                    lat: 40,
                     type: MapPointType.Aggression,
                     date: "2024-01-02",
                 },
                 {
-                    x: 50,
-                    y: 60,
+                    long: 50,
+                    lat: 60,
                     type: MapPointType.Robbery,
                     date: "2024-01-03",
                 },
@@ -113,8 +118,8 @@ describe("DrizzleMapPointRepository", () => {
 
         it("should preserve coordinate precision", async () => {
             const precisePoint = {
-                x: 12.123456789,
-                y: 41.987654321,
+                long: 12.123456789,
+                lat: 41.987654321,
                 type: MapPointType.Theft,
                 date: "2024-01-01",
             };
@@ -123,8 +128,8 @@ describe("DrizzleMapPointRepository", () => {
             const result = await repository.findAll();
 
             expect(result.length).toBe(1);
-            expect(result[0].x).toBeCloseTo(precisePoint.x, 6);
-            expect(result[0].y).toBeCloseTo(precisePoint.y, 6);
+            expect(result[0].long).toBeCloseTo(precisePoint.long, 6);
+            expect(result[0].lat).toBeCloseTo(precisePoint.lat, 6);
         });
     });
 });

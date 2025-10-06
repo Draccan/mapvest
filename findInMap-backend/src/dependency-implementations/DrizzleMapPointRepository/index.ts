@@ -12,8 +12,8 @@ export class DrizzleMapPointRepository implements MapPointRepository {
         const allMapPoints = await db
             .select({
                 id: mapPoints.id,
-                x: sql<number>`ST_X(${mapPoints.location})`,
-                y: sql<number>`ST_Y(${mapPoints.location})`,
+                long: sql<number>`ST_X(${mapPoints.location})`,
+                lat: sql<number>`ST_Y(${mapPoints.location})`,
                 type: mapPoints.type,
                 date: mapPoints.date,
                 createdAt: mapPoints.createdAt,
@@ -28,14 +28,14 @@ export class DrizzleMapPointRepository implements MapPointRepository {
         const [createdMapPoint] = await db
             .insert(mapPoints)
             .values({
-                location: sql`ST_GeomFromText(${`POINT(${data.x} ${data.y})`}, 4326)`,
+                location: sql`ST_GeomFromText(${`POINT(${data.long} ${data.lat})`}, 4326)`,
                 type: data.type,
                 date: data.date,
             })
             .returning({
                 id: mapPoints.id,
-                x: sql<number>`ST_X(${mapPoints.location})`,
-                y: sql<number>`ST_Y(${mapPoints.location})`,
+                long: sql<number>`ST_X(${mapPoints.location})`,
+                lat: sql<number>`ST_Y(${mapPoints.location})`,
                 type: mapPoints.type,
                 date: mapPoints.date,
                 createdAt: mapPoints.createdAt,
@@ -49,8 +49,8 @@ export class DrizzleMapPointRepository implements MapPointRepository {
         const [mapPoint] = await db
             .select({
                 id: mapPoints.id,
-                x: sql<number>`ST_X(${mapPoints.location})`,
-                y: sql<number>`ST_Y(${mapPoints.location})`,
+                long: sql<number>`ST_X(${mapPoints.location})`,
+                lat: sql<number>`ST_Y(${mapPoints.location})`,
                 type: mapPoints.type,
                 date: mapPoints.date,
                 createdAt: mapPoints.createdAt,

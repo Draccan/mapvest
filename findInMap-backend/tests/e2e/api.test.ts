@@ -112,8 +112,8 @@ describe("E2E Tests", () => {
                 .expect(201);
 
             expect(response.body).toHaveProperty("id");
-            expect(response.body.x).toBe(testMapPoint.x);
-            expect(response.body.y).toBe(testMapPoint.y);
+            expect(response.body.long).toBe(testMapPoint.long);
+            expect(response.body.lat).toBe(testMapPoint.lat);
             expect(response.body.type).toBe(testMapPoint.type);
         });
 

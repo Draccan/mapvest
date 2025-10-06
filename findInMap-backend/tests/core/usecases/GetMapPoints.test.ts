@@ -23,8 +23,8 @@ describe("GetMapPoints", () => {
             const mockMapPoints: MapPointEntity[] = [
                 {
                     id: 1,
-                    x: 45.0,
-                    y: 9.0,
+                    long: 45.0,
+                    lat: 9.0,
                     type: MapPointType.Theft,
                     date: "2025-10-02",
                     created_at: mockDate,
@@ -32,8 +32,8 @@ describe("GetMapPoints", () => {
                 },
                 {
                     id: 2,
-                    x: 46.0,
-                    y: 10.0,
+                    long: 46.0,
+                    lat: 10.0,
                     type: MapPointType.Aggression,
                     date: "2023-01-02",
                     created_at: mockDate,
@@ -48,16 +48,16 @@ describe("GetMapPoints", () => {
             expect(result).toEqual([
                 {
                     id: 1,
-                    x: 45.0,
-                    y: 9.0,
+                    long: 45.0,
+                    lat: 9.0,
                     type: MapPointType.Theft,
                     date: "2025-10-02",
                     createdAt: mockDate,
                 },
                 {
                     id: 2,
-                    x: 46.0,
-                    y: 10.0,
+                    long: 46.0,
+                    lat: 10.0,
                     type: MapPointType.Aggression,
                     date: "2023-01-02",
                     createdAt: mockDate,

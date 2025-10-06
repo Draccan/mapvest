@@ -49,8 +49,8 @@ export const testUser = {
 };
 
 export const testMapPoint = {
-    x: 45.4642,
-    y: 9.19,
+    long: 45.4642,
+    lat: 9.19,
     type: "THEFT",
     date: "01/01/2023",
 };
