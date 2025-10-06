@@ -10,7 +10,7 @@ const mockUserRepository: jest.Mocked<UserRepository> = {
 };
 
 const mockJwtService = {
-    generateToken: jest.fn(),
+    generateTokenPair: jest.fn(),
     verifyToken: jest.fn(),
 } as any;
 
@@ -37,15 +37,19 @@ describe("LoginUser", () => {
                 createdAt: mockDate,
                 updatedAt: mockDate,
             };
-            const mockToken = "jwt-token-123";
+            const mockTokenPair = {
+                accessToken: "jwt-access-token-123",
+                refreshToken: "jwt-refresh-token-456",
+            };
 
             mockUserRepository.findByEmail.mockResolvedValue(mockUser);
-            mockJwtService.generateToken.mockReturnValue(mockToken);
+            mockJwtService.generateTokenPair.mockReturnValue(mockTokenPair);
 
             const result = await loginUser.exec({ email, password });
 
             expect(result).toEqual({
-                token: mockToken,
+                token: mockTokenPair.accessToken,
+                refreshToken: mockTokenPair.refreshToken,
                 user: {
                     id: mockUser.id,
                     name: mockUser.name,
@@ -54,7 +58,7 @@ describe("LoginUser", () => {
                 },
             });
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(email);
-            expect(mockJwtService.generateToken).toHaveBeenCalledWith({
+            expect(mockJwtService.generateTokenPair).toHaveBeenCalledWith({
                 userId: mockUser.id,
                 email: mockUser.email,
             });
@@ -70,7 +74,7 @@ describe("LoginUser", () => {
                 InvalidCredentialsError,
             );
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(email);
-            expect(mockJwtService.generateToken).not.toHaveBeenCalled();
+            expect(mockJwtService.generateTokenPair).not.toHaveBeenCalled();
         });
 
         it("should throw InvalidCredentialsError when password is incorrect", async () => {
@@ -94,7 +98,7 @@ describe("LoginUser", () => {
                 loginUser.exec({ email, password: incorrectPassword }),
             ).rejects.toThrow(InvalidCredentialsError);
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(email);
-            expect(mockJwtService.generateToken).not.toHaveBeenCalled();
+            expect(mockJwtService.generateTokenPair).not.toHaveBeenCalled();
         });
 
         it("should handle empty email", async () => {
@@ -122,10 +126,13 @@ describe("LoginUser", () => {
                 createdAt: mockDate,
                 updatedAt: mockDate,
             };
-            const mockToken = "secure-jwt-token";
+            const mockTokenPair = {
+                accessToken: "secure-jwt-access-token",
+                refreshToken: "secure-jwt-refresh-token",
+            };
 
             mockUserRepository.findByEmail.mockResolvedValue(mockUser);
-            mockJwtService.generateToken.mockReturnValue(mockToken);
+            mockJwtService.generateTokenPair.mockReturnValue(mockTokenPair);
 
             const result = await loginUser.exec({ email, password });
 

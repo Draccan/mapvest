@@ -2,6 +2,7 @@ import UserEntity from "../entities/UserEntity";
 
 export default interface LoginResponseDto {
     token: string;
+    refreshToken: string;
     user: {
         id: string;
         name: string;
@@ -12,10 +13,12 @@ export default interface LoginResponseDto {
 
 export function makeLoginResponseDto(
     token: string,
+    refreshToken: string,
     user: UserEntity,
 ): LoginResponseDto {
     return {
         token,
+        refreshToken,
         user: {
             id: user.id,
             name: user.name,

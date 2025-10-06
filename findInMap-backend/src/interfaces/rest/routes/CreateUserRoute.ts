@@ -3,7 +3,7 @@ import UserDto from "../../../core/dtos/UserDto";
 import CreateUser from "../../../core/usecases/CreateUser";
 import Route from "../Route";
 import getCreateUserSchema from "../schemas/getCreateUserSchema";
-import getUserSchema from "../schemas/getUserScehma";
+import getUserSchema from "../schemas/getUserSchema";
 
 type ReqBody = CreateUserDto;
 type ResBody = UserDto | { message: string };

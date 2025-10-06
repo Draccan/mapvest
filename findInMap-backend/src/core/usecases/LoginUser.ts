@@ -27,11 +27,15 @@ export default class LoginUser {
             throw new InvalidCredentialsError();
         }
 
-        const token = this.jwtService.generateToken({
+        const tokenPair = this.jwtService.generateTokenPair({
             userId: user.id,
             email: user.email,
         });
 
-        return makeLoginResponseDto(token, user);
+        return makeLoginResponseDto(
+            tokenPair.accessToken,
+            tokenPair.refreshToken,
+            user,
+        );
     }
 }

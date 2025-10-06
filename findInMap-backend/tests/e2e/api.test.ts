@@ -79,6 +79,7 @@ describe("E2E Tests", () => {
                 .expect(200);
 
             expect(response.body).toHaveProperty("token");
+            expect(response.body).toHaveProperty("refreshToken");
             expect(response.body).toHaveProperty("user");
             expect(response.body.user.email).toBe(testUser.email);
         });
@@ -89,6 +90,45 @@ describe("E2E Tests", () => {
                 .send({
                     email: "nonexistent@example.com",
                     password: "wrongpassword",
+                })
+                .expect(401);
+
+            expect(response.body).toHaveProperty("error");
+        });
+
+        it("POST /token/refresh should refresh access token", async () => {
+            await request(app).post("/users").send(testUser);
+
+            const loginResponse = await request(app)
+                .post("/users/login")
+                .send({
+                    email: testUser.email,
+                    password: testUser.password,
+                })
+                .expect(200);
+
+            const refreshToken = loginResponse.body.refreshToken;
+            expect(refreshToken).toBeDefined();
+
+            const refreshResponse = await request(app)
+                .post("/token/refresh")
+                .send({
+                    refreshToken: refreshToken,
+                })
+                .expect(200);
+
+            expect(refreshResponse.body).toHaveProperty("accessToken");
+            expect(refreshResponse.body).toHaveProperty("refreshToken");
+            expect(typeof refreshResponse.body.accessToken).toBe("string");
+            expect(typeof refreshResponse.body.refreshToken).toBe("string");
+            expect(refreshResponse.body.refreshToken).not.toBe(refreshToken);
+        });
+
+        it("POST /token/refresh should return 401 for invalid refresh token", async () => {
+            const response = await request(app)
+                .post("/token/refresh")
+                .send({
+                    refreshToken: "invalid-refresh-token",
                 })
                 .expect(401);
 

@@ -5,6 +5,7 @@ import GetMapPoints from "../core/usecases/GetMapPoints";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
 import LoginUser from "../core/usecases/LoginUser";
+import RefreshToken from "../core/usecases/RefreshToken";
 import { client } from "../db";
 import { DrizzleMapPointRepository } from "../dependency-implementations/DrizzleMapPointRepository";
 import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUserRepository";
@@ -25,6 +26,7 @@ const getMapPoints = new GetMapPoints(mapPointRepository);
 const createMapPoint = new CreateMapPoint(mapPointRepository, rateLimitService);
 const createUser = new CreateUser(userRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
+const refreshToken = new RefreshToken(jwtService);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -38,6 +40,7 @@ const restInterface = new RestInterface(
         createMapPoint,
         createUser,
         loginUser,
+        refreshToken,
     },
 );
 
