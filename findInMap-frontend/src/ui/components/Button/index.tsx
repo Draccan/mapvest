@@ -3,7 +3,7 @@ import React from "react";
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import "./style.css";
 
-export type ButtonKind = "primary";
+export type ButtonKind = "primary" | "danger";
 
 export interface ButtonProps {
     kind?: ButtonKind;

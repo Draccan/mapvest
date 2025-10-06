@@ -118,3 +118,18 @@
     font-size: 1.125rem;
     min-height: 3.5rem;
 }
+
+.c-button-danger {
+    padding: 0.5rem 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.c-button-danger:hover {
+    background-color: #c82333;
+}

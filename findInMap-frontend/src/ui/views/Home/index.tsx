@@ -5,8 +5,10 @@ import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import LogoSvg from "../../assets/logo.svg";
+import { useAuth } from "../../commons/hooks/useAuth";
 import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
+import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
@@ -30,6 +32,7 @@ export const Home: React.FC = () => {
         error,
     } = useGetMapPoints();
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
+    const { logout } = useAuth();
 
     useEffect(() => {
         if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();
@@ -57,9 +60,21 @@ export const Home: React.FC = () => {
                         <img src={LogoSvg} alt="MapVest" />
                     </div>
                     <nav className="v-home-navigation">
-                        <Link to={routes.about()} kind="nav">
+                        <Link
+                            to={routes.about()}
+                            kind="nav"
+                            className="v-home-about-nav-link"
+                        >
                             {fm("about")}
                         </Link>
+                        <Button
+                            onClick={logout}
+                            type="button"
+                            kind="danger"
+                            size="small"
+                        >
+                            {fm("logout")}
+                        </Button>
                     </nav>
                 </header>
                 <div className="v-home-content">

@@ -39,6 +39,11 @@
 .v-home-navigation {
     display: flex;
     gap: 1.5rem;
+    align-items: center;
+}
+
+.v-home-about-nav-link {
+    min-width: 100px;
 }
 
 .v-home-content {
