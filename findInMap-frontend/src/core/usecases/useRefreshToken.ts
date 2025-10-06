@@ -28,8 +28,8 @@ export const useRefreshToken = (): UseRefreshToken => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${refreshTokenValue}`,
                 },
+                body: JSON.stringify({ refreshToken: refreshTokenValue }),
             });
 
             if (!response.ok) {
