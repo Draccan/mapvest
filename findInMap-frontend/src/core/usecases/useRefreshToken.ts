@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { API_URL } from "../../config";
 import TokenStorageService from "../../utils/TokenStorageService";
@@ -14,13 +14,13 @@ export const useRefreshToken = (): UseRefreshToken => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const refreshToken = async (): Promise<TokenResponseDto | null> => {
+    const refreshToken = useCallback(async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const currentRefreshToken = TokenStorageService.getRefreshToken();
-            if (!currentRefreshToken) {
+            const refreshTokenValue = TokenStorageService.getRefreshToken();
+            if (!refreshTokenValue) {
                 throw new Error("No refresh token available");
             }
 
@@ -28,10 +28,8 @@ export const useRefreshToken = (): UseRefreshToken => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${refreshTokenValue}`,
                 },
-                body: JSON.stringify({
-                    refreshToken: currentRefreshToken,
-                }),
             });
 
             if (!response.ok) {
@@ -40,21 +38,18 @@ export const useRefreshToken = (): UseRefreshToken => {
             }
 
             const tokenResponse: TokenResponseDto = await response.json();
-
-            TokenStorageService.setTokens(
-                tokenResponse.accessToken,
-                tokenResponse.refreshToken || currentRefreshToken,
-            );
-
-            setLoading(false);
             return tokenResponse;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Unknown error");
-            TokenStorageService.clearTokens();
-            setLoading(false);
+            const error =
+                err instanceof Error
+                    ? err.message
+                    : "Errore durante il refresh del token";
+            setError(error);
             return null;
+        } finally {
+            setLoading(false);
         }
-    };
+    }, []);
 
     return {
         refreshToken,

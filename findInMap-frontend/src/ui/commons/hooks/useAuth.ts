@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import routes from "../routes";
@@ -16,9 +16,13 @@ export const useAuth = (): UseAuth => {
     const [isLoading, setIsLoading] = useState(true);
     const { refreshToken } = useRefreshToken();
     const navigate = useNavigate();
+    // Use a ref to prevent multiple simultaneous refresh attempts
+    const isRefreshingRef = useRef(false);
 
     useEffect(() => {
         const checkAuthStatus = async () => {
+            if (isRefreshingRef.current) return;
+
             setIsLoading(true);
 
             const hasTokens = TokenStorageService.hasValidTokens();
@@ -32,8 +36,13 @@ export const useAuth = (): UseAuth => {
             const hasRefreshToken = TokenStorageService.hasRefreshToken();
 
             if (hasRefreshToken) {
-                const tokensResponse = await refreshToken();
-                setIsAuthenticated(!!tokensResponse);
+                try {
+                    isRefreshingRef.current = true;
+                    const tokensResponse = await refreshToken();
+                    setIsAuthenticated(!!tokensResponse);
+                } finally {
+                    isRefreshingRef.current = false;
+                }
             } else {
                 setIsAuthenticated(false);
             }
