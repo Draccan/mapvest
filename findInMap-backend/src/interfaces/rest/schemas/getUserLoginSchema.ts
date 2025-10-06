@@ -8,6 +8,10 @@ export default function getUserSchema(): OpenAPIV3.SchemaObject {
                 type: "string",
                 description: "JWT authentication token",
             },
+            refreshToken: {
+                type: "string",
+                description: "JWT refresh token",
+            },
             user: {
                 type: "object",
                 properties: {
@@ -32,7 +36,7 @@ export default function getUserSchema(): OpenAPIV3.SchemaObject {
                 required: ["id", "name", "surname", "email"],
             },
         },
-        required: ["token", "user"],
+        required: ["token", "refreshToken", "user"],
         additionalProperties: false,
     };
 }
