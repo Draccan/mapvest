@@ -11,7 +11,7 @@ This is a monorepo setup with pnpm containing:
 
 - **findInMap-frontend**: React + TypeScript + Vite frontend application
 - **findInMap-backend**: Node.js + Express + TypeScript + PostgreSQL + PostGIS
-  backend API
+  backend API + JWT handling
 
 ## Features
 
