@@ -1,9 +1,11 @@
 import { InMemoryRateLimitService } from "../../src/core/services/RateLimitService";
 import JwtService from "../../src/core/services/JwtService";
+import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
 import CreateMapPoint from "../../src/core/usecases/CreateMapPoint";
 import CreateUser from "../../src/core/usecases/CreateUser";
 import GetMapPoints from "../../src/core/usecases/GetMapPoints";
 import LoginUser from "../../src/core/usecases/LoginUser";
+import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
 import { DrizzleMapPointRepository } from "../../src/dependency-implementations/DrizzleMapPointRepository";
 import { DrizzleUserRepository } from "../../src/dependency-implementations/DrizzleUserRepository";
@@ -14,7 +16,8 @@ export function createTestApp() {
     const userRepository = new DrizzleUserRepository();
 
     const rateLimitService = new InMemoryRateLimitService(1);
-    const jwtService = new JwtService("test-jwt-secret");
+    const tokenBlacklistService = new TokenBlacklistService("test-jwt-secret");
+    const jwtService = new JwtService("test-jwt-secret", tokenBlacklistService);
 
     const createMapPoint = new CreateMapPoint(
         mapPointRepository,
@@ -23,6 +26,7 @@ export function createTestApp() {
     const createUser = new CreateUser(userRepository);
     const getMapPoints = new GetMapPoints(mapPointRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
+    const logoutUser = new LogoutUser(jwtService);
     const refreshToken = new RefreshToken(jwtService);
 
     const restInterface = new RestInterface(
@@ -37,6 +41,7 @@ export function createTestApp() {
             createUser,
             getMapPoints,
             loginUser,
+            logoutUser,
             refreshToken,
         },
     );

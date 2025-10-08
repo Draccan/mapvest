@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+import TokenBlacklistService from "./TokenBlacklistService";
 
 interface UserPayload {
     userId: string;
@@ -10,13 +11,22 @@ interface TokenPair {
     refreshToken: string;
 }
 
+const MinutesInSeconds15 = 15 * 60 * 1000;
+
 export default class JwtService {
     private readonly secret: string;
     private readonly accessTokenExpiresIn: string = "15m";
     private readonly refreshTokenExpiresIn: string = "1d";
+    private cleanupInterval: NodeJS.Timeout;
 
-    constructor(secret: string) {
+    constructor(
+        secret: string,
+        private tokenBlacklistService: TokenBlacklistService,
+    ) {
         this.secret = secret;
+        this.cleanupInterval = setInterval(() => {
+            this.tokenBlacklistService.cleanupExpiredTokens();
+        }, MinutesInSeconds15);
     }
 
     generateTokenPair(payload: UserPayload): TokenPair {
@@ -65,6 +75,10 @@ export default class JwtService {
 
     verifyRefreshToken(token: string): UserPayload | null {
         try {
+            if (this.tokenBlacklistService.isTokenBlacklisted(token)) {
+                return null;
+            }
+
             const decoded = jwt.verify(token, this.secret);
             if (
                 typeof decoded === "object" &&
@@ -90,5 +104,16 @@ export default class JwtService {
         }
 
         return this.generateTokenPair(payload);
+    }
+
+    invalidateRefreshToken(refreshToken: string): void {
+        this.tokenBlacklistService.addToBlacklist(refreshToken);
+    }
+
+    destroy(): void {
+        if (this.cleanupInterval) {
+            clearInterval(this.cleanupInterval);
+        }
+        this.tokenBlacklistService.clear();
     }
 }

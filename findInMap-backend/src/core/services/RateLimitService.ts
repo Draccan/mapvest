@@ -12,8 +12,6 @@ export class InMemoryRateLimitService implements RateLimitService {
 
     constructor(timeWindowSeconds: number = 15) {
         this.timeWindowMs = timeWindowSeconds * 1000;
-
-        // Cleanup expired entries every 20 seconds
         this.cleanupInterval = setInterval(() => this.cleanup(), 20000);
     }
 

@@ -24,6 +24,8 @@ This is a monorepo setup with pnpm containing:
   - Date input
   - Save button
 - Real-time map updates after adding new points
+- Complete authentication system with JWT tokens
+- Protected routes and automatic token refresh
 - MSW (Mock Service Worker) for local API mocking
 - Clean architecture with separated layers:
   - `src/core/usecases`: Business logic and API calls
@@ -36,10 +38,18 @@ This is a monorepo setup with pnpm containing:
 - RESTful API endpoints:
   - `GET /api/map-points`: Retrieve all map points
   - `POST /api/map-points`: Create new map point
-- TypeScript + Express setup
-- CORS enabled for frontend communication
-- Environment configuration with dotenv
-- Ready for PostgreSQL + PostGIS integration
+  - `POST /users`: User registration
+  - `POST /users/login`: User authentication
+  - `POST /users/logout`: Secure logout with token invalidation
+  - `POST /token/refresh`: JWT token refresh
+- JWT authentication with access/refresh token rotation
+- **Automatic token blacklist cleanup**: Expired tokens are automatically
+  removed from memory every 5 minutes to prevent memory leaks
+- Rate limiting for API protection
+- PostgreSQL + PostGIS for spatial data
+- Drizzle ORM for type-safe database operations
+- Comprehensive testing suite with Jest
+- Clean architecture with dependency injection
 
 ## Getting Started
 

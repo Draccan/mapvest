@@ -198,4 +198,8 @@ export const handlers = [
             refreshToken: newRefreshToken,
         });
     }),
+
+    http.post("http://localhost:3001/users/logout", async () => {
+        return HttpResponse.json();
+    }),
 ];

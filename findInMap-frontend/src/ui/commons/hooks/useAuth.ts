@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import routes from "../routes";
 import TokenStorageService from "../../../utils/TokenStorageService";
 import { useRefreshToken } from "../../../core/usecases/useRefreshToken";
+import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 
 interface UseAuth {
     isAuthenticated: boolean;
@@ -15,6 +16,7 @@ export const useAuth = (): UseAuth => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const { refreshToken } = useRefreshToken();
+    const { logout: logoutUser } = useLogoutUser();
     const navigate = useNavigate();
     // Use a ref to prevent multiple simultaneous refresh attempts
     const isRefreshingRef = useRef(false);
@@ -53,7 +55,8 @@ export const useAuth = (): UseAuth => {
         checkAuthStatus();
     }, [refreshToken]);
 
-    const logout = () => {
+    const logout = async () => {
+        await logoutUser();
         TokenStorageService.clearTokens();
         setIsAuthenticated(false);
         navigate(routes.login());

@@ -1,11 +1,14 @@
 import JwtService from "../../../src/core/services/JwtService";
+import TokenBlacklistService from "../../../src/core/services/TokenBlacklistService";
 
 describe("JwtService", () => {
     let jwtService: JwtService;
+    let tokenBlacklistService: TokenBlacklistService;
     const testSecret = "test-secret-key-for-jwt-testing-only";
 
     beforeEach(() => {
-        jwtService = new JwtService(testSecret);
+        tokenBlacklistService = new TokenBlacklistService(testSecret);
+        jwtService = new JwtService(testSecret, tokenBlacklistService);
     });
 
     describe("verifyToken", () => {
@@ -33,7 +36,10 @@ describe("JwtService", () => {
         });
 
         it("should return null for token signed with different secret", () => {
-            const differentService = new JwtService("different-secret");
+            const differentService = new JwtService(
+                "different-secret",
+                new TokenBlacklistService("different-secret"),
+            );
             const payload = {
                 userId: "test-user-id",
                 email: "test@example.com",
@@ -136,7 +142,10 @@ describe("JwtService", () => {
         });
 
         it("should return null for refresh token signed with different secret", () => {
-            const differentService = new JwtService("different-secret");
+            const differentService = new JwtService(
+                "different-secret",
+                new TokenBlacklistService("different-secret"),
+            );
             const payload = {
                 userId: "test-user-id",
                 email: "test@example.com",
@@ -322,6 +331,50 @@ describe("JwtService", () => {
             );
             expect(newVerifiedAccess?.userId).toBe(originalPayload.userId);
             expect(newVerifiedRefresh?.userId).toBe(originalPayload.userId);
+        });
+    });
+
+    describe("invalidateRefreshToken", () => {
+        it("should invalidate a refresh token", () => {
+            const payload = {
+                userId: "test-user-id",
+                email: "test@example.com",
+            };
+
+            const tokenPair = jwtService.generateTokenPair(payload);
+
+            expect(
+                jwtService.verifyRefreshToken(tokenPair.refreshToken),
+            ).not.toBeNull();
+
+            jwtService.invalidateRefreshToken(tokenPair.refreshToken);
+
+            expect(
+                jwtService.verifyRefreshToken(tokenPair.refreshToken),
+            ).toBeNull();
+        });
+
+        it("should not affect other refresh tokens", () => {
+            const payload1 = {
+                userId: "user-1",
+                email: "user1@example.com",
+            };
+            const payload2 = {
+                userId: "user-2",
+                email: "user2@example.com",
+            };
+
+            const tokenPair1 = jwtService.generateTokenPair(payload1);
+            const tokenPair2 = jwtService.generateTokenPair(payload2);
+
+            jwtService.invalidateRefreshToken(tokenPair1.refreshToken);
+
+            expect(
+                jwtService.verifyRefreshToken(tokenPair1.refreshToken),
+            ).toBeNull();
+            expect(
+                jwtService.verifyRefreshToken(tokenPair2.refreshToken),
+            ).not.toBeNull();
         });
     });
 });

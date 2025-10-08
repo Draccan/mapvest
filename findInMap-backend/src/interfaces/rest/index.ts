@@ -13,6 +13,7 @@ import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import LoginUser from "../../core/usecases/LoginUser";
+import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
 import errorHandler from "./errorHandler";
 import Route from "./Route";
@@ -22,6 +23,7 @@ import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
 import LoginUserRoute from "./routes/LoginUserRoute";
+import LogoutUserRoute from "./routes/LogoutUserRoute";
 import RefreshTokenRoute from "./routes/RefreshTokenRoute";
 
 export default class RestInterface {
@@ -36,10 +38,11 @@ export default class RestInterface {
         private corsAllowedOrigins: string[],
         private validateResponses: boolean,
         usecases: {
-            getMapPoints: GetMapPoints;
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
+            getMapPoints: GetMapPoints;
             loginUser: LoginUser;
+            logoutUser: LogoutUser;
             refreshToken: RefreshToken;
         },
     ) {
@@ -50,6 +53,7 @@ export default class RestInterface {
             HealthRoute(),
             InfoRoute(),
             LoginUserRoute(usecases.loginUser),
+            LogoutUserRoute(usecases.logoutUser),
             RefreshTokenRoute(usecases.refreshToken),
         ];
 
