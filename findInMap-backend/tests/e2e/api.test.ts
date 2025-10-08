@@ -112,9 +112,8 @@ describe("E2E Tests", () => {
 
             const refreshResponse = await request(app)
                 .post("/token/refresh")
-                .send({
-                    refreshToken: refreshToken,
-                })
+                .withCredentials()
+                .set("Authorization", `Bearer ${refreshToken}`)
                 .expect(200);
 
             expect(refreshResponse.body).toHaveProperty("accessToken");
@@ -127,12 +126,18 @@ describe("E2E Tests", () => {
         it("POST /token/refresh should return 401 for invalid refresh token", async () => {
             const response = await request(app)
                 .post("/token/refresh")
-                .send({
-                    refreshToken: "invalid-refresh-token",
-                })
+                .set("Authorization", "Bearer invalid-refresh-token")
                 .expect(401);
 
             expect(response.body).toHaveProperty("error");
+        });
+
+        it("POST /token/refresh should return 400 for missing Authorization header", async () => {
+            const response = await request(app)
+                .post("/token/refresh")
+                .expect(400);
+
+            expect(response.body).toHaveProperty("name", "InvalidRequestError");
         });
     });
 

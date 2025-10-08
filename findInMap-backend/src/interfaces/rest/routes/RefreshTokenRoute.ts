@@ -1,10 +1,9 @@
 import RefreshToken from "../../../core/usecases/RefreshToken";
-import { RefreshTokenDto } from "../../../core/dtos/RefreshTokenDto";
 import { TokenResponseDto } from "../../../core/dtos/TokenResponseDto";
 import Route from "../Route";
 import getTokensSchema from "../schemas/getTokensSchema";
 
-type ReqBody = RefreshTokenDto;
+type ReqBody = void;
 type ResBody = TokenResponseDto;
 
 export default (
@@ -15,23 +14,20 @@ export default (
     operationObject: {
         tags: ["auth"],
         summary: "Refresh access token",
-        description: "Generate a new access token using a valid refresh token",
-        requestBody: {
-            content: {
-                "application/json": {
-                    schema: {
-                        type: "object",
-                        properties: {
-                            refreshToken: {
-                                type: "string",
-                                description: "Valid refresh token",
-                            },
-                        },
-                        required: ["refreshToken"],
-                    },
+        description:
+            "Generate a new access token using a valid refresh token from Authorization header",
+        parameters: [
+            {
+                name: "Authorization",
+                in: "header",
+                required: true,
+                description: "Bearer token with refresh token",
+                schema: {
+                    type: "string",
+                    pattern: "^Bearer .+",
                 },
             },
-        },
+        ],
         responses: {
             200: {
                 description: "New access token generated successfully",
@@ -60,7 +56,17 @@ export default (
         },
     },
     handler: async (req, res) => {
-        const tokenResponse = await refreshToken.exec(req.body.refreshToken);
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader?.startsWith("Bearer ")) {
+            return res.status(401).json({
+                error: "Missing or invalid Authorization header",
+            } as any);
+        }
+
+        const refreshTokenValue = authHeader.substring(7);
+
+        const tokenResponse = await refreshToken.exec(refreshTokenValue);
 
         if (!tokenResponse) {
             return res

@@ -170,9 +170,16 @@ export const handlers = [
     }),
 
     http.post("http://localhost:3001/token/refresh", async ({ request }) => {
-        const { refreshToken } = (await request.json()) as {
-            refreshToken: string;
-        };
+        const authHeader = request.headers.get("Authorization");
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return HttpResponse.json(
+                { error: "Missing or invalid Authorization header" },
+                { status: 400 },
+            );
+        }
+
+        const refreshToken = authHeader.substring(7);
 
         if (!refreshToken || !refreshToken.startsWith("mock.refresh.token")) {
             return HttpResponse.json(
