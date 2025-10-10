@@ -109,7 +109,6 @@ export default class RestInterface {
             }),
         );
 
-        // Swagger UI
         this.app.use(
             "/swagger",
             swaggerUi.serve,
@@ -122,7 +121,6 @@ export default class RestInterface {
         // Register API routes
         this.registerHandlers();
 
-        // 404 handler
         this.app.use((req, res) => {
             res.status(404).json({
                 success: false,
@@ -130,7 +128,6 @@ export default class RestInterface {
             });
         });
 
-        // Error handler
         this.app.use(errorHandler);
     }
 

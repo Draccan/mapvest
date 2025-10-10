@@ -13,7 +13,10 @@ module.exports = {
         "!src/main/server.ts",
         "!src/db/index.ts",
     ],
-    setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
+    setupFilesAfterEnv: [
+        "<rootDir>/tests/setup.ts",
+        "<rootDir>/tests/e2e/setup.ts",
+    ],
     testTimeout: 10000,
     clearMocks: true,
     resetMocks: true,
