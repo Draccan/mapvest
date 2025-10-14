@@ -2,6 +2,7 @@ import RefreshToken from "../../../core/usecases/RefreshToken";
 import { TokenResponseDto } from "../../../core/dtos/TokenResponseDto";
 import Route from "../Route";
 import getTokensSchema from "../schemas/getTokensSchema";
+import { auhtorizationParam } from "./common/authorizationParam";
 
 type ReqBody = void;
 type ResBody = TokenResponseDto;
@@ -16,18 +17,7 @@ export default (
         summary: "Refresh access token",
         description:
             "Generate a new access token using a valid refresh token from Authorization header",
-        parameters: [
-            {
-                name: "Authorization",
-                in: "header",
-                required: true,
-                description: "Bearer token with refresh token",
-                schema: {
-                    type: "string",
-                    pattern: "^Bearer .+",
-                },
-            },
-        ],
+        parameters: [auhtorizationParam],
         responses: {
             200: {
                 description: "New access token generated successfully",

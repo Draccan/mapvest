@@ -8,6 +8,7 @@ import helmet from "helmet";
 import * as http from "http";
 import * as swaggerUi from "swagger-ui-express";
 
+import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
@@ -16,6 +17,7 @@ import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
 import errorHandler from "./errorHandler";
+import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
@@ -45,6 +47,7 @@ export default class RestInterface {
             logoutUser: LogoutUser;
             refreshToken: RefreshToken;
         },
+        private jwtService: JwtService,
     ) {
         this.routes = [
             CreateMapPointRoute(usecases.createMapPoint),
@@ -101,6 +104,7 @@ export default class RestInterface {
         this.app.use(compression());
         this.app.use(express.json({ limit: "10mb" }));
         this.app.use(express.urlencoded({ limit: "10mb", extended: true }));
+        this.app.use(authMiddleware(this.jwtService));
         this.app.use(
             openapiValidator({
                 apiSpec: apiSpec,

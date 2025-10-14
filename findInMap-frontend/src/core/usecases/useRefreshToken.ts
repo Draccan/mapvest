@@ -19,8 +19,8 @@ export const useRefreshToken = (): UseRefreshToken => {
         setError(null);
 
         try {
-            const refreshTokenValue = TokenStorageService.getRefreshToken();
-            if (!refreshTokenValue) {
+            const refreshToken = TokenStorageService.getRefreshToken();
+            if (!refreshToken) {
                 throw new Error("No refresh token available");
             }
 
@@ -28,7 +28,7 @@ export const useRefreshToken = (): UseRefreshToken => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${refreshTokenValue}`,
+                    Authorization: `Bearer ${refreshToken}`,
                 },
             });
 

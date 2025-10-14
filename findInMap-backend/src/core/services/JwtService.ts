@@ -60,7 +60,8 @@ export default class JwtService {
             if (
                 typeof decoded === "object" &&
                 decoded.userId &&
-                decoded.email
+                decoded.email &&
+                decoded.type === "access"
             ) {
                 return {
                     userId: decoded.userId as string,

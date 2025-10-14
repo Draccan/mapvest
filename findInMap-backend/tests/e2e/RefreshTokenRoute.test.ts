@@ -46,9 +46,9 @@ describe("Refresh Token Route", () => {
         expect(response.body).toHaveProperty("error");
     });
 
-    it("POST /token/refresh should return 400 for missing Authorization header", async () => {
-        const response = await request(app).post("/token/refresh").expect(400);
+    it("POST /token/refresh should return 401 for missing Authorization header", async () => {
+        const response = await request(app).post("/token/refresh").expect(401);
 
-        expect(response.body).toHaveProperty("name", "InvalidRequestError");
+        expect(response.body).toHaveProperty("error");
     });
 });

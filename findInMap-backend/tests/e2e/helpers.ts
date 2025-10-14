@@ -44,6 +44,7 @@ export function createTestApp() {
             logoutUser,
             refreshToken,
         },
+        jwtService,
     );
 
     return restInterface;

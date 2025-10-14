@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 
 import { API_URL } from "../../config";
+import TokenStorageService from "../../utils/TokenStorageService";
 import { type MapPointDto } from "../dtos/MapPointDto";
 
 interface UseGetMapPoints {
@@ -22,10 +23,13 @@ export const useGetMapPoints = (): UseGetMapPoints => {
             setLoading(true);
             setError(null);
 
+            const accessToken = TokenStorageService.getAccessToken();
+
             const response = await fetch(`${API_URL}/api/map-points`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
                 },
             });
 

@@ -10,7 +10,7 @@ describe("Logout User Route", () => {
         app = getTestApp();
     });
 
-    it("POST /users/logout should logout successfully with valid refresh token", async () => {
+    it("POST /users/logout should logout successfully with valid access token", async () => {
         await request(app).post("/users").send(testUser);
 
         const loginResponse = await request(app)
@@ -21,12 +21,12 @@ describe("Logout User Route", () => {
             })
             .expect(200);
 
-        const refreshToken = loginResponse.body.refreshToken;
-        expect(refreshToken).toBeDefined();
+        const accessToken = loginResponse.body.token;
+        expect(accessToken).toBeDefined();
 
         const logoutResponse = await request(app)
             .post("/users/logout")
-            .set("Authorization", `Bearer ${refreshToken}`)
+            .set("Authorization", `Bearer ${accessToken}`)
             .expect(200);
 
         expect(logoutResponse.body).toHaveProperty(
@@ -36,15 +36,14 @@ describe("Logout User Route", () => {
 
         const refreshResponse = await request(app)
             .post("/token/refresh")
-            .set("Authorization", `Bearer ${refreshToken}`)
+            .set("Authorization", `Bearer ${accessToken}`)
             .expect(401);
 
         expect(refreshResponse.body).toHaveProperty("error");
     });
 
-    it("POST /users/logout should return 400 for missing Authorization header", async () => {
-        const response = await request(app).post("/users/logout").expect(400);
-
-        expect(response.body).toHaveProperty("name", "InvalidRequestError");
+    it("POST /users/logout should return 401 for missing Authorization header", async () => {
+        const response = await request(app).post("/users/logout").expect(401);
+        expect(response.body).toHaveProperty("error");
     });
 });

@@ -47,6 +47,7 @@ const restInterface = new RestInterface(
         logoutUser,
         refreshToken,
     },
+    jwtService,
 );
 
 process.on("SIGINT", async () => {
