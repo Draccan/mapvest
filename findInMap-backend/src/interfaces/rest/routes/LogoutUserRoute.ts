@@ -1,5 +1,6 @@
 import LogoutUser from "../../../core/usecases/LogoutUser";
 import Route from "../Route";
+import { auhtorizationParam } from "./common/authorizationParam";
 
 type ReqBody = void;
 type ResBody = { message: string };
@@ -13,18 +14,7 @@ export default (
         tags: ["auth"],
         summary: "Logout user",
         description: "Invalidate refresh token and logout user",
-        parameters: [
-            {
-                name: "Authorization",
-                in: "header",
-                required: true,
-                description: "Bearer token with refresh token",
-                schema: {
-                    type: "string",
-                    pattern: "^Bearer .+",
-                },
-            },
-        ],
+        parameters: [auhtorizationParam],
         responses: {
             200: {
                 description: "Successfully logged out",

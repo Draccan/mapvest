@@ -18,7 +18,7 @@ export const useAuth = (): UseAuth => {
     const { refreshToken } = useRefreshToken();
     const { logout: logoutUser } = useLogoutUser();
     const navigate = useNavigate();
-    // Use a ref to prevent multiple simultaneous refresh attempts
+    // Warning: Use a ref to prevent multiple simultaneous refresh attempts
     const isRefreshingRef = useRef(false);
 
     useEffect(() => {
