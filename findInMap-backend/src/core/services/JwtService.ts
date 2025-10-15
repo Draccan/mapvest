@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 import TokenBlacklistService from "./TokenBlacklistService";
 
 interface UserPayload {
@@ -12,6 +13,10 @@ interface TokenPair {
 }
 
 const MinutesInSeconds15 = 15 * 60 * 1000;
+export enum TokenType {
+    ACCESS = "access",
+    REFRESH = "refresh",
+}
 
 export default class JwtService {
     private readonly secret: string;
@@ -33,7 +38,7 @@ export default class JwtService {
         const now = Date.now();
 
         const accessToken = jwt.sign(
-            { ...payload, type: "access", jti: `access_${now}` },
+            { ...payload, type: TokenType.ACCESS, jti: `access_${now}` },
             this.secret,
             {
                 expiresIn: this.accessTokenExpiresIn,
@@ -41,7 +46,7 @@ export default class JwtService {
         );
 
         const refreshToken = jwt.sign(
-            { ...payload, type: "refresh", jti: `refresh_${now}` },
+            { ...payload, type: TokenType.REFRESH, jti: `refresh_${now}` },
             this.secret,
             {
                 expiresIn: this.refreshTokenExpiresIn,
@@ -54,38 +59,21 @@ export default class JwtService {
         };
     }
 
-    verifyToken(token: string): UserPayload | null {
-        try {
-            const decoded = jwt.verify(token, this.secret);
-            if (
-                typeof decoded === "object" &&
-                decoded.userId &&
-                decoded.email &&
-                decoded.type === "access"
-            ) {
-                return {
-                    userId: decoded.userId as string,
-                    email: decoded.email as string,
-                };
-            }
-            return null;
-        } catch (error) {
+    verifyToken(
+        token: string,
+        tokenType: TokenType = TokenType.ACCESS,
+    ): UserPayload | null {
+        if (this.tokenBlacklistService.isTokenBlacklisted(token)) {
             return null;
         }
-    }
 
-    verifyRefreshToken(token: string): UserPayload | null {
         try {
-            if (this.tokenBlacklistService.isTokenBlacklisted(token)) {
-                return null;
-            }
-
             const decoded = jwt.verify(token, this.secret);
             if (
                 typeof decoded === "object" &&
                 decoded.userId &&
                 decoded.email &&
-                decoded.type === "refresh"
+                decoded.type === tokenType
             ) {
                 return {
                     userId: decoded.userId as string,
@@ -99,7 +87,7 @@ export default class JwtService {
     }
 
     refreshAccessToken(refreshToken: string): TokenPair | null {
-        const payload = this.verifyRefreshToken(refreshToken);
+        const payload = this.verifyToken(refreshToken, TokenType.REFRESH);
         if (!payload) {
             return null;
         }

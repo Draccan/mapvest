@@ -87,11 +87,11 @@ export const handlers = [
         },
     ),
 
-    http.get("http://localhost:3001/api/map-points", () => {
+    http.get("http://localhost:3001/map-points", () => {
         return HttpResponse.json(mockMapPoints);
     }),
 
-    http.post("http://localhost:3001/api/map-points", async ({ request }) => {
+    http.post("http://localhost:3001/map-points", async ({ request }) => {
         const newPoint = (await request.json()) as Omit<
             MapPointDto,
             "id" | "createdAt"

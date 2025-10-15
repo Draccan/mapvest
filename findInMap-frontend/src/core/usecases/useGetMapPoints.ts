@@ -25,7 +25,7 @@ export const useGetMapPoints = (): UseGetMapPoints => {
 
             const accessToken = TokenStorageService.getAccessToken();
 
-            const response = await fetch(`${API_URL}/api/map-points`, {
+            const response = await fetch(`${API_URL}/map-points`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

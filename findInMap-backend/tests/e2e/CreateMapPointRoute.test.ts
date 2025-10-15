@@ -20,9 +20,9 @@ describe("Create Map Point Route", () => {
         accessToken = loginResponse.body.token;
     });
 
-    it("POST /api/map-points should create a new map point with valid token", async () => {
+    it("POST /map-points should create a new map point with valid token", async () => {
         const response = await request(app)
-            .post("/api/map-points")
+            .post("/map-points")
             .set("Authorization", `Bearer ${accessToken}`)
             .send(testMapPoint)
             .expect(201);
@@ -33,17 +33,17 @@ describe("Create Map Point Route", () => {
         expect(response.body.type).toBe(testMapPoint.type);
     });
 
-    it("POST /api/map-points should return 401 without token", async () => {
+    it("POST /map-points should return 401 without token", async () => {
         const response = await request(app)
-            .post("/api/map-points")
+            .post("/map-points")
             .send(testMapPoint)
             .expect(401);
         expect(response.body).toHaveProperty("error");
     });
 
-    it("POST /api/map-points should return 401 with invalid token", async () => {
+    it("POST /map-points should return 401 with invalid token", async () => {
         const response = await request(app)
-            .post("/api/map-points")
+            .post("/map-points")
             .set("Authorization", "Bearer invalid-token")
             .send(testMapPoint)
             .expect(401);

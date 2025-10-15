@@ -1,4 +1,4 @@
-import JwtService from "../../../src/core/services/JwtService";
+import JwtService, { TokenType } from "../../../src/core/services/JwtService";
 import TokenBlacklistService from "../../../src/core/services/TokenBlacklistService";
 import LogoutUser from "../../../src/core/usecases/LogoutUser";
 
@@ -23,13 +23,19 @@ describe("LogoutUser", () => {
             const tokenPair = jwtService.generateTokenPair(payload);
 
             expect(
-                jwtService.verifyRefreshToken(tokenPair.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).not.toBeNull();
 
             await logoutUser.exec(tokenPair.refreshToken);
 
             expect(
-                jwtService.verifyRefreshToken(tokenPair.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).toBeNull();
         });
 
@@ -49,10 +55,16 @@ describe("LogoutUser", () => {
             await logoutUser.exec(tokenPair1.refreshToken);
 
             expect(
-                jwtService.verifyRefreshToken(tokenPair1.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair1.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).toBeNull();
             expect(
-                jwtService.verifyRefreshToken(tokenPair2.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair2.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).not.toBeNull();
         });
     });

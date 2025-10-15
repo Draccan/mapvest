@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
-import JwtService from "../../../core/services/JwtService";
+import JwtService, { TokenType } from "../../../core/services/JwtService";
 
 export default function authMiddleware(jwtService: JwtService) {
     const refreshTokenRoutes = ["/token/refresh"];
-    const accessTokenRoutes = ["/api/map-points", "/users/logout"];
+    const accessTokenRoutes = ["/map-points", "/users/logout"];
 
     return (req: Request, res: Response, next: NextFunction) => {
         const needsRefreshToken = refreshTokenRoutes.some(
@@ -28,8 +28,8 @@ export default function authMiddleware(jwtService: JwtService) {
 
         const token = authHeader.substring(7);
         const payload = needsRefreshToken
-            ? jwtService.verifyRefreshToken(token)
-            : jwtService.verifyToken(token);
+            ? jwtService.verifyToken(token, TokenType.REFRESH)
+            : jwtService.verifyToken(token, TokenType.ACCESS);
 
         if (!payload) {
             return res.status(401).json({

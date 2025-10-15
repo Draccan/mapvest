@@ -7,7 +7,7 @@ import { auhtorizationParam } from "./common/authorizationParam";
 export default (
     getMapPoints: GetMapPoints,
 ): Route<void, void, void, MapPointDto[]> => ({
-    path: "/api/map-points",
+    path: "/map-points",
     method: "get",
     operationObject: {
         tags: ["map-points"],

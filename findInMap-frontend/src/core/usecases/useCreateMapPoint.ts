@@ -23,17 +23,14 @@ export const useCreateMapPoint = (): UseCreateMapPoint => {
 
                 const accessToken = TokenStorageService.getAccessToken();
 
-                const response = await window.fetch(
-                    `${API_URL}/api/map-points`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                        body: JSON.stringify(data),
+                const response = await window.fetch(`${API_URL}/map-points`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${accessToken}`,
                     },
-                );
+                    body: JSON.stringify(data),
+                });
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,11 +1,14 @@
-import JwtService from "../services/JwtService";
+import JwtService, { TokenType } from "../services/JwtService";
 
 export default class LogoutUser {
     constructor(private jwtService: JwtService) {}
 
     async exec(refreshToken: string): Promise<void> {
         try {
-            const isValid = this.jwtService.verifyRefreshToken(refreshToken);
+            const isValid = this.jwtService.verifyToken(
+                refreshToken,
+                TokenType.REFRESH,
+            );
             if (!isValid) {
                 return;
             }

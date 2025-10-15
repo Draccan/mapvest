@@ -10,7 +10,7 @@ import getClientIp from "./common/getClientIp";
 export default (
     createMapPoint: CreateMapPoint,
 ): Route<void, void, CreateMapPointDto, MapPointDto> => ({
-    path: "/api/map-points",
+    path: "/map-points",
     method: "post",
     operationObject: {
         tags: ["map-points"],

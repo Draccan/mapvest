@@ -1,4 +1,4 @@
-import JwtService from "../../../src/core/services/JwtService";
+import JwtService, { TokenType } from "../../../src/core/services/JwtService";
 import TokenBlacklistService from "../../../src/core/services/TokenBlacklistService";
 
 describe("JwtService", () => {
@@ -59,6 +59,30 @@ describe("JwtService", () => {
 
             expect(authenticatedUser).toBeNull();
         });
+
+        it("should return null for access token passed with type REFRESH", () => {
+            const payload = {
+                userId: "test-user-id",
+                email: "test@example.com",
+            };
+
+            const tokenPair = jwtService.generateTokenPair(payload);
+            const authenticatedUser = jwtService.verifyToken(
+                tokenPair.accessToken,
+                TokenType.REFRESH,
+            );
+
+            expect(authenticatedUser).toBeNull();
+        });
+        it("should return null for invalid refresh token", () => {
+            const invalidToken = "invalid.refresh.token";
+            const authenticatedUser = jwtService.verifyToken(
+                invalidToken,
+                TokenType.REFRESH,
+            );
+
+            expect(authenticatedUser).toBeNull();
+        });
     });
 
     describe("generateTokenPair", () => {
@@ -99,78 +123,6 @@ describe("JwtService", () => {
 
             expect(tokenPair1.accessToken).not.toBe(tokenPair2.accessToken);
             expect(tokenPair1.refreshToken).not.toBe(tokenPair2.refreshToken);
-        });
-    });
-
-    describe("verifyRefreshToken", () => {
-        it("should verify a valid refresh token and return payload", () => {
-            const payload = {
-                userId: "test-user-id",
-                email: "test@example.com",
-            };
-
-            const tokenPair = jwtService.generateTokenPair(payload);
-            const authenticatedUser = jwtService.verifyRefreshToken(
-                tokenPair.refreshToken,
-            );
-
-            expect(authenticatedUser).toBeDefined();
-            expect(authenticatedUser?.userId).toBe(payload.userId);
-            expect(authenticatedUser?.email).toBe(payload.email);
-        });
-
-        it("should return null for access token passed to verifyRefreshToken", () => {
-            const payload = {
-                userId: "test-user-id",
-                email: "test@example.com",
-            };
-
-            const tokenPair = jwtService.generateTokenPair(payload);
-            const authenticatedUser = jwtService.verifyRefreshToken(
-                tokenPair.accessToken,
-            );
-
-            expect(authenticatedUser).toBeNull();
-        });
-
-        it("should return null for invalid refresh token", () => {
-            const invalidToken = "invalid.refresh.token";
-            const authenticatedUser =
-                jwtService.verifyRefreshToken(invalidToken);
-
-            expect(authenticatedUser).toBeNull();
-        });
-
-        it("should return null for refresh token signed with different secret", () => {
-            const differentService = new JwtService(
-                "different-secret",
-                new TokenBlacklistService("different-secret"),
-            );
-            const payload = {
-                userId: "test-user-id",
-                email: "test@example.com",
-            };
-
-            const tokenPair = differentService.generateTokenPair(payload);
-            const authenticatedUser = jwtService.verifyRefreshToken(
-                tokenPair.refreshToken,
-            );
-
-            expect(authenticatedUser).toBeNull();
-        });
-
-        it("should return null for regular token without refresh type", () => {
-            const payload = {
-                userId: "test-user-id",
-                email: "test@example.com",
-            };
-
-            const tokenPair = jwtService.generateTokenPair(payload);
-            const authenticatedUser = jwtService.verifyRefreshToken(
-                tokenPair.accessToken,
-            );
-
-            expect(authenticatedUser).toBeNull();
         });
     });
 
@@ -224,8 +176,9 @@ describe("JwtService", () => {
             const verifiedAccess = jwtService.verifyToken(
                 newTokenPair!.accessToken,
             );
-            const verifiedRefresh = jwtService.verifyRefreshToken(
+            const verifiedRefresh = jwtService.verifyToken(
                 newTokenPair!.refreshToken,
+                TokenType.REFRESH,
             );
 
             expect(verifiedAccess?.userId).toBe(payload.userId);
@@ -304,8 +257,9 @@ describe("JwtService", () => {
             const verifiedAccess = jwtService.verifyToken(
                 initialTokenPair.accessToken,
             );
-            const verifiedRefresh = jwtService.verifyRefreshToken(
+            const verifiedRefresh = jwtService.verifyToken(
                 initialTokenPair.refreshToken,
+                TokenType.REFRESH,
             );
             expect(verifiedAccess?.userId).toBe(originalPayload.userId);
             expect(verifiedRefresh?.userId).toBe(originalPayload.userId);
@@ -326,8 +280,9 @@ describe("JwtService", () => {
             const newVerifiedAccess = jwtService.verifyToken(
                 newTokenPair!.accessToken,
             );
-            const newVerifiedRefresh = jwtService.verifyRefreshToken(
+            const newVerifiedRefresh = jwtService.verifyToken(
                 newTokenPair!.refreshToken,
+                TokenType.REFRESH,
             );
             expect(newVerifiedAccess?.userId).toBe(originalPayload.userId);
             expect(newVerifiedRefresh?.userId).toBe(originalPayload.userId);
@@ -344,13 +299,19 @@ describe("JwtService", () => {
             const tokenPair = jwtService.generateTokenPair(payload);
 
             expect(
-                jwtService.verifyRefreshToken(tokenPair.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).not.toBeNull();
 
             jwtService.invalidateRefreshToken(tokenPair.refreshToken);
 
             expect(
-                jwtService.verifyRefreshToken(tokenPair.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).toBeNull();
         });
 
@@ -370,10 +331,16 @@ describe("JwtService", () => {
             jwtService.invalidateRefreshToken(tokenPair1.refreshToken);
 
             expect(
-                jwtService.verifyRefreshToken(tokenPair1.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair1.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).toBeNull();
             expect(
-                jwtService.verifyRefreshToken(tokenPair2.refreshToken),
+                jwtService.verifyToken(
+                    tokenPair2.refreshToken,
+                    TokenType.REFRESH,
+                ),
             ).not.toBeNull();
         });
     });
