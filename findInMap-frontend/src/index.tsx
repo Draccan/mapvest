@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./ui/views/index.tsx";
 
 async function enableMocking() {
-    if (!import.meta.env.DEV) {
+    if (import.meta.env.DEV) {
         return;
     }
 
