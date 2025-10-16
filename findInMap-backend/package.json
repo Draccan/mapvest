@@ -36,6 +36,7 @@
   "license": "CC-BY-NC-SA-4.0",
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
     "@types/pg": "^8.15.5",
     "compression": "^1.7.4",
     "cors": "^2.8.5",

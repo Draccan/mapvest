@@ -16,7 +16,7 @@ describe("SearchAddresses UseCase", () => {
     it("should return addresses when text is provided", async () => {
         const mockAddressesEntity: AddressEntity[] = [
             {
-                displayName: "Test Location",
+                name: "Test Location",
                 formattedAddress: "123 Test St, Test City",
                 location: {
                     latitude: 45.4642,
@@ -34,6 +34,23 @@ describe("SearchAddresses UseCase", () => {
             lat: 45.4642,
             long: 9.19,
         });
+        expect(mockRepository.findByText).toHaveBeenCalledWith("test query");
+        expect(mockRepository.findByText).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not return addresses when the location is missing", async () => {
+        const mockAddressesEntity: AddressEntity[] = [
+            {
+                name: "Test Location",
+                formattedAddress: "123 Test St, Test City",
+            },
+        ];
+
+        mockRepository.findByText.mockResolvedValue(mockAddressesEntity);
+
+        const result = await searchAddresses.exec("test query");
+
+        expect(result.length).toEqual(0);
         expect(mockRepository.findByText).toHaveBeenCalledWith("test query");
         expect(mockRepository.findByText).toHaveBeenCalledTimes(1);
     });

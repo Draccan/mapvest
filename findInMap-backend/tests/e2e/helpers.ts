@@ -19,7 +19,7 @@ class MockGoogleRepository implements AddressesManagerRepository {
         return [
             {
                 formattedAddress: text,
-                displayName: text,
+                name: text,
                 location: {
                     latitude: 1,
                     longitude: 1,

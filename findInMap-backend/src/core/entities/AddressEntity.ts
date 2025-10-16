@@ -1,7 +1,7 @@
 export default interface AddressEntity {
-    formattedAddress?: string;
-    displayName?: string;
-    location: {
+    formattedAddress: string;
+    name: string;
+    location?: {
         latitude: number;
         longitude: number;
     };

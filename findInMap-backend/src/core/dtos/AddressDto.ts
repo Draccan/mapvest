@@ -7,16 +7,13 @@ export default interface AddressDto {
 }
 
 export function makeAddressDto(
-    address: AddressEntity,
+    address: Required<AddressEntity>,
     searchedAddress?: string,
 ): AddressDto {
     return {
         lat: address.location.latitude,
         long: address.location.longitude,
         label:
-            address.formattedAddress ||
-            address.displayName ||
-            searchedAddress ||
-            "",
+            address.formattedAddress || address.name || searchedAddress || "",
     };
 }
