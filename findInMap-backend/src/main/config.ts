@@ -90,4 +90,10 @@ export default {
         nonProductionDefault:
             "postgresql://findinmap:findinmap@localhost:5432/findinmap?schema=public",
     }),
+
+    // Google APIs
+    googleMapsApiKey: env("GOOGLE_MAPS_API_KEY", {
+        required: true,
+        nonProductionDefault: "",
+    }),
 };

@@ -16,6 +16,7 @@ import GetMapPoints from "../../core/usecases/GetMapPoints";
 import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
+import SearchAddresses from "../../core/usecases/SearchAddresses";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
@@ -27,6 +28,7 @@ import InfoRoute from "./routes/InfoRoute";
 import LoginUserRoute from "./routes/LoginUserRoute";
 import LogoutUserRoute from "./routes/LogoutUserRoute";
 import RefreshTokenRoute from "./routes/RefreshTokenRoute";
+import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 
 export default class RestInterface {
     private routes: Route[];
@@ -46,6 +48,7 @@ export default class RestInterface {
             loginUser: LoginUser;
             logoutUser: LogoutUser;
             refreshToken: RefreshToken;
+            searchAddresses: SearchAddresses;
         },
         private jwtService: JwtService,
     ) {
@@ -58,6 +61,7 @@ export default class RestInterface {
             LoginUserRoute(usecases.loginUser),
             LogoutUserRoute(usecases.logoutUser),
             RefreshTokenRoute(usecases.refreshToken),
+            SearchAddressesRoute(usecases.searchAddresses),
         ];
 
         // OpenAPI Spec

@@ -8,15 +8,18 @@ import CreateUser from "../core/usecases/CreateUser";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
 import RefreshToken from "../core/usecases/RefreshToken";
+import SearchAddresses from "../core/usecases/SearchAddresses";
 import { client } from "../db";
 import { DrizzleMapPointRepository } from "../dependency-implementations/DrizzleMapPointRepository";
 import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUserRepository";
+import GoogleRepository from "../dependency-implementations/GoogleRepository";
 import RestInterface from "../interfaces/rest";
 import config from "./config";
 
 // Repositories
 const mapPointRepository = new DrizzleMapPointRepository();
 const userRepository = new DrizzleUserRepository();
+const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 
 // Services
 // 15 seconds
@@ -31,6 +34,7 @@ const createUser = new CreateUser(userRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
 const logoutUser = new LogoutUser(jwtService);
 const refreshToken = new RefreshToken(jwtService);
+const searchAddresses = new SearchAddresses(googleRepository);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -46,6 +50,7 @@ const restInterface = new RestInterface(
         loginUser,
         logoutUser,
         refreshToken,
+        searchAddresses,
     },
     jwtService,
 );

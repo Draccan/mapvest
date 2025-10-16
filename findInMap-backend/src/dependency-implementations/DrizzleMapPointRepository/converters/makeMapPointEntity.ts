@@ -1,13 +1,8 @@
 import { MapPointType } from "../../../core/commons/enums";
 import { MapPointEntity } from "../../../core/entities/MapPointEntity";
-import { MapPoint } from "../../../db/schema";
+import RawMapPoint from "../types/RawMapPointType";
 
-interface RawMapPoint extends Omit<MapPoint, "location"> {
-    long: number;
-    lat: number;
-}
-
-export const makeMapPointEntity = (mapPoint: RawMapPoint): MapPointEntity => {
+export function makeMapPointEntity(mapPoint: RawMapPoint): MapPointEntity {
     return {
         id: mapPoint.id,
         long: mapPoint.long,
@@ -17,4 +12,4 @@ export const makeMapPointEntity = (mapPoint: RawMapPoint): MapPointEntity => {
         created_at: mapPoint.createdAt,
         updated_at: mapPoint.updatedAt,
     };
-};
+}

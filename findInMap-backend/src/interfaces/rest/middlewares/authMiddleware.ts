@@ -4,7 +4,11 @@ import JwtService, { TokenType } from "../../../core/services/JwtService";
 
 export default function authMiddleware(jwtService: JwtService) {
     const refreshTokenRoutes = ["/token/refresh"];
-    const accessTokenRoutes = ["/map-points", "/users/logout"];
+    const accessTokenRoutes = [
+        "/map-points",
+        "/search/addresses",
+        "/users/logout",
+    ];
 
     return (req: Request, res: Response, next: NextFunction) => {
         const needsRefreshToken = refreshTokenRoutes.some(

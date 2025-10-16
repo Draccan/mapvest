@@ -1,3 +1,5 @@
+import AddressesManagerRepository from "../../src/core/dependencies/AddressesManagerRepository";
+import AddressEntity from "../../src/core/entities/AddressEntity";
 import { InMemoryRateLimitService } from "../../src/core/services/RateLimitService";
 import JwtService from "../../src/core/services/JwtService";
 import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
@@ -7,13 +9,30 @@ import GetMapPoints from "../../src/core/usecases/GetMapPoints";
 import LoginUser from "../../src/core/usecases/LoginUser";
 import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
+import SearchAddresses from "../../src/core/usecases/SearchAddresses";
 import { DrizzleMapPointRepository } from "../../src/dependency-implementations/DrizzleMapPointRepository";
 import { DrizzleUserRepository } from "../../src/dependency-implementations/DrizzleUserRepository";
 import RestInterface from "../../src/interfaces/rest";
 
+class MockGoogleRepository implements AddressesManagerRepository {
+    async findByText(text: string): Promise<AddressEntity[]> {
+        return [
+            {
+                formattedAddress: text,
+                displayName: text,
+                location: {
+                    latitude: 1,
+                    longitude: 1,
+                },
+            },
+        ];
+    }
+}
+
 export function createTestApp() {
     const mapPointRepository = new DrizzleMapPointRepository();
     const userRepository = new DrizzleUserRepository();
+    const googleRepository = new MockGoogleRepository();
 
     const rateLimitService = new InMemoryRateLimitService(1);
     const tokenBlacklistService = new TokenBlacklistService("test-jwt-secret");
@@ -28,6 +47,7 @@ export function createTestApp() {
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);
     const refreshToken = new RefreshToken(jwtService);
+    const searchAddresses = new SearchAddresses(googleRepository);
 
     const restInterface = new RestInterface(
         "http://localhost:3002",
@@ -43,6 +63,7 @@ export function createTestApp() {
             loginUser,
             logoutUser,
             refreshToken,
+            searchAddresses,
         },
         jwtService,
     );
