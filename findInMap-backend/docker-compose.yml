@@ -30,6 +30,7 @@ services:
       PORT: 3001
       PUBLIC_URL: http://localhost:3001
       CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001
+      JWT_SECRET: 011cc9b3ee2c12a513fbfc73be48306c81ba8b2bd4a60fe2d1639f69e8ef5a25d94965a87d6c0492fc9e93bdc651bd44e398a2f40cf5c3777d4a4917c5783ba5
       LOG_LEVEL: INFO
       VALIDATE_API_RESPONSES: true
     ports:

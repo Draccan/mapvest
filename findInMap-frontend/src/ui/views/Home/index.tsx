@@ -5,22 +5,21 @@ import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import LogoSvg from "../../assets/logo.svg";
+import { useAuth } from "../../commons/hooks/useAuth";
 import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
+import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
-import initializeGoogleMaps from "../../utils/initializeGoogleMaps";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("views.Home");
 
-initializeGoogleMaps();
-
 export const Home: React.FC = () => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
-        x: number;
-        y: number;
+        long: number;
+        lat: number;
         zoom?: number;
     } | null>(null);
     const {
@@ -30,13 +29,14 @@ export const Home: React.FC = () => {
         error,
     } = useGetMapPoints();
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
+    const { logout } = useAuth();
 
     useEffect(() => {
         if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();
     }, [fetchMapPoints]);
 
     const handleMapPointSelection = (lng: number, lat: number) => {
-        setSelectedCoordinates({ x: lng, y: lat, zoom: 15 });
+        setSelectedCoordinates({ long: lng, lat: lat, zoom: 15 });
     };
 
     const handleSavePoint = async (pointData: CreateMapPointDto) => {
@@ -57,9 +57,21 @@ export const Home: React.FC = () => {
                         <img src={LogoSvg} alt="MapVest" />
                     </div>
                     <nav className="v-home-navigation">
-                        <Link to={routes.about()} kind="nav">
+                        <Link
+                            to={routes.about()}
+                            kind="nav"
+                            className="v-home-about-nav-link"
+                        >
                             {fm("about")}
                         </Link>
+                        <Button
+                            onClick={logout}
+                            type="button"
+                            kind="danger"
+                            size="small"
+                        >
+                            {fm("logout")}
+                        </Button>
                     </nav>
                 </header>
                 <div className="v-home-content">

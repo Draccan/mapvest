@@ -8,17 +8,27 @@ import helmet from "helmet";
 import * as http from "http";
 import * as swaggerUi from "swagger-ui-express";
 
+import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
+import LoginUser from "../../core/usecases/LoginUser";
+import LogoutUser from "../../core/usecases/LogoutUser";
+import RefreshToken from "../../core/usecases/RefreshToken";
+import SearchAddresses from "../../core/usecases/SearchAddresses";
 import errorHandler from "./errorHandler";
+import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
+import LoginUserRoute from "./routes/LoginUserRoute";
+import LogoutUserRoute from "./routes/LogoutUserRoute";
+import RefreshTokenRoute from "./routes/RefreshTokenRoute";
+import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 
 export default class RestInterface {
     private routes: Route[];
@@ -32,10 +42,15 @@ export default class RestInterface {
         private corsAllowedOrigins: string[],
         private validateResponses: boolean,
         usecases: {
-            getMapPoints: GetMapPoints;
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
+            getMapPoints: GetMapPoints;
+            loginUser: LoginUser;
+            logoutUser: LogoutUser;
+            refreshToken: RefreshToken;
+            searchAddresses: SearchAddresses;
         },
+        private jwtService: JwtService,
     ) {
         this.routes = [
             CreateMapPointRoute(usecases.createMapPoint),
@@ -43,6 +58,10 @@ export default class RestInterface {
             GetMapPointsRoute(usecases.getMapPoints),
             HealthRoute(),
             InfoRoute(),
+            LoginUserRoute(usecases.loginUser),
+            LogoutUserRoute(usecases.logoutUser),
+            RefreshTokenRoute(usecases.refreshToken),
+            SearchAddressesRoute(usecases.searchAddresses),
         ];
 
         // OpenAPI Spec
@@ -89,6 +108,7 @@ export default class RestInterface {
         this.app.use(compression());
         this.app.use(express.json({ limit: "10mb" }));
         this.app.use(express.urlencoded({ limit: "10mb", extended: true }));
+        this.app.use(authMiddleware(this.jwtService));
         this.app.use(
             openapiValidator({
                 apiSpec: apiSpec,
@@ -97,7 +117,6 @@ export default class RestInterface {
             }),
         );
 
-        // Swagger UI
         this.app.use(
             "/swagger",
             swaggerUi.serve,
@@ -110,7 +129,6 @@ export default class RestInterface {
         // Register API routes
         this.registerHandlers();
 
-        // 404 handler
         this.app.use((req, res) => {
             res.status(404).json({
                 success: false,
@@ -118,7 +136,6 @@ export default class RestInterface {
             });
         });
 
-        // Error handler
         this.app.use(errorHandler);
     }
 

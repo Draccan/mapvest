@@ -4,18 +4,20 @@ import CreateMapPoint from "../../../core/usecases/CreateMapPoint";
 import Route from "../Route";
 import getCreateMapPointSchema from "../schemas/getCreateMapPointSchema";
 import getMapPointSchema from "../schemas/getMapPointSchema";
+import { auhtorizationParam } from "./common/authorizationParam";
 import getClientIp from "./common/getClientIp";
 
 export default (
     createMapPoint: CreateMapPoint,
 ): Route<void, void, CreateMapPointDto, MapPointDto> => ({
-    path: "/api/map-points",
+    path: "/map-points",
     method: "post",
     operationObject: {
         tags: ["map-points"],
         summary: "Create a new map point",
         description:
             "Create a new crime map point. Rate limited to 1 request per 15 seconds per IP.",
+        parameters: [auhtorizationParam],
         requestBody: {
             required: true,
             content: {

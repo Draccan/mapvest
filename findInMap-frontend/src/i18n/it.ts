@@ -38,7 +38,16 @@ export default flattenObject({
         },
         Home: {
             about: "Chi sono",
+            logout: "Esci",
             loadingMapPoints: "Caricamento punti mappa...",
+        },
+        Login: {
+            emailLabel: "Email:",
+            passwordLabel: "Password:",
+            login: "Accedi",
+            loading: "Accesso in corso...",
+            noAccount: "Non hai un account?",
+            registerHere: "Registrati qui",
         },
         NotFound: {
             title: "Oops! Sei perso!",
@@ -47,6 +56,18 @@ export default flattenObject({
             backToMap: "Torna alla Mappa",
             footerMessage:
                 "Non preoccuparti, anche i migliori esploratori a volte si perdono!",
+        },
+        Register: {
+            passwordsDoNotMatch: "Le password non corrispondono",
+            nameLabel: "Nome:",
+            surnameLabel: "Cognome:",
+            emailLabel: "Email:",
+            passwordLabel: "Password:",
+            confirmPasswordLabel: "Conferma Password:",
+            register: "Registrati",
+            registering: "Registrazione in corso...",
+            alreadyHaveAccount: "Hai già un account?",
+            loginHere: "Accedi qui",
         },
     },
 });

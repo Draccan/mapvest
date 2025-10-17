@@ -19,19 +19,54 @@ const developmentFormat = winston.format.combine(
     }),
 );
 
-const loggerService = winston.createLogger({
-    level: config.logLevel.toLowerCase(),
-    format: config.nodeEnv === "production" ? railwayFormat : developmentFormat,
-    defaultMeta: {
-        service: config.appName,
-        version: config.appVersion,
+// Warning: for test purposes
+const createConsoleLogger = (): any => ({
+    log: (message: any) => {
+        console.log(message);
     },
-    transports: [
-        new winston.transports.Console({
-            handleExceptions: true,
-            handleRejections: true,
-        }),
-    ],
+    error: (message: any) => {
+        console.error(message);
+    },
+    warn: (message: any) => {
+        console.warn(message);
+    },
+    info: (message: any) => {
+        console.info(message);
+    },
+    debug: (message: any) => {
+        console.debug(message);
+    },
+    verbose: (message: any) => {
+        console.log(message);
+    },
+    silly: (message: any) => {
+        console.log(message);
+    },
+    http: (message: any) => {
+        console.log(message);
+    },
+    child: () => createConsoleLogger(),
 });
+
+const loggerService =
+    config.nodeEnv === "test"
+        ? createConsoleLogger()
+        : winston.createLogger({
+              level: config.logLevel.toLowerCase(),
+              format:
+                  config.nodeEnv === "production"
+                      ? railwayFormat
+                      : developmentFormat,
+              defaultMeta: {
+                  service: config.appName,
+                  version: config.appVersion,
+              },
+              transports: [
+                  new winston.transports.Console({
+                      handleExceptions: true,
+                      handleRejections: true,
+                  }),
+              ],
+          });
 
 export default loggerService;

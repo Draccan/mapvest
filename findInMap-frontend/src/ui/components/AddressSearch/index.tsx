@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import useGetGooglePlaces from "../../../core/usecases/useGetGooglePlaces";
+import type AddressDto from "../../../core/dtos/AddressDto";
+import useGetSearchAddresses from "../../../core/usecases/useGetSearchAddresses";
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import "./style.css";
 
@@ -9,19 +10,13 @@ interface AddressSearchProps {
     className?: string;
 }
 
-interface SearchResult {
-    x: number;
-    y: number;
-    label: string;
-}
-
 export const AddressSearch: React.FC<AddressSearchProps> = ({
     onAddressSelect,
     className = "",
 }) => {
     const [query, setQuery] = useState("");
     const [showResults, setShowResults] = useState(false);
-    const { debouncedFetch, loading, results } = useGetGooglePlaces();
+    const { debouncedFetch, loading, results } = useGetSearchAddresses();
 
     useEffect(() => {
         setShowResults(results.length > 0);
@@ -33,10 +28,10 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
         debouncedFetch(value);
     };
 
-    const handleResultSelect = (result: SearchResult) => {
+    const handleResultSelect = (result: AddressDto) => {
         setQuery(result.label);
         setShowResults(false);
-        onAddressSelect(result.x, result.y);
+        onAddressSelect(result.long, result.lat);
     };
 
     const classNames = setMultipleClassNames("c-address-search", className);

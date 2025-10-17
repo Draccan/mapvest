@@ -2,16 +2,18 @@ import { MapPointDto } from "../../../core/dtos/MapPointDto";
 import GetMapPoints from "../../../core/usecases/GetMapPoints";
 import Route from "../Route";
 import getMapPointSchema from "../schemas/getMapPointSchema";
+import { auhtorizationParam } from "./common/authorizationParam";
 
 export default (
     getMapPoints: GetMapPoints,
 ): Route<void, void, void, MapPointDto[]> => ({
-    path: "/api/map-points",
+    path: "/map-points",
     method: "get",
     operationObject: {
         tags: ["map-points"],
         summary: "Get all map points",
         description: "Retrieve all map points from the database",
+        parameters: [auhtorizationParam],
         responses: {
             200: {
                 description: "List of map points",

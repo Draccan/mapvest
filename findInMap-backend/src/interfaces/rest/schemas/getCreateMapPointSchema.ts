@@ -6,13 +6,13 @@ export default function getCreateMapPointSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
         properties: {
-            x: {
+            long: {
                 type: "number",
                 description: "Longitude coordinate",
                 maximum: 180,
                 minimum: -180,
             },
-            y: {
+            lat: {
                 type: "number",
                 description: "Latitude coordinate",
                 maximum: 90,
@@ -29,7 +29,7 @@ export default function getCreateMapPointSchema(): OpenAPIV3.SchemaObject {
                 pattern: "^\\d{2}/\\d{2}/\\d{4}$",
             },
         },
-        required: ["x", "y", "type", "date"],
+        required: ["long", "lat", "type", "date"],
         additionalProperties: false,
     };
 }

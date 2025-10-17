@@ -79,11 +79,21 @@ export default {
                 .map((origin) => origin.trim())
                 .filter((origin) => origin.length > 0),
     }),
+    jwtSecret: env("JWT_SECRET", {
+        required: true,
+        nonProductionDefault: "your-super-secret-jwt-key-for-development-only",
+    }),
 
     // Database
     databaseUrl: env("DATABASE_URL", {
         required: true,
         nonProductionDefault:
             "postgresql://findinmap:findinmap@localhost:5432/findinmap?schema=public",
+    }),
+
+    // Google APIs
+    googleMapsApiKey: env("GOOGLE_MAPS_API_KEY", {
+        required: true,
+        nonProductionDefault: "",
     }),
 };
