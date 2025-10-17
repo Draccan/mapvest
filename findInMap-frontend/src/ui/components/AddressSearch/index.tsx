@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import useGetGooglePlaces, {
-    type SearchResult,
-} from "../../../core/usecases/useGetGooglePlaces";
+import type AddressDto from "../../../core/dtos/AddressDto";
+import useGetSearchAddresses from "../../../core/usecases/useGetSearchAddresses";
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import "./style.css";
 
@@ -17,7 +16,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
 }) => {
     const [query, setQuery] = useState("");
     const [showResults, setShowResults] = useState(false);
-    const { debouncedFetch, loading, results } = useGetGooglePlaces();
+    const { debouncedFetch, loading, results } = useGetSearchAddresses();
 
     useEffect(() => {
         setShowResults(results.length > 0);
@@ -29,7 +28,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
         debouncedFetch(value);
     };
 
-    const handleResultSelect = (result: SearchResult) => {
+    const handleResultSelect = (result: AddressDto) => {
         setQuery(result.label);
         setShowResults(false);
         onAddressSelect(result.long, result.lat);

@@ -43,54 +43,27 @@ let userIdCounter = 2;
 
 export const handlers = [
     http.all("https://maps.googleapis.com/*", () => passthrough()),
+    http.get("http://localhost:3001/search/addresses", ({ request }) => {
+        const url = new URL(request.url);
+        const text = url.searchParams.get("text") || "";
 
-    http.post(
-        "https://places.googleapis.com/$rpc/google.maps.places.v1.Places/SearchText",
-        () => {
-            return HttpResponse.json([
-                [
-                    [
-                        null,
-                        "ChIJMydZdn50LRMRzwch0BgnvaA",
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        "Via degli Olmi, 18, 60019 Senigallia AN, Italia",
-                        null,
-                        null,
-                        [43.7009486, 13.2220985],
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        ["Via degli Olmi, 18"],
-                    ],
-                ],
-            ]);
-        },
-    ),
-
+        const mockAddresses = [
+            {
+                label: text,
+                lat: 41.9028,
+                long: 12.4964,
+            },
+            {
+                label: "456 Elm St, Townsville",
+                lat: 41.8902,
+                long: 12.4922,
+            },
+        ];
+        return HttpResponse.json(mockAddresses);
+    }),
     http.get("http://localhost:3001/map-points", () => {
         return HttpResponse.json(mockMapPoints);
     }),
-
     http.post("http://localhost:3001/map-points", async ({ request }) => {
         const newPoint = (await request.json()) as Omit<
             MapPointDto,
@@ -107,8 +80,6 @@ export const handlers = [
 
         return HttpResponse.json(mapPoint, { status: 201 });
     }),
-
-    // Auth endpoints
     http.post("http://localhost:3001/users", async ({ request }) => {
         const userData = (await request.json()) as {
             name: string;
@@ -137,7 +108,6 @@ export const handlers = [
         const { password, ...userResponse } = newUser;
         return HttpResponse.json(userResponse, { status: 201 });
     }),
-
     http.post("http://localhost:3001/users/login", async ({ request }) => {
         const credentials = (await request.json()) as {
             email: string;
@@ -168,7 +138,6 @@ export const handlers = [
             user: userResponse,
         });
     }),
-
     http.post("http://localhost:3001/token/refresh", async ({ request }) => {
         const authHeader = request.headers.get("Authorization");
 
@@ -198,7 +167,6 @@ export const handlers = [
             refreshToken: newRefreshToken,
         });
     }),
-
     http.post("http://localhost:3001/users/logout", async () => {
         return HttpResponse.json();
     }),

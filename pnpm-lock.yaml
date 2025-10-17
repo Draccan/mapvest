@@ -139,9 +139,6 @@ importers:
         specifier: ^14.2.5
         version: 14.2.5
     devDependencies:
-      '@types/google.maps':
-        specifier: ^3.58.1
-        version: 3.58.1
       '@types/leaflet':
         specifier: ^1.9.20
         version: 1.9.20
@@ -1085,9 +1082,6 @@ packages:
 
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
-
-  '@types/google.maps@3.58.1':
-    resolution: {integrity: sha512-X9QTSvGJ0nCfMzYOnaVs/k6/4L+7F5uCS+4iUmkLEls6J9S/Phv+m/i3mDeyc49ZBgwab3EFO1HEoBY7k98EGQ==}
 
   '@types/history@4.7.11':
     resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
@@ -4357,8 +4351,6 @@ snapshots:
       '@types/serve-static': 1.15.8
 
   '@types/geojson@7946.0.16': {}
-
-  '@types/google.maps@3.58.1': {}
 
   '@types/history@4.7.11': {}
 
