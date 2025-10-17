@@ -18,17 +18,16 @@ const fetchAddressesRequest = async (
 ): Promise<AddressDto[]> => {
     const accessToken = TokenStorageService.getAccessToken();
 
-    const params = new URLSearchParams({
-        text: encodeURIComponent(searchQuery),
-    });
-
-    const response = await fetch(`${API_URL}/search/addresses?${params}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+        `${API_URL}/search/addresses?text=${encodeURIComponent(searchQuery)}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
         },
-    });
+    );
 
     return await response.json();
 };

@@ -30,13 +30,6 @@ export default class GoogleRepository implements AddressesManagerRepository {
                 },
             });
 
-            console.log(
-                "AAA response:",
-                response.data.candidates
-                    .filter((place) => !!place.geometry)
-                    .map((place) => makeAddressEntity(place, text)),
-            );
-
             return response.data.candidates
                 .filter((place) => !!place.geometry)
                 .map((place) => makeAddressEntity(place, text));
