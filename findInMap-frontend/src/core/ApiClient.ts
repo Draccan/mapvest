@@ -151,10 +151,12 @@ export default class ApiClient {
                     Authorization: `Bearer ${refreshToken}`,
                 },
             });
+        } catch (err) {
+            console.error("Error during logout:", err);
+            throw err;
+        } finally {
             TokenStorageService.clearTokens();
             window.location.replace(routes.login());
-        } catch (err) {
-            throw err;
         }
     }
 
