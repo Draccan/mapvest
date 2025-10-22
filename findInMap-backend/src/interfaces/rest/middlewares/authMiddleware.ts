@@ -3,12 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import JwtService, { TokenType } from "../../../core/services/JwtService";
 
 export default function authMiddleware(jwtService: JwtService) {
-    const refreshTokenRoutes = ["/token/refresh"];
-    const accessTokenRoutes = [
-        "/map-points",
-        "/search/addresses",
-        "/users/logout",
-    ];
+    const refreshTokenRoutes = ["/token/refresh", "/users/logout"];
+    const accessTokenRoutes = ["/map-points", "/search/addresses"];
 
     return (req: Request, res: Response, next: NextFunction) => {
         const needsRefreshToken = refreshTokenRoutes.some(

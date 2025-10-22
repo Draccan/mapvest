@@ -2,8 +2,8 @@ import debounce from "lodash-es/debounce";
 import mem from "mem";
 import { useCallback, useMemo, useState } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import type ApiClient from "../ApiClient";
+import { useApiClient } from "../contexts/ApiClientContext";
 import type AddressDto from "../dtos/AddressDto";
 
 interface UseGetGooglePlaces {
@@ -14,22 +14,10 @@ interface UseGetGooglePlaces {
 }
 
 const fetchAddressesRequest = async (
+    apiClient: ApiClient,
     searchQuery: string,
 ): Promise<AddressDto[]> => {
-    const accessToken = TokenStorageService.getAccessToken();
-
-    const response = await fetch(
-        `${API_URL}/search/addresses?text=${encodeURIComponent(searchQuery)}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-        },
-    );
-
-    return await response.json();
+    return await apiClient.searchAddresses(searchQuery);
 };
 
 const memoizedFetchAddresses = mem(fetchAddressesRequest, {
@@ -38,6 +26,7 @@ const memoizedFetchAddresses = mem(fetchAddressesRequest, {
 });
 
 export default function useGetGooglePlaces(): UseGetGooglePlaces {
+    const apiClient = useApiClient();
     const [results, setResults] = useState<AddressDto[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -49,7 +38,10 @@ export default function useGetGooglePlaces(): UseGetGooglePlaces {
 
         setLoading(true);
         try {
-            const searchResults = await memoizedFetchAddresses(searchQuery);
+            const searchResults = await memoizedFetchAddresses(
+                apiClient,
+                searchQuery,
+            );
             setResults(searchResults);
         } catch (error) {
             console.error("Address search error:", error);

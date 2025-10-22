@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import { useApiClient } from "../contexts/ApiClientContext";
 import { type MapPointDto } from "../dtos/MapPointDto";
 
 interface UseGetMapPoints {
@@ -13,6 +12,7 @@ interface UseGetMapPoints {
 }
 
 export const useGetMapPoints = (): UseGetMapPoints => {
+    const apiClient = useApiClient();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
     const [data, setData] = useState<MapPointDto[] | null>(null);
@@ -23,21 +23,8 @@ export const useGetMapPoints = (): UseGetMapPoints => {
             setLoading(true);
             setError(null);
 
-            const accessToken = TokenStorageService.getAccessToken();
+            const result: MapPointDto[] = await apiClient.getMapPoints();
 
-            const response = await fetch(`${API_URL}/map-points`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result: MapPointDto[] = await response.json();
             setData(result);
             setHasFetched(true);
         } catch (err) {

@@ -16,6 +16,7 @@ k8s/*
 
 # Our folders
 public
+drizzle
 
 # Others
 .vscode

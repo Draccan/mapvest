@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import { useApiClient } from "../contexts/ApiClientContext";
 import { type CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
 
@@ -12,6 +11,7 @@ interface UseCreateMapPoint {
 }
 
 export const useCreateMapPoint = (): UseCreateMapPoint => {
+    const apiClient = useApiClient();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
 
@@ -21,23 +21,8 @@ export const useCreateMapPoint = (): UseCreateMapPoint => {
                 setLoading(true);
                 setError(null);
 
-                const accessToken = TokenStorageService.getAccessToken();
-
-                const response = await window.fetch(`${API_URL}/map-points`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    body: JSON.stringify(data),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result: MapPointDto = await response.json();
-                return result;
+                const response = await apiClient.createMapPoint(data);
+                return response;
             } catch (err) {
                 setError(err);
                 return null;

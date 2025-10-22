@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
 import type TokenResponseDto from "../dtos/TokenResponseDto";
+import { useApiClient } from "../contexts/ApiClientContext";
 
 interface UseRefreshToken {
     refreshToken: () => Promise<TokenResponseDto | null>;
@@ -13,31 +12,14 @@ interface UseRefreshToken {
 export const useRefreshToken = (): UseRefreshToken => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const apiClient = useApiClient();
 
     const refreshToken = useCallback(async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const refreshToken = TokenStorageService.getRefreshToken();
-            if (!refreshToken) {
-                throw new Error("No refresh token available");
-            }
-
-            const response = await fetch(`${API_URL}/token/refresh`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${refreshToken}`,
-                },
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Token refresh failed");
-            }
-
-            const tokenResponse: TokenResponseDto = await response.json();
+            const tokenResponse = apiClient.refreshToken();
             return tokenResponse;
         } catch (err) {
             const error =

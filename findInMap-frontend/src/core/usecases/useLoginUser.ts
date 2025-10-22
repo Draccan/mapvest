@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import { useApiClient } from "../contexts/ApiClientContext";
 import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
 
@@ -13,6 +12,7 @@ interface UseLoginUser {
 }
 
 export const useLoginUser = (): UseLoginUser => {
+    const apiClient = useApiClient();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [user, setUser] = useState<LoginResponseDto["user"] | null>(null);
@@ -24,28 +24,10 @@ export const useLoginUser = (): UseLoginUser => {
         setError(null);
 
         try {
-            const response = await fetch(`${API_URL}/users/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(credentials),
-            });
+            const response = await apiClient.login(credentials);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Login failed");
-            }
-
-            const loginResponse: LoginResponseDto = await response.json();
-
-            TokenStorageService.setTokens(
-                loginResponse.token,
-                loginResponse.refreshToken,
-            );
-
-            setUser(loginResponse.user);
-            return loginResponse;
+            setUser(response.user);
+            return response;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             return null;

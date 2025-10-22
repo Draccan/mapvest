@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
+import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import LogoSvg from "../../assets/logo.svg";
-import { useAuth } from "../../commons/hooks/useAuth";
 import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
 import { Button } from "../../components/Button";
@@ -29,7 +29,7 @@ export const Home: React.FC = () => {
         error,
     } = useGetMapPoints();
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
-    const { logout } = useAuth();
+    const { logout } = useLogoutUser();
 
     useEffect(() => {
         if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();

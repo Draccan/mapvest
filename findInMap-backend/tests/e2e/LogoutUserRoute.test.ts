@@ -21,12 +21,12 @@ describe("Logout User Route", () => {
             })
             .expect(200);
 
-        const accessToken = loginResponse.body.token;
-        expect(accessToken).toBeDefined();
+        const refreshToken = loginResponse.body.refreshToken;
+        expect(refreshToken).toBeDefined();
 
         const logoutResponse = await request(app)
             .post("/users/logout")
-            .set("Authorization", `Bearer ${accessToken}`)
+            .set("Authorization", `Bearer ${refreshToken}`)
             .expect(200);
 
         expect(logoutResponse.body).toHaveProperty(
@@ -36,7 +36,7 @@ describe("Logout User Route", () => {
 
         const refreshResponse = await request(app)
             .post("/token/refresh")
-            .set("Authorization", `Bearer ${accessToken}`)
+            .set("Authorization", `Bearer ${refreshToken}`)
             .expect(401);
 
         expect(refreshResponse.body).toHaveProperty("error");
