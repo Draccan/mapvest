@@ -145,12 +145,16 @@ export default class ApiClient {
         }
 
         try {
-            await this.fetchWithInterceptors(`${API_URL}/users/logout`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${refreshToken}`,
+            await this.fetchWithInterceptors(
+                `${API_URL}/users/logout`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${refreshToken}`,
+                    },
                 },
-            });
+                false,
+            );
         } catch (err) {
             console.error("Error during logout:", err);
             throw err;
