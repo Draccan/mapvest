@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ApiClientProvider } from "../../core/contexts/ApiClientContext";
 import i18nMessages from "../../i18n";
 import routes from "../commons/routes";
+import { RoutesWrapper } from "../components/RoutesWrapper";
 import About from "./About";
 import { Home } from "./Home";
 import { Login } from "./Login";
@@ -28,19 +29,30 @@ const App: React.FC = () => {
             >
                 <ApiClientProvider>
                     <Router>
-                        <Routes>
-                            <Route path={routes.login()} element={<Login />} />
-                            <Route
-                                path={routes.register()}
-                                element={<Register />}
-                            />
-                            <Route path={routes.home()} element={<Home />} />
-                            <Route path={routes.about()} element={<About />} />
-                            <Route
-                                path={routes.notFound()}
-                                element={<NotFound />}
-                            />
-                        </Routes>
+                        <RoutesWrapper>
+                            <Routes>
+                                <Route
+                                    path={routes.login()}
+                                    element={<Login />}
+                                />
+                                <Route
+                                    path={routes.register()}
+                                    element={<Register />}
+                                />
+                                <Route
+                                    path={routes.home()}
+                                    element={<Home />}
+                                />
+                                <Route
+                                    path={routes.about()}
+                                    element={<About />}
+                                />
+                                <Route
+                                    path={routes.notFound()}
+                                    element={<NotFound />}
+                                />
+                            </Routes>
+                        </RoutesWrapper>
                     </Router>
                 </ApiClientProvider>
             </IntlProvider>

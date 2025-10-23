@@ -1,5 +1,6 @@
 import { createContext, type ReactNode, useContext } from "react";
-import ApiClient from "../ApiClient";
+
+import ApiClient from "../api/ApiClient";
 
 const ApiClientContext = createContext<ApiClient>(new ApiClient());
 

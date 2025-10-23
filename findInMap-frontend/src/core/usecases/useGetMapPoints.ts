@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type MapPointDto } from "../dtos/MapPointDto";
+import { useRequestWrapper } from "./utils/useRequestWrapper";
 
 interface UseGetMapPoints {
     loading: boolean;
@@ -13,27 +14,23 @@ interface UseGetMapPoints {
 
 export const useGetMapPoints = (): UseGetMapPoints => {
     const apiClient = useApiClient();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<any>(null);
     const [data, setData] = useState<MapPointDto[] | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
-    const fetchMapPoints = useCallback(async () => {
-        try {
-            setLoading(true);
-            setError(null);
+    const { fetch, loading, error } = useRequestWrapper(() =>
+        apiClient.getMapPoints(),
+    );
 
-            const result: MapPointDto[] = await apiClient.getMapPoints();
+    const fetchMapPoints = async () => {
+        const result: MapPointDto[] | null = await fetch();
 
+        if (result) {
             setData(result);
             setHasFetched(true);
-        } catch (err) {
-            setError(err);
+        } else {
             setData(null);
-        } finally {
-            setLoading(false);
         }
-    }, []);
+    };
 
     return {
         loading,

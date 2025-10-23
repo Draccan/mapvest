@@ -1,8 +1,8 @@
 import { useState } from "react";
-
 import { useApiClient } from "../contexts/ApiClientContext";
 import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
+import { useRequestWrapper } from "./utils/useRequestWrapper";
 
 interface UseLoginUser {
     login: (credentials: LoginUserDto) => Promise<LoginResponseDto | null>;
@@ -13,33 +13,33 @@ interface UseLoginUser {
 
 export const useLoginUser = (): UseLoginUser => {
     const apiClient = useApiClient();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [user, setUser] = useState<LoginResponseDto["user"] | null>(null);
+
+    const { fetch, loading, error } = useRequestWrapper(
+        (credentials: LoginUserDto) => apiClient.login(credentials),
+    );
 
     const login = async (
         credentials: LoginUserDto,
     ): Promise<LoginResponseDto | null> => {
-        setLoading(true);
-        setError(null);
+        const response = await fetch(credentials);
 
-        try {
-            const response = await apiClient.login(credentials);
-
+        if (response) {
             setUser(response.user);
-            return response;
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Unknown error");
-            return null;
-        } finally {
-            setLoading(false);
         }
+
+        return response;
     };
 
     return {
         login,
         loading,
-        error,
+        error:
+            error instanceof Error
+                ? error.message
+                : error
+                  ? String(error)
+                  : null,
         user,
     };
 };

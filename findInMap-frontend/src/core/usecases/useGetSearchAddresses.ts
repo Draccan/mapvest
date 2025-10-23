@@ -2,9 +2,10 @@ import debounce from "lodash-es/debounce";
 import mem from "mem";
 import { useCallback, useMemo, useState } from "react";
 
-import type ApiClient from "../ApiClient";
+import type ApiClient from "../api/ApiClient";
 import { useApiClient } from "../contexts/ApiClientContext";
 import type AddressDto from "../dtos/AddressDto";
+import { useRequestWrapper } from "./utils/useRequestWrapper";
 
 interface UseGetGooglePlaces {
     results: AddressDto[];
@@ -28,7 +29,10 @@ const memoizedFetchAddresses = mem(fetchAddressesRequest, {
 export default function useGetGooglePlaces(): UseGetGooglePlaces {
     const apiClient = useApiClient();
     const [results, setResults] = useState<AddressDto[]>([]);
-    const [loading, setLoading] = useState(false);
+
+    const { fetch, loading } = useRequestWrapper((searchQuery: string) =>
+        memoizedFetchAddresses(apiClient, searchQuery),
+    );
 
     const fetchAddresses = useCallback(async (searchQuery: string) => {
         if (searchQuery.length < 3) {
@@ -36,18 +40,11 @@ export default function useGetGooglePlaces(): UseGetGooglePlaces {
             return;
         }
 
-        setLoading(true);
-        try {
-            const searchResults = await memoizedFetchAddresses(
-                apiClient,
-                searchQuery,
-            );
-            setResults(searchResults);
-        } catch (error) {
-            console.error("Address search error:", error);
+        const result = await fetch(searchQuery);
+        if (result) {
+            setResults(result);
+        } else {
             setResults([]);
-        } finally {
-            setLoading(false);
         }
     }, []);
 

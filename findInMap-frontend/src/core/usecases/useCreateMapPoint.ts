@@ -1,8 +1,7 @@
-import { useState, useCallback } from "react";
-
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
+import { useRequestWrapper } from "./utils/useRequestWrapper";
 
 interface UseCreateMapPoint {
     loading: boolean;
@@ -12,26 +11,17 @@ interface UseCreateMapPoint {
 
 export const useCreateMapPoint = (): UseCreateMapPoint => {
     const apiClient = useApiClient();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<any>(null);
 
-    const createMapPoint = useCallback(
-        async (data: CreateMapPointDto): Promise<MapPointDto | null> => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                const response = await apiClient.createMapPoint(data);
-                return response;
-            } catch (err) {
-                setError(err);
-                return null;
-            } finally {
-                setLoading(false);
-            }
-        },
-        [],
+    const { fetch, loading, error } = useRequestWrapper(
+        (data: CreateMapPointDto) => apiClient.createMapPoint(data),
     );
+
+    const createMapPoint = async (
+        data: CreateMapPointDto,
+    ): Promise<MapPointDto | null> => {
+        const response = await fetch(data);
+        return response;
+    };
 
     return {
         loading,

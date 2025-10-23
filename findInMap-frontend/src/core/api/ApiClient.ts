@@ -1,14 +1,14 @@
-import { API_URL } from "../config";
-import routes from "../ui/commons/routes";
-import TokenStorageService from "../utils/TokenStorageService";
-import type AddressDto from "./dtos/AddressDto";
-import type { CreateMapPointDto } from "./dtos/CreateMapPointDto";
-import type CreateUserDto from "./dtos/CreateUserDto";
-import type LoginResponseDto from "./dtos/LoginResponseDto";
-import type LoginUserDto from "./dtos/LoginUserDto";
-import type { MapPointDto } from "./dtos/MapPointDto";
-import type TokenResponseDto from "./dtos/TokenResponseDto";
-import type UserDto from "./dtos/UserDto";
+import { API_URL } from "../../config";
+import TokenStorageService from "../../utils/TokenStorageService";
+import type AddressDto from "../dtos/AddressDto";
+import type { CreateMapPointDto } from "../dtos/CreateMapPointDto";
+import type CreateUserDto from "../dtos/CreateUserDto";
+import type LoginResponseDto from "../dtos/LoginResponseDto";
+import type LoginUserDto from "../dtos/LoginUserDto";
+import type { MapPointDto } from "../dtos/MapPointDto";
+import type TokenResponseDto from "../dtos/TokenResponseDto";
+import type UserDto from "../dtos/UserDto";
+import { UnauthorizedError } from "./errors/UnauthorizedError";
 
 export default class ApiClient {
     private token: string | null = null;
@@ -21,7 +21,7 @@ export default class ApiClient {
         const refreshToken = TokenStorageService.getRefreshToken();
         if (!refreshToken) {
             console.error("No refresh token available");
-            window.location.replace(routes.login());
+            throw new UnauthorizedError();
         }
 
         const response = await fetch(`${API_URL}/token/refresh`, {
@@ -33,7 +33,7 @@ export default class ApiClient {
         });
 
         if (!response.ok) {
-            this.logout();
+            throw new UnauthorizedError();
         }
 
         const tokenResponse: TokenResponseDto = await response.json();
@@ -76,9 +76,7 @@ export default class ApiClient {
                     console.error(
                         "Unable to perform the request after token refresh",
                     );
-                    this.logout();
-                    window.location.replace(routes.login());
-                    return res;
+                    throw new UnauthorizedError();
                 }
 
                 await this.refreshToken();
@@ -140,8 +138,7 @@ export default class ApiClient {
     async logout(): Promise<void> {
         const refreshToken = TokenStorageService.getRefreshToken();
         if (!refreshToken) {
-            window.location.replace(routes.login());
-            return;
+            throw new UnauthorizedError();
         }
 
         try {
@@ -155,12 +152,13 @@ export default class ApiClient {
                 },
                 false,
             );
+            throw new UnauthorizedError();
         } catch (err) {
             console.error("Error during logout:", err);
             throw err;
         } finally {
             TokenStorageService.clearTokens();
-            window.location.replace(routes.login());
+            this.token = null;
         }
     }
 
