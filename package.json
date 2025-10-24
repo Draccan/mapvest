@@ -17,7 +17,7 @@
     "monorepo"
   ],
   "author": "Paolo Dell'Aguzzo",
-  "license": "CC-BY-NC-SA-4.0",
+  "license": "CC-BY-NC-ND-4.0",
   "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "prettier": "^3.6.2"
