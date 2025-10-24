@@ -2,19 +2,15 @@ import { Request, Response, NextFunction } from "express";
 
 import JwtService, { TokenType } from "../../../core/services/JwtService";
 
+const PublicRoutes = ["/health", "/info", "/users", "/users/login"];
+
+const RefreshTokenRoutes = ["/token/refresh", "/users/logout"];
+
 export default function authMiddleware(jwtService: JwtService) {
-    const refreshTokenRoutes = ["/token/refresh", "/users/logout"];
-    const accessTokenRoutes = ["/map-points", "/search/addresses"];
-
     return (req: Request, res: Response, next: NextFunction) => {
-        const needsRefreshToken = refreshTokenRoutes.some(
-            (route) => req.path === route || req.path.startsWith(route + "/"),
-        );
-        const needsAccessToken = accessTokenRoutes.some(
-            (route) => req.path === route || req.path.startsWith(route + "/"),
-        );
+        const isPublicRoute = PublicRoutes.some((route) => req.path === route);
 
-        if (!needsRefreshToken && !needsAccessToken) {
+        if (isPublicRoute) {
             return next();
         }
 
@@ -27,9 +23,15 @@ export default function authMiddleware(jwtService: JwtService) {
         }
 
         const token = authHeader.substring(7);
-        const payload = needsRefreshToken
-            ? jwtService.verifyToken(token, TokenType.REFRESH)
-            : jwtService.verifyToken(token, TokenType.ACCESS);
+
+        const needsRefreshToken = RefreshTokenRoutes.some(
+            (route) => req.path === route,
+        );
+
+        const tokenType = needsRefreshToken
+            ? TokenType.REFRESH
+            : TokenType.ACCESS;
+        const payload = jwtService.verifyToken(token, tokenType);
 
         if (!payload) {
             return res.status(401).json({
