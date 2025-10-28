@@ -25,7 +25,11 @@
 }
 
 .c-button-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-primary-hover)
+    );
     color: white;
 }
 
@@ -47,7 +51,7 @@
 
 .c-button-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
 }
 
 .c-button-primary:hover:not(:disabled)::before {
@@ -56,16 +60,16 @@
 
 .c-button-primary:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
 }
 
 .c-button-primary:focus:not(:disabled) {
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 .c-button:disabled {
-    background: #a0aec0 !important;
-    color: #ffffff !important;
+    background: var(--color-text-muted) !important;
+    color: var(--color-background-primary) !important;
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;
@@ -121,7 +125,7 @@
 
 .c-button-danger {
     padding: 0.5rem 1rem;
-    background-color: #dc3545;
+    background-color: var(--color-danger);
     color: white;
     border: none;
     border-radius: 6px;
@@ -131,5 +135,5 @@
 }
 
 .c-button-danger:hover {
-    background-color: #c82333;
+    background-color: var(--color-danger-hover);
 }

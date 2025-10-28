@@ -15,7 +15,7 @@
     padding: 12px 45px 12px 16px;
     border: 2px solid transparent;
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--color-background-primary);
     backdrop-filter: blur(10px);
     font-family:
         "Inter",
@@ -26,21 +26,21 @@
         sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: #2c3e50;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+    color: var(--color-text-primary);
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
     transition: all 0.3s ease;
     box-sizing: border-box;
 }
 
 .c-address-search-input:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
-    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
+    background: var(--color-background-primary);
 }
 
 .c-address-search-input::placeholder {
-    color: #7f8c8d;
+    color: var(--color-text-muted);
 }
 
 .c-address-search-icon {
@@ -62,8 +62,8 @@
 .c-address-search-spinner {
     width: 16px;
     height: 16px;
-    border: 2px solid #f3f4f6;
-    border-top: 2px solid #667eea;
+    border: 2px solid var(--color-border);
+    border-top: 2px solid var(--color-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -83,11 +83,11 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--color-background-primary);
     backdrop-filter: blur(20px);
     border-radius: 16px;
-    box-shadow: 0 16px 64px rgba(102, 126, 234, 0.2);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    box-shadow: 0 16px 64px rgba(59, 130, 246, 0.2);
+    border: 1px solid var(--color-border);
     margin-top: 8px;
     overflow: hidden;
 }
@@ -114,7 +114,11 @@
 }
 
 .c-address-search-result:hover {
-    background: linear-gradient(135deg, #667eea20, #764ba220);
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.1),
+        rgba(59, 130, 246, 0.15)
+    );
     transform: translateX(4px);
 }
 
@@ -124,7 +128,7 @@
 }
 
 .c-address-search-result-text {
-    color: #2c3e50;
+    color: var(--color-text-primary);
     font-weight: 500;
 }
 

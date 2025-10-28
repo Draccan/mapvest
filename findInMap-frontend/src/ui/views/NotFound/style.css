@@ -3,7 +3,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(
+        135deg,
+        var(--color-primary) 0%,
+        var(--color-primary-hover) 100%
+    );
     background-size: 400% 400%;
     animation: gradientShift 8s ease infinite;
 }
@@ -22,12 +26,12 @@
 .v-notfound-content {
     max-width: 600px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--color-background-primary);
     padding: 3rem 2.5rem;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px var(--color-shadow-strong);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--color-border-light);
 }
 
 .v-notfound-animation {
@@ -39,7 +43,7 @@
 .v-floating-404 {
     font-size: 4rem;
     font-weight: bold;
-    color: #e74c3c;
+    color: var(--color-danger);
     animation: float 3s ease-in-out infinite;
     display: inline-block;
 }
@@ -66,14 +70,14 @@
 .v-notfound-title {
     font-size: 2.5rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--color-text-primary);
     margin: 0 0 1.5rem 0;
     letter-spacing: -0.5px;
 }
 
 .v-notfound-description {
     font-size: 1.3rem;
-    color: #7f8c8d;
+    color: var(--color-text-muted);
     margin: 0 0 2.5rem 0;
     line-height: 1.6;
 }
@@ -84,7 +88,11 @@
 
 .v-home-button {
     display: inline-block;
-    background: linear-gradient(135deg, #3498db, #2ecc71);
+    background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-success)
+    );
     color: white;
     text-decoration: none;
     font-weight: 600;
@@ -92,13 +100,17 @@
     padding: 1rem 2rem;
     border-radius: 50px;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
 }
 
 .v-home-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
-    background: linear-gradient(135deg, #2ecc71, #3498db);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(
+        135deg,
+        var(--color-success),
+        var(--color-primary)
+    );
 }
 
 .v-home-button:active {
@@ -106,14 +118,14 @@
 }
 
 .v-notfound-footer {
-    border-top: 1px solid #ecf0f1;
+    border-top: 1px solid var(--color-border);
     padding-top: 1.5rem;
     margin-top: 1.5rem;
 }
 
 .v-notfound-footer p {
     font-size: 1rem;
-    color: #95a5a6;
+    color: var(--color-text-muted);
     margin: 0;
     font-style: italic;
 }

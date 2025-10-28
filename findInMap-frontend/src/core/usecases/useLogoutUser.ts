@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import { UnauthorizedError } from "../api/errors/UnauthorizedError";
+import { useApiClient } from "../contexts/ApiClientContext";
 
 interface UseLogoutUser {
     logout: () => Promise<void>;
@@ -10,6 +10,7 @@ interface UseLogoutUser {
 }
 
 export const useLogoutUser = (): UseLogoutUser => {
+    const apiClient = useApiClient();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>();
 
@@ -18,19 +19,11 @@ export const useLogoutUser = (): UseLogoutUser => {
         setError(null);
 
         try {
-            const refreshToken = TokenStorageService.getRefreshToken();
-            if (!refreshToken) {
-                return;
-            }
-
-            await fetch(`${API_URL}/users/logout`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${refreshToken}`,
-                },
-            });
+            await apiClient.logout();
         } catch (err) {
+            if (err instanceof UnauthorizedError) {
+                throw err;
+            }
             setError(err);
         } finally {
             setLoading(false);

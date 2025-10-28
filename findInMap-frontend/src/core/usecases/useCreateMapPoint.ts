@@ -1,9 +1,7 @@
-import { useState, useCallback } from "react";
-
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import { useApiClient } from "../contexts/ApiClientContext";
 import { type CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
+import { useRequestWrapper } from "./utils/useRequestWrapper";
 
 interface UseCreateMapPoint {
     loading: boolean;
@@ -12,41 +10,18 @@ interface UseCreateMapPoint {
 }
 
 export const useCreateMapPoint = (): UseCreateMapPoint => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<any>(null);
+    const apiClient = useApiClient();
 
-    const createMapPoint = useCallback(
-        async (data: CreateMapPointDto): Promise<MapPointDto | null> => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                const accessToken = TokenStorageService.getAccessToken();
-
-                const response = await window.fetch(`${API_URL}/map-points`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    body: JSON.stringify(data),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result: MapPointDto = await response.json();
-                return result;
-            } catch (err) {
-                setError(err);
-                return null;
-            } finally {
-                setLoading(false);
-            }
-        },
-        [],
+    const { fetch, loading, error } = useRequestWrapper(
+        (data: CreateMapPointDto) => apiClient.createMapPoint(data),
     );
+
+    const createMapPoint = async (
+        data: CreateMapPointDto,
+    ): Promise<MapPointDto | null> => {
+        const response = await fetch(data);
+        return response;
+    };
 
     return {
         loading,

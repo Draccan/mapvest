@@ -2,9 +2,10 @@ import debounce from "lodash-es/debounce";
 import mem from "mem";
 import { useCallback, useMemo, useState } from "react";
 
-import { API_URL } from "../../config";
-import TokenStorageService from "../../utils/TokenStorageService";
+import type ApiClient from "../api/ApiClient";
+import { useApiClient } from "../contexts/ApiClientContext";
 import type AddressDto from "../dtos/AddressDto";
+import { useRequestWrapper } from "./utils/useRequestWrapper";
 
 interface UseGetGooglePlaces {
     results: AddressDto[];
@@ -14,22 +15,10 @@ interface UseGetGooglePlaces {
 }
 
 const fetchAddressesRequest = async (
+    apiClient: ApiClient,
     searchQuery: string,
 ): Promise<AddressDto[]> => {
-    const accessToken = TokenStorageService.getAccessToken();
-
-    const response = await fetch(
-        `${API_URL}/search/addresses?text=${encodeURIComponent(searchQuery)}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-        },
-    );
-
-    return await response.json();
+    return await apiClient.searchAddresses(searchQuery);
 };
 
 const memoizedFetchAddresses = mem(fetchAddressesRequest, {
@@ -38,8 +27,12 @@ const memoizedFetchAddresses = mem(fetchAddressesRequest, {
 });
 
 export default function useGetGooglePlaces(): UseGetGooglePlaces {
+    const apiClient = useApiClient();
     const [results, setResults] = useState<AddressDto[]>([]);
-    const [loading, setLoading] = useState(false);
+
+    const { fetch, loading } = useRequestWrapper((searchQuery: string) =>
+        memoizedFetchAddresses(apiClient, searchQuery),
+    );
 
     const fetchAddresses = useCallback(async (searchQuery: string) => {
         if (searchQuery.length < 3) {
@@ -47,15 +40,11 @@ export default function useGetGooglePlaces(): UseGetGooglePlaces {
             return;
         }
 
-        setLoading(true);
-        try {
-            const searchResults = await memoizedFetchAddresses(searchQuery);
-            setResults(searchResults);
-        } catch (error) {
-            console.error("Address search error:", error);
+        const result = await fetch(searchQuery);
+        if (result) {
+            setResults(result);
+        } else {
             setResults([]);
-        } finally {
-            setLoading(false);
         }
     }, []);
 

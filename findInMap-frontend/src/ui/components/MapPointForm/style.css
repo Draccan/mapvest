@@ -14,7 +14,7 @@
 
 .c-mapPoint-form h2 {
     margin: 0 0 1.5rem 0;
-    color: #1a202c;
+    color: var(--color-text-primary);
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.025em;
@@ -30,7 +30,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
     letter-spacing: 0.025em;
 }
@@ -38,10 +38,10 @@
 .c-coordinate-input {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--color-border);
     border-radius: 12px;
-    background-color: #f7fafc;
-    color: #4a5568;
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-secondary);
     font-family: "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono", monospace;
     font-size: 0.9rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -50,9 +50,9 @@
 
 .c-coordinate-input:focus {
     outline: none;
-    border-color: #667eea;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--color-primary);
+    background-color: var(--color-background-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     transform: translateY(-1px);
 }
 
@@ -60,11 +60,11 @@
 .c-date-input {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--color-border);
     border-radius: 12px;
     font-size: 0.95rem;
-    background-color: #ffffff;
-    color: #2d3748;
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
 }
@@ -72,8 +72,8 @@
 .c-type-select:focus,
 .c-date-input:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     transform: translateY(-1px);
 }
 
@@ -82,29 +82,37 @@
 }
 
 .c-error {
-    color: #e53e3e;
-    background: linear-gradient(135deg, #fed7d7, #feb2b2);
-    border: 2px solid #fc8181;
+    color: var(--color-danger);
+    background: linear-gradient(
+        135deg,
+        rgba(239, 68, 68, 0.1),
+        rgba(239, 68, 68, 0.15)
+    );
+    border: 2px solid var(--color-danger);
     padding: 0.75rem 1rem;
     border-radius: 12px;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.15);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
 .c-instructions {
     margin-top: 2rem;
     padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, #e6fffa, #b2f5ea);
-    border-left: 4px solid #38b2ac;
+    background: linear-gradient(
+        135deg,
+        rgba(16, 185, 129, 0.1),
+        rgba(16, 185, 129, 0.15)
+    );
+    border-left: 4px solid var(--color-success);
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(56, 178, 172, 0.1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
 }
 
 .c-instructions p {
     margin: 0;
-    color: #234e52;
+    color: var(--color-text-primary);
     font-size: 0.9rem;
     font-weight: 500;
     line-height: 1.5;

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./ui/views/index.tsx";
+import "./ui/styles/theme.css";
 
 async function enableMocking() {
     if (!import.meta.env.DEV) {

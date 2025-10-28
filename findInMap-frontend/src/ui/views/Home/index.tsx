@@ -3,15 +3,17 @@ import React, { useState, useEffect } from "react";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
+import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import LogoSvg from "../../assets/logo.svg";
-import { useAuth } from "../../commons/hooks/useAuth";
 import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
+import { Skeleton } from "../../components/Skeleton";
+import { ThemeToggle } from "../../components/ThemeToggle";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("views.Home");
@@ -27,9 +29,10 @@ export const Home: React.FC = () => {
         fetch: fetchMapPoints,
         loading: loadingPoints,
         error,
+        hasFetched,
     } = useGetMapPoints();
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
-    const { logout } = useAuth();
+    const { loading: loadingLogout, logout } = useLogoutUser();
 
     useEffect(() => {
         if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();
@@ -51,6 +54,7 @@ export const Home: React.FC = () => {
 
     return (
         <div className="v-home">
+            <ThemeToggle className="v-home-ThemeToggle" />
             <div className="v-home-container">
                 <header className="v-home-header">
                     <div className="v-home-logo">
@@ -69,6 +73,7 @@ export const Home: React.FC = () => {
                             type="button"
                             kind="danger"
                             size="small"
+                            loading={loadingLogout}
                         >
                             {fm("logout")}
                         </Button>
@@ -83,6 +88,7 @@ export const Home: React.FC = () => {
                             />
                         </div>
                         <div className="v-home-map">
+                            {loadingPoints && !hasFetched && <Skeleton />}
                             <MapContainer
                                 mapPoints={mapPoints}
                                 onMapClick={handleMapPointSelection}
@@ -98,11 +104,6 @@ export const Home: React.FC = () => {
                         />
                     </div>
                 </div>
-                {loadingPoints && (
-                    <div className="v-home-loading">
-                        {fm("loadingMapPoints")}
-                    </div>
-                )}
             </div>
         </div>
     );
