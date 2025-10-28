@@ -1,4 +1,4 @@
-import { http, HttpResponse, passthrough } from "msw";
+import { http, HttpResponse, passthrough, delay } from "msw";
 import { type MapPointDto } from "../src/core/dtos/MapPointDto";
 import { MapPointType } from "../src/core/commons/enums";
 
@@ -43,7 +43,8 @@ let userIdCounter = 2;
 
 export const handlers = [
     http.all("https://maps.googleapis.com/*", () => passthrough()),
-    http.get("http://localhost:3001/search/addresses", ({ request }) => {
+    http.get("http://localhost:3001/search/addresses", async ({ request }) => {
+        await delay(2000);
         const url = new URL(request.url);
         const text = url.searchParams.get("text") || "";
 
@@ -61,10 +62,12 @@ export const handlers = [
         ];
         return HttpResponse.json(mockAddresses);
     }),
-    http.get("http://localhost:3001/map-points", () => {
+    http.get("http://localhost:3001/map-points", async () => {
+        await delay(2000);
         return HttpResponse.json(mockMapPoints);
     }),
     http.post("http://localhost:3001/map-points", async ({ request }) => {
+        await delay(2000);
         const newPoint = (await request.json()) as Omit<
             MapPointDto,
             "id" | "createdAt"
@@ -81,6 +84,7 @@ export const handlers = [
         return HttpResponse.json(mapPoint, { status: 201 });
     }),
     http.post("http://localhost:3001/users", async ({ request }) => {
+        await delay(2000);
         const userData = (await request.json()) as {
             name: string;
             surname: string;
@@ -109,6 +113,7 @@ export const handlers = [
         return HttpResponse.json(userResponse, { status: 201 });
     }),
     http.post("http://localhost:3001/users/login", async ({ request }) => {
+        await delay(2000);
         const credentials = (await request.json()) as {
             email: string;
             password: string;
@@ -139,6 +144,7 @@ export const handlers = [
         });
     }),
     http.post("http://localhost:3001/token/refresh", async ({ request }) => {
+        await delay(2000);
         const authHeader = request.headers.get("Authorization");
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -168,6 +174,7 @@ export const handlers = [
         });
     }),
     http.post("http://localhost:3001/users/logout", async () => {
+        await delay(2000);
         return HttpResponse.json();
     }),
 ];

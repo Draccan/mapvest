@@ -3,6 +3,7 @@ import { IntlProvider } from "react-intl";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { ApiClientProvider } from "../../core/contexts/ApiClientContext";
+import { ThemeProvider } from "../../core/contexts/ThemeContext";
 import i18nMessages from "../../i18n";
 import routes from "../commons/routes";
 import { RoutesWrapper } from "../components/RoutesWrapper";
@@ -18,44 +19,46 @@ const App: React.FC = () => {
 
     return (
         <div className="v-App">
-            <IntlProvider
-                locale={browserLanguage}
-                key={browserLanguage}
-                messages={
-                    browserLanguage === "it-IT"
-                        ? i18nMessages.it
-                        : i18nMessages.en
-                }
-            >
-                <ApiClientProvider>
-                    <Router>
-                        <RoutesWrapper>
-                            <Routes>
-                                <Route
-                                    path={routes.login()}
-                                    element={<Login />}
-                                />
-                                <Route
-                                    path={routes.register()}
-                                    element={<Register />}
-                                />
-                                <Route
-                                    path={routes.home()}
-                                    element={<Home />}
-                                />
-                                <Route
-                                    path={routes.about()}
-                                    element={<About />}
-                                />
-                                <Route
-                                    path={routes.notFound()}
-                                    element={<NotFound />}
-                                />
-                            </Routes>
-                        </RoutesWrapper>
-                    </Router>
-                </ApiClientProvider>
-            </IntlProvider>
+            <ThemeProvider>
+                <IntlProvider
+                    locale={browserLanguage}
+                    key={browserLanguage}
+                    messages={
+                        browserLanguage === "it-IT"
+                            ? i18nMessages.it
+                            : i18nMessages.en
+                    }
+                >
+                    <ApiClientProvider>
+                        <Router>
+                            <RoutesWrapper>
+                                <Routes>
+                                    <Route
+                                        path={routes.login()}
+                                        element={<Login />}
+                                    />
+                                    <Route
+                                        path={routes.register()}
+                                        element={<Register />}
+                                    />
+                                    <Route
+                                        path={routes.home()}
+                                        element={<Home />}
+                                    />
+                                    <Route
+                                        path={routes.about()}
+                                        element={<About />}
+                                    />
+                                    <Route
+                                        path={routes.notFound()}
+                                        element={<NotFound />}
+                                    />
+                                </Routes>
+                            </RoutesWrapper>
+                        </Router>
+                    </ApiClientProvider>
+                </IntlProvider>
+            </ThemeProvider>
         </div>
     );
 };

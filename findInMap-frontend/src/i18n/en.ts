@@ -28,6 +28,10 @@ export default flattenObject({
             saving: "Saving...",
             clickOnMapInstructions: "Click on the map to select coordinates.",
         },
+        ThemeToggle: {
+            switchToDark: "Switch to dark mode",
+            switchToLight: "Switch to light mode",
+        },
     },
     views: {
         About: {
@@ -38,7 +42,6 @@ export default flattenObject({
         Home: {
             about: "About",
             logout: "Logout",
-            loadingMapPoints: "Loading map points...",
         },
         Login: {
             emailLabel: "Email:",

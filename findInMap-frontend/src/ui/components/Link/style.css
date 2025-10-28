@@ -1,5 +1,5 @@
 .c-link {
-    color: #4a5568;
+    color: var(--color-text-secondary);
     text-decoration: none;
     padding: 0.75rem 1.5rem;
     border-radius: 10px;
@@ -21,7 +21,7 @@
 }
 
 .c-link-nav {
-    color: #4a5568;
+    color: var(--color-text-secondary);
 }
 
 .c-link-nav::before {
@@ -31,7 +31,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-primary-hover)
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
     border-radius: 10px;
@@ -40,7 +44,7 @@
 .c-link-nav:hover {
     color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
 }
 
 .c-link-nav:hover::before {
@@ -54,7 +58,7 @@
 
 .c-link-nav:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 .c-link-nav:active {

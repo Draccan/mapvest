@@ -29,6 +29,10 @@ export default flattenObject({
             clickOnMapInstructions:
                 "Clicca sulla mappa per selezionare le coordinate.",
         },
+        ThemeToggle: {
+            switchToDark: "Passa alla modalità scura",
+            switchToLight: "Passa alla modalità chiara",
+        },
     },
     views: {
         About: {
@@ -39,7 +43,6 @@ export default flattenObject({
         Home: {
             about: "Chi sono",
             logout: "Esci",
-            loadingMapPoints: "Caricamento punti mappa...",
         },
         Login: {
             emailLabel: "Email:",
@@ -50,7 +53,7 @@ export default flattenObject({
             registerHere: "Registrati qui",
         },
         NotFound: {
-            title: "Oops! Sei perso!",
+            title: "Oops! Ti sei perso!",
             description: "Sembra che tu abbia preso una direzione sbagliata.",
             description2: "Questo luogo non è ancora stato mappato!",
             backToMap: "Torna alla Mappa",
