@@ -1,6 +1,6 @@
 import CreateUserDto from "../../../src/core/dtos/CreateUserDto";
 import { db } from "../../../src/db";
-import { users } from "../../../src/db/schema";
+import { users, usersGroups, groups } from "../../../src/db/schema";
 import { DrizzleUserRepository } from "../../../src/dependency-implementations/DrizzleUserRepository";
 
 describe("DrizzleUserRepository", () => {
@@ -11,6 +11,8 @@ describe("DrizzleUserRepository", () => {
     });
 
     beforeEach(async () => {
+        await db.delete(usersGroups);
+        await db.delete(groups);
         await db.delete(users);
     });
 

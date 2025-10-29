@@ -38,4 +38,40 @@ describe("Create User Route", () => {
 
         expect(response.body).toHaveProperty("message");
     });
+
+    it("POST /users should create a 'First Group' for the new user", async () => {
+        const newUser = {
+            name: "GroupTest",
+            surname: "User",
+            email: `grouptest-${Date.now()}@example.com`,
+            password: "testpass123",
+        };
+
+        const createResponse = await request(app)
+            .post("/users")
+            .send(newUser)
+            .expect(201);
+
+        createResponse.body.id;
+
+        const loginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: newUser.email,
+                password: newUser.password,
+            })
+            .expect(200);
+
+        const accessToken = loginResponse.body.token;
+
+        const groupsResponse = await request(app)
+            .get("/groups")
+            .set("Authorization", `Bearer ${accessToken}`)
+            .expect(200);
+
+        expect(Array.isArray(groupsResponse.body)).toBe(true);
+        expect(groupsResponse.body.length).toBe(1);
+        expect(groupsResponse.body[0].name).toBe("First Group");
+        expect(groupsResponse.body[0].role).toBe("owner");
+    });
 });

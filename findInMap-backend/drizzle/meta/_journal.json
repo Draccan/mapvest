@@ -8,6 +8,13 @@
       "when": 1759246215938,
       "tag": "0000_silent_puppet_master",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1730188800000,
+      "tag": "0001_create_group_table",
+      "breakpoints": true
     }
   ]
 }

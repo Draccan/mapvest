@@ -1,12 +1,40 @@
 import CreateUser from "../../../src/core/usecases/CreateUser";
 import UserRepository from "../../../src/core/dependencies/UserRepository";
+import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import UserEntity from "../../../src/core/entities/UserEntity";
+import GroupEntity from "../../../src/core/entities/GroupEntity";
 import UserEmailAlreadyRegistered from "../../../src/core/errors/UserEmailAlreadyRegistered";
+import { UserGroupRole } from "../../../src/core/commons/enums";
 
 const mockUserRepository: jest.Mocked<UserRepository> = {
     create: jest.fn(),
     findByEmail: jest.fn(),
 };
+
+const mockGroupRepository: jest.Mocked<GroupRepository> = {
+    findByUserId: jest.fn(),
+    createGroup: jest.fn(),
+    addUserToGroup: jest.fn(),
+};
+
+jest.mock("../../../src/db", () => ({
+    db: {
+        transaction: jest.fn((callback) =>
+            callback({
+                insert: jest.fn().mockReturnValue({
+                    values: jest.fn().mockReturnValue({
+                        returning: jest.fn().mockResolvedValue([]),
+                    }),
+                }),
+                select: jest.fn().mockReturnValue({
+                    from: jest.fn().mockReturnValue({
+                        where: jest.fn().mockResolvedValue([]),
+                    }),
+                }),
+            }),
+        ),
+    },
+}));
 
 describe("CreateUser", () => {
     let createUser: CreateUser;
@@ -14,7 +42,7 @@ describe("CreateUser", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        createUser = new CreateUser(mockUserRepository);
+        createUser = new CreateUser(mockUserRepository, mockGroupRepository);
     });
 
     describe("exec", () => {
@@ -36,8 +64,18 @@ describe("CreateUser", () => {
                 updatedAt: mockDate,
             };
 
+            const mockCreatedGroup: GroupEntity = {
+                id: "group-123",
+                name: "First Group",
+                createdBy: "user-123",
+                createdAt: mockDate,
+                updatedAt: mockDate,
+            };
+
             mockUserRepository.findByEmail.mockResolvedValue(null);
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);
+            mockGroupRepository.createGroup.mockResolvedValue(mockCreatedGroup);
+            mockGroupRepository.addUserToGroup.mockResolvedValue();
 
             const result = await createUser.exec(userData);
 
@@ -52,10 +90,13 @@ describe("CreateUser", () => {
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(
                 userData.email,
             );
-            expect(mockUserRepository.create).toHaveBeenCalledWith({
-                ...userData,
-                password: expect.any(String),
-            });
+            expect(mockUserRepository.create).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    ...userData,
+                    password: expect.any(String),
+                }),
+                expect.anything(), // Transaction parameter
+            );
             expect(
                 mockUserRepository.create.mock.calls[0][0].password,
             ).not.toBe(userData.password);
@@ -108,15 +149,28 @@ describe("CreateUser", () => {
                 updatedAt: mockDate,
             };
 
+            const mockCreatedGroup: GroupEntity = {
+                id: "group-456",
+                name: "First Group",
+                createdBy: "security-user-456",
+                createdAt: mockDate,
+                updatedAt: mockDate,
+            };
+
             mockUserRepository.findByEmail.mockResolvedValue(null);
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);
+            mockGroupRepository.createGroup.mockResolvedValue(mockCreatedGroup);
+            mockGroupRepository.addUserToGroup.mockResolvedValue();
 
             await createUser.exec(userData);
 
-            expect(mockUserRepository.create).toHaveBeenCalledWith({
-                ...userData,
-                password: expect.any(String),
-            });
+            expect(mockUserRepository.create).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    ...userData,
+                    password: expect.any(String),
+                }),
+                expect.anything(), // Transaction parameter
+            );
 
             const createCall = mockUserRepository.create.mock.calls[0][0];
             expect(createCall.password).not.toBe(userData.password);
@@ -141,8 +195,18 @@ describe("CreateUser", () => {
                 updatedAt: mockDate,
             };
 
+            const mockCreatedGroup: GroupEntity = {
+                id: "group-789",
+                name: "First Group",
+                createdBy: "special-user-789",
+                createdAt: mockDate,
+                updatedAt: mockDate,
+            };
+
             mockUserRepository.findByEmail.mockResolvedValue(null);
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);
+            mockGroupRepository.createGroup.mockResolvedValue(mockCreatedGroup);
+            mockGroupRepository.addUserToGroup.mockResolvedValue();
 
             const result = await createUser.exec(userData);
 
@@ -172,8 +236,18 @@ describe("CreateUser", () => {
                 updatedAt: mockDate,
             };
 
+            const mockCreatedGroup: GroupEntity = {
+                id: "group-999",
+                name: "First Group",
+                createdBy: "private-user-999",
+                createdAt: mockDate,
+                updatedAt: mockDate,
+            };
+
             mockUserRepository.findByEmail.mockResolvedValue(null);
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);
+            mockGroupRepository.createGroup.mockResolvedValue(mockCreatedGroup);
+            mockGroupRepository.addUserToGroup.mockResolvedValue();
 
             const result = await createUser.exec(userData);
 
@@ -208,7 +282,17 @@ describe("CreateUser", () => {
                 updatedAt: mockDate,
             };
 
+            const mockCreatedGroup: GroupEntity = {
+                id: "group-111",
+                name: "First Group",
+                createdBy: "case-user-111",
+                createdAt: mockDate,
+                updatedAt: mockDate,
+            };
+
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);
+            mockGroupRepository.createGroup.mockResolvedValue(mockCreatedGroup);
+            mockGroupRepository.addUserToGroup.mockResolvedValue();
 
             const result = await createUser.exec(userData);
 

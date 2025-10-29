@@ -1,9 +1,8 @@
 import request from "supertest";
 
 import { getTestApp } from "./setup";
-import { testMapPoint } from "./helpers";
 
-describe("Get Map Points Route", () => {
+describe("Get Groups Route", () => {
     let app: any;
     let accessToken: string;
 
@@ -12,9 +11,9 @@ describe("Get Map Points Route", () => {
 
         // Create a unique user for this test suite
         const uniqueUser = {
-            name: "MapPoints",
+            name: "Groups",
             surname: "TestUser",
-            email: `mappoints-test-${Date.now()}@example.com`,
+            email: `groups-test-${Date.now()}@example.com`,
             password: "testpass123",
         };
 
@@ -28,39 +27,47 @@ describe("Get Map Points Route", () => {
         accessToken = loginResponse.body.token;
     });
 
-    it("GET /map-points should return empty array initially", async () => {
+    it("GET /groups should return user groups", async () => {
         const response = await request(app)
-            .get("/map-points")
+            .get("/groups")
             .set("Authorization", `Bearer ${accessToken}`)
             .expect(200);
 
         expect(Array.isArray(response.body)).toBe(true);
     });
 
-    it("GET /map-points should return created map points", async () => {
-        await request(app)
-            .post("/map-points")
-            .set("Authorization", `Bearer ${accessToken}`)
-            .send(testMapPoint);
-
+    it("GET /groups should return correct group structure when groups exist", async () => {
         const response = await request(app)
-            .get("/map-points")
+            .get("/groups")
             .set("Authorization", `Bearer ${accessToken}`)
             .expect(200);
 
         expect(Array.isArray(response.body)).toBe(true);
-        expect(response.body.length).toBeGreaterThan(0);
+        if (response.body.length > 0) {
+            const group = response.body[0];
+            expect(typeof group.id).toBe("string");
+            expect(typeof group.name).toBe("string");
+            expect(["owner", "admin", "contributor"]).toContain(group.role);
+        }
     });
 
-    it("GET /map-points should return 401 without token", async () => {
-        const response = await request(app).get("/map-points").expect(401);
+    it("GET /groups should return 401 without token", async () => {
+        const response = await request(app).get("/groups").expect(401);
         expect(response.body).toHaveProperty("error");
     });
 
-    it("GET /map-points should return 401 with invalid token", async () => {
+    it("GET /groups should return 401 with invalid token", async () => {
         const response = await request(app)
-            .get("/map-points")
+            .get("/groups")
             .set("Authorization", "Bearer invalid-token")
+            .expect(401);
+        expect(response.body).toHaveProperty("error");
+    });
+
+    it("GET /groups should return 401 with malformed Authorization header", async () => {
+        const response = await request(app)
+            .get("/groups")
+            .set("Authorization", "InvalidFormat")
             .expect(401);
         expect(response.body).toHaveProperty("error");
     });

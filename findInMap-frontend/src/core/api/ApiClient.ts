@@ -167,12 +167,17 @@ export default class ApiClient {
     ): Promise<UserDto | { message: string }> {
         const response = await fetch(`${API_URL}/users`, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify(userData),
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to create user");
+            throw new Error(
+                errorData.error || errorData.message || "Failed to create user",
+            );
         }
 
         return response.json();
