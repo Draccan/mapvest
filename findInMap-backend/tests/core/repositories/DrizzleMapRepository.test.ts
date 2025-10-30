@@ -15,8 +15,8 @@ describe("DrizzleMapRepository", () => {
         await db.delete(mapPoints);
     });
 
-    describe("create", () => {
-        it("should create a new map point in the database", async () => {
+    describe("createMapPoint", () => {
+        it("should createMapPoint a new map point in the database", async () => {
             const createMapPointDto: CreateMapPointDto = {
                 long: 12.4964,
                 lat: 41.9028,
@@ -24,7 +24,7 @@ describe("DrizzleMapRepository", () => {
                 date: "2024-01-01",
             };
 
-            const result = await repository.create(createMapPointDto);
+            const result = await repository.createMapPoint(createMapPointDto);
 
             expect(result).toBeDefined();
             expect(result.id).toBeDefined();
@@ -58,7 +58,7 @@ describe("DrizzleMapRepository", () => {
             ];
 
             for (const testCase of testCases) {
-                const result = await repository.create(testCase);
+                const result = await repository.createMapPoint(testCase);
                 expect(result.type).toBe(testCase.type);
                 expect(result.long).toBe(testCase.long);
                 expect(result.lat).toBe(testCase.lat);
@@ -66,9 +66,9 @@ describe("DrizzleMapRepository", () => {
         });
     });
 
-    describe("findAll", () => {
+    describe("findAllMapPoints", () => {
         it("should return empty array when no map points exist", async () => {
-            const result = await repository.findAll();
+            const result = await repository.findAllMapPoints();
             expect(Array.isArray(result)).toBe(true);
             expect(result.length).toBe(0);
         });
@@ -96,10 +96,10 @@ describe("DrizzleMapRepository", () => {
             ];
 
             for (const point of testPoints) {
-                await repository.create(point);
+                await repository.createMapPoint(point);
             }
 
-            const result = await repository.findAll();
+            const result = await repository.findAllMapPoints();
 
             expect(result.length).toBe(3);
             expect(result.every((point) => point.id !== undefined)).toBe(true);
@@ -124,8 +124,8 @@ describe("DrizzleMapRepository", () => {
                 date: "2024-01-01",
             };
 
-            await repository.create(precisePoint);
-            const result = await repository.findAll();
+            await repository.createMapPoint(precisePoint);
+            const result = await repository.findAllMapPoints();
 
             expect(result.length).toBe(1);
             expect(result[0].long).toBeCloseTo(precisePoint.long, 6);

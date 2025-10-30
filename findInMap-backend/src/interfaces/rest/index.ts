@@ -12,6 +12,7 @@ import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
+import GetGroupMaps from "../../core/usecases/GetGroupMaps";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
@@ -25,6 +26,7 @@ import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
 import GetGroupsRoute from "./routes/GetGroupsRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
+import GetMapsRoute from "./routes/GetMapsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
 import LoginUserRoute from "./routes/LoginUserRoute";
@@ -52,6 +54,7 @@ export default class RestInterface {
             logoutUser: LogoutUser;
             refreshToken: RefreshToken;
             searchAddresses: SearchAddresses;
+            getGroupMaps: GetGroupMaps;
         },
         private jwtService: JwtService,
     ) {
@@ -60,6 +63,7 @@ export default class RestInterface {
             CreateUserRoute(usecases.createUser),
             GetGroupsRoute(usecases.getUserGroups),
             GetMapPointsRoute(usecases.getMapPoints),
+            GetMapsRoute(usecases.getGroupMaps),
             HealthRoute(),
             InfoRoute(),
             LoginUserRoute(usecases.loginUser),

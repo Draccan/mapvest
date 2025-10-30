@@ -1,4 +1,4 @@
-import MapPointRepository from "../dependencies/MapPointRepository";
+import MapRepository from "../dependencies/MapRepository";
 import { CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import { makeMapPointDto, MapPointDto } from "../dtos/MapPointDto";
 import { RateLimitError } from "../errors/RateLimitError";
@@ -6,7 +6,7 @@ import { RateLimitService } from "../services/RateLimitService";
 
 export default class CreateMapPoint {
     constructor(
-        private mapPointRepository: MapPointRepository,
+        private mapPointRepository: MapRepository,
         private rateLimitService: RateLimitService,
     ) {}
 
@@ -20,7 +20,7 @@ export default class CreateMapPoint {
             throw new RateLimitError(remainingTime);
         }
 
-        const mapPoint = await this.mapPointRepository.create(data);
+        const mapPoint = await this.mapPointRepository.createMapPoint(data);
 
         this.rateLimitService.recordRequest(clientIp);
 

@@ -1,12 +1,13 @@
 import { MapPointType } from "../../../src/core/commons/enums";
-import MapPointRepository from "../../../src/core/dependencies/MapPointRepository";
+import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import GetMapPoints from "../../../src/core/usecases/GetMapPoints";
 
-const mockMapPointRepository: jest.Mocked<MapPointRepository> = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findById: jest.fn(),
+const mockMapPointRepository: jest.Mocked<MapRepository> = {
+    createMapPoint: jest.fn(),
+    findAllMapPoints: jest.fn(),
+    findMapPointById: jest.fn(),
+    findMapByGroupId: jest.fn(),
 };
 
 describe("GetMapPoints", () => {
@@ -41,7 +42,9 @@ describe("GetMapPoints", () => {
                 },
             ];
 
-            mockMapPointRepository.findAll.mockResolvedValue(mockMapPoints);
+            mockMapPointRepository.findAllMapPoints.mockResolvedValue(
+                mockMapPoints,
+            );
 
             const result = await getMapPoints.exec();
 
@@ -63,16 +66,20 @@ describe("GetMapPoints", () => {
                     createdAt: mockDate,
                 },
             ]);
-            expect(mockMapPointRepository.findAll).toHaveBeenCalledTimes(1);
+            expect(
+                mockMapPointRepository.findAllMapPoints,
+            ).toHaveBeenCalledTimes(1);
         });
 
         it("should return empty array when no map points exist", async () => {
-            mockMapPointRepository.findAll.mockResolvedValue([]);
+            mockMapPointRepository.findAllMapPoints.mockResolvedValue([]);
 
             const result = await getMapPoints.exec();
 
             expect(result).toEqual([]);
-            expect(mockMapPointRepository.findAll).toHaveBeenCalledTimes(1);
+            expect(
+                mockMapPointRepository.findAllMapPoints,
+            ).toHaveBeenCalledTimes(1);
         });
     });
 });

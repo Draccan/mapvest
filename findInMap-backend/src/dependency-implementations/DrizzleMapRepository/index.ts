@@ -1,14 +1,16 @@
 import { eq, sql } from "drizzle-orm";
 
-import MapPointRepository from "../../core/dependencies/MapPointRepository";
+import MapRepository from "../../core/dependencies/MapRepository";
 import { CreateMapPointDto } from "../../core/dtos/CreateMapPointDto";
+import MapEntity from "../../core/entities/MapEntity";
 import { MapPointEntity } from "../../core/entities/MapPointEntity";
 import { db } from "../../db";
-import { mapPoints } from "../../db/schema";
+import { mapPoints, maps } from "../../db/schema";
 import { makeMapPointEntity } from "./converters/makeMapPointEntity";
+import { makeMapEntity } from "./converters/makeMapEntity";
 
-export class DrizzleMapRepository implements MapPointRepository {
-    async findAll(): Promise<MapPointEntity[]> {
+export class DrizzleMapRepository implements MapRepository {
+    async findAllMapPoints(): Promise<MapPointEntity[]> {
         const allMapPoints = await db
             .select({
                 id: mapPoints.id,
@@ -24,7 +26,16 @@ export class DrizzleMapRepository implements MapPointRepository {
         return allMapPoints.map(makeMapPointEntity);
     }
 
-    async create(data: CreateMapPointDto): Promise<MapPointEntity> {
+    async findMapByGroupId(groupId: string): Promise<MapEntity[]> {
+        const dbMaps = await db
+            .select()
+            .from(maps)
+            .where(eq(maps.groupId, groupId));
+
+        return dbMaps.map(makeMapEntity);
+    }
+
+    async createMapPoint(data: CreateMapPointDto): Promise<MapPointEntity> {
         const [createdMapPoint] = await db
             .insert(mapPoints)
             .values({
@@ -45,7 +56,7 @@ export class DrizzleMapRepository implements MapPointRepository {
         return makeMapPointEntity(createdMapPoint);
     }
 
-    async findById(id: number): Promise<MapPointEntity | null> {
+    async findMapPointById(id: number): Promise<MapPointEntity | null> {
         const [mapPoint] = await db
             .select({
                 id: mapPoints.id,

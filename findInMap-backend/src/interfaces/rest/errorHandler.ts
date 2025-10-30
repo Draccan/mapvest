@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { error as openapiValidatorErrors } from "express-openapi-validator";
 
 import InvalidCredentialsError from "../../core/errors/InvalidCredentialsError";
+import NotAllowedActionError from "../../core/errors/NotAllowedActionError";
 import { RateLimitError } from "../../core/errors/RateLimitError";
 import UserEmailAlreadyRegistered from "../../core/errors/UserEmailAlreadyRegistered";
 import LoggerService from "../../core/services/LoggerService";
@@ -22,6 +23,10 @@ export default function errorHandler(
         });
     } else if (error instanceof InvalidCredentialsError) {
         res.status(401).json({
+            error: error.message,
+        });
+    } else if (error instanceof NotAllowedActionError) {
+        res.status(403).json({
             error: error.message,
         });
     } else if (error instanceof openapiValidatorErrors.UnsupportedMediaType) {

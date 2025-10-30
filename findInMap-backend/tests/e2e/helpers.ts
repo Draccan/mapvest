@@ -5,6 +5,7 @@ import JwtService from "../../src/core/services/JwtService";
 import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
 import CreateMapPoint from "../../src/core/usecases/CreateMapPoint";
 import CreateUser from "../../src/core/usecases/CreateUser";
+import GetGroupMaps from "../../src/core/usecases/GetGroupMaps";
 import GetMapPoints from "../../src/core/usecases/GetMapPoints";
 import GetUserGroups from "../../src/core/usecases/GetUserGroups";
 import LoginUser from "../../src/core/usecases/LoginUser";
@@ -46,6 +47,7 @@ export function createTestApp() {
         rateLimitService,
     );
     const createUser = new CreateUser(userRepository, groupRepository);
+    const getGroupMaps = new GetGroupMaps(mapPointRepository, groupRepository);
     const getMapPoints = new GetMapPoints(mapPointRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
@@ -63,6 +65,7 @@ export function createTestApp() {
         {
             createMapPoint,
             createUser,
+            getGroupMaps,
             getMapPoints,
             getUserGroups,
             loginUser,

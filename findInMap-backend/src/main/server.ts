@@ -18,9 +18,11 @@ import GoogleRepository from "../dependency-implementations/GoogleRepository";
 import RestInterface from "../interfaces/rest";
 import config from "./config";
 
+import GetGroupMaps from "../core/usecases/GetGroupMaps";
+
 // Repositories
 const groupRepository = new DrizzleGroupRepository();
-const mapPointRepository = new DrizzleMapRepository();
+const mapRepository = new DrizzleMapRepository();
 const userRepository = new DrizzleUserRepository();
 const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 
@@ -31,9 +33,10 @@ const tokenBlacklistService = new TokenBlacklistService(config.jwtSecret);
 const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 
 // Usecases
-const getMapPoints = new GetMapPoints(mapPointRepository);
-const createMapPoint = new CreateMapPoint(mapPointRepository, rateLimitService);
+const getMapPoints = new GetMapPoints(mapRepository);
+const createMapPoint = new CreateMapPoint(mapRepository, rateLimitService);
 const createUser = new CreateUser(userRepository, groupRepository);
+const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
 const getUserGroups = new GetUserGroups(groupRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
 const logoutUser = new LogoutUser(jwtService);
@@ -56,6 +59,7 @@ const restInterface = new RestInterface(
         logoutUser,
         refreshToken,
         searchAddresses,
+        getGroupMaps,
     },
     jwtService,
 );

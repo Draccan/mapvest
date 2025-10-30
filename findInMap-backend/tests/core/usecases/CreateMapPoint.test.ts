@@ -1,15 +1,16 @@
 import { MapPointType } from "../../../src/core/commons/enums";
-import MapPointRepository from "../../../src/core/dependencies/MapPointRepository";
+import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import { RateLimitError } from "../../../src/core/errors/RateLimitError";
 import { RateLimitService } from "../../../src/core/services/RateLimitService";
 import CreateMapPoint from "../../../src/core/usecases/CreateMapPoint";
 
-const mockMapPointRepository: jest.Mocked<MapPointRepository> = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findById: jest.fn(),
+const mockMapPointRepository: jest.Mocked<MapRepository> = {
+    createMapPoint: jest.fn(),
+    findAllMapPoints: jest.fn(),
+    findMapPointById: jest.fn(),
+    findMapByGroupId: jest.fn(),
 };
 
 const mockRateLimitService: jest.Mocked<RateLimitService> = {
@@ -52,7 +53,7 @@ describe("CreateMapPoint", () => {
             };
 
             mockRateLimitService.isAllowed.mockReturnValue(true);
-            mockMapPointRepository.create.mockResolvedValue(
+            mockMapPointRepository.createMapPoint.mockResolvedValue(
                 mockCreatedMapPoint,
             );
 
@@ -72,7 +73,7 @@ describe("CreateMapPoint", () => {
             expect(mockRateLimitService.recordRequest).toHaveBeenCalledWith(
                 clientIp,
             );
-            expect(mockMapPointRepository.create).toHaveBeenCalledWith(
+            expect(mockMapPointRepository.createMapPoint).toHaveBeenCalledWith(
                 mapPointData,
             );
         });
@@ -96,7 +97,9 @@ describe("CreateMapPoint", () => {
                 clientIp,
             );
             expect(mockRateLimitService.recordRequest).not.toHaveBeenCalled();
-            expect(mockMapPointRepository.create).not.toHaveBeenCalled();
+            expect(
+                mockMapPointRepository.createMapPoint,
+            ).not.toHaveBeenCalled();
         });
     });
 });
