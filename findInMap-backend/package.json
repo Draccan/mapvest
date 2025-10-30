@@ -20,8 +20,7 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "setup": "pnpm docker:up && sleep 5 && pnpm db:push",
-    "migrate": "tsx src/db/migrate.ts",
-    "deploy": "pnpm build && pnpm db:migrate && pnpm migrate && pnpm start"
+    "deploy": "pnpm build && pnpm db:migrate && pnpm start"
   },
   "keywords": [
     "map",
