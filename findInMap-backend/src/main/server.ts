@@ -12,7 +12,7 @@ import RefreshToken from "../core/usecases/RefreshToken";
 import SearchAddresses from "../core/usecases/SearchAddresses";
 import { client } from "../db";
 import { DrizzleGroupRepository } from "../dependency-implementations/DrizzleGroupRepository";
-import { DrizzleMapPointRepository } from "../dependency-implementations/DrizzleMapPointRepository";
+import { DrizzleMapRepository } from "../dependency-implementations/DrizzleMapRepository";
 import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUserRepository";
 import GoogleRepository from "../dependency-implementations/GoogleRepository";
 import RestInterface from "../interfaces/rest";
@@ -20,7 +20,7 @@ import config from "./config";
 
 // Repositories
 const groupRepository = new DrizzleGroupRepository();
-const mapPointRepository = new DrizzleMapPointRepository();
+const mapPointRepository = new DrizzleMapRepository();
 const userRepository = new DrizzleUserRepository();
 const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 

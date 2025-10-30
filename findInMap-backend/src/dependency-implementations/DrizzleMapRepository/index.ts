@@ -7,7 +7,7 @@ import { db } from "../../db";
 import { mapPoints } from "../../db/schema";
 import { makeMapPointEntity } from "./converters/makeMapPointEntity";
 
-export class DrizzleMapPointRepository implements MapPointRepository {
+export class DrizzleMapRepository implements MapPointRepository {
     async findAll(): Promise<MapPointEntity[]> {
         const allMapPoints = await db
             .select({

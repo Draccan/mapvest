@@ -12,7 +12,7 @@ import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
 import SearchAddresses from "../../src/core/usecases/SearchAddresses";
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
-import { DrizzleMapPointRepository } from "../../src/dependency-implementations/DrizzleMapPointRepository";
+import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
 import { DrizzleUserRepository } from "../../src/dependency-implementations/DrizzleUserRepository";
 import RestInterface from "../../src/interfaces/rest";
 
@@ -33,7 +33,7 @@ class MockGoogleRepository implements AddressesManagerRepository {
 
 export function createTestApp() {
     const groupRepository = new DrizzleGroupRepository();
-    const mapPointRepository = new DrizzleMapPointRepository();
+    const mapPointRepository = new DrizzleMapRepository();
     const userRepository = new DrizzleUserRepository();
     const googleRepository = new MockGoogleRepository();
 

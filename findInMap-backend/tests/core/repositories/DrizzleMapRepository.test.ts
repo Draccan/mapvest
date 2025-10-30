@@ -2,13 +2,13 @@ import { MapPointType } from "../../../src/core/commons/enums";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { db } from "../../../src/db";
 import { mapPoints } from "../../../src/db/schema";
-import { DrizzleMapPointRepository } from "../../../src/dependency-implementations/DrizzleMapPointRepository";
+import { DrizzleMapRepository } from "../../../src/dependency-implementations/DrizzleMapRepository";
 
-describe("DrizzleMapPointRepository", () => {
-    let repository: DrizzleMapPointRepository;
+describe("DrizzleMapRepository", () => {
+    let repository: DrizzleMapRepository;
 
     beforeAll(() => {
-        repository = new DrizzleMapPointRepository();
+        repository = new DrizzleMapRepository();
     });
 
     beforeEach(async () => {
