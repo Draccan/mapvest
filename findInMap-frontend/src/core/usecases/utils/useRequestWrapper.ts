@@ -24,7 +24,13 @@ export function useRequestWrapper<T, Args extends any[]>(
                 if (err instanceof UnauthorizedError) {
                     throw err;
                 }
-                setError(err);
+                const errorMessage =
+                    err instanceof Error
+                        ? err.message
+                        : typeof err === "string"
+                          ? err
+                          : "An unexpected error occurred";
+                setError(errorMessage);
                 return null;
             } finally {
                 setLoading(false);

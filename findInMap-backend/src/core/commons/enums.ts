@@ -3,3 +3,9 @@ export enum MapPointType {
     Aggression = "AGGRESSION",
     Robbery = "ROBBERY",
 }
+
+export enum UserGroupRole {
+    Owner = "owner",
+    Admin = "admin",
+    Contributor = "contributor",
+}

@@ -13,6 +13,7 @@ import LoggerService from "../../core/services/LoggerService";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
+import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
@@ -22,6 +23,7 @@ import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
+import GetGroupsRoute from "./routes/GetGroupsRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
@@ -45,6 +47,7 @@ export default class RestInterface {
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
             getMapPoints: GetMapPoints;
+            getUserGroups: GetUserGroups;
             loginUser: LoginUser;
             logoutUser: LogoutUser;
             refreshToken: RefreshToken;
@@ -55,6 +58,7 @@ export default class RestInterface {
         this.routes = [
             CreateMapPointRoute(usecases.createMapPoint),
             CreateUserRoute(usecases.createUser),
+            GetGroupsRoute(usecases.getUserGroups),
             GetMapPointsRoute(usecases.getMapPoints),
             HealthRoute(),
             InfoRoute(),

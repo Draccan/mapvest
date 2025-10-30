@@ -1,6 +1,6 @@
 export default class UserEmailAlreadyRegistered extends Error {
-    constructor(email: string) {
-        super(`User with email ${email} is already registered`);
+    constructor() {
+        super("There is something wrong");
         this.name = "UserEmailAlreadyRegistered";
     }
 }

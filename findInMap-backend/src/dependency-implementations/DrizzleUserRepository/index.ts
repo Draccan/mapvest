@@ -1,4 +1,6 @@
 import { eq } from "drizzle-orm";
+
+import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import UserRepository from "../../core/dependencies/UserRepository";
 import UserEntity from "../../core/entities/UserEntity";
 import CreateUserDto from "../../core/dtos/CreateUserDto";
@@ -7,8 +9,11 @@ import { users } from "../../db/schema";
 import { makeUserEntity } from "./converters/makeUserEntity";
 
 export class DrizzleUserRepository implements UserRepository {
-    async create(userData: CreateUserDto): Promise<UserEntity> {
-        const [createdUser] = await db
+    async create(
+        userData: CreateUserDto,
+        dbInstance: DbOrTransaction = db,
+    ): Promise<UserEntity> {
+        const [createdUser] = await dbInstance
             .insert(users)
             .values({
                 name: userData.name,

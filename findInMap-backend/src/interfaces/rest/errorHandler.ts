@@ -24,6 +24,12 @@ export default function errorHandler(
         res.status(401).json({
             error: error.message,
         });
+    } else if (error instanceof openapiValidatorErrors.UnsupportedMediaType) {
+        res.status(415).json({
+            error: "Unsupported Media Type",
+            message: "Content-Type must be application/json",
+            details: error.message,
+        });
     } else if (error instanceof RateLimitError) {
         res.status(429).json({
             error: error.message,

@@ -6,10 +6,12 @@ import TokenBlacklistService from "../../src/core/services/TokenBlacklistService
 import CreateMapPoint from "../../src/core/usecases/CreateMapPoint";
 import CreateUser from "../../src/core/usecases/CreateUser";
 import GetMapPoints from "../../src/core/usecases/GetMapPoints";
+import GetUserGroups from "../../src/core/usecases/GetUserGroups";
 import LoginUser from "../../src/core/usecases/LoginUser";
 import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
 import SearchAddresses from "../../src/core/usecases/SearchAddresses";
+import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapPointRepository } from "../../src/dependency-implementations/DrizzleMapPointRepository";
 import { DrizzleUserRepository } from "../../src/dependency-implementations/DrizzleUserRepository";
 import RestInterface from "../../src/interfaces/rest";
@@ -30,6 +32,7 @@ class MockGoogleRepository implements AddressesManagerRepository {
 }
 
 export function createTestApp() {
+    const groupRepository = new DrizzleGroupRepository();
     const mapPointRepository = new DrizzleMapPointRepository();
     const userRepository = new DrizzleUserRepository();
     const googleRepository = new MockGoogleRepository();
@@ -42,8 +45,9 @@ export function createTestApp() {
         mapPointRepository,
         rateLimitService,
     );
-    const createUser = new CreateUser(userRepository);
+    const createUser = new CreateUser(userRepository, groupRepository);
     const getMapPoints = new GetMapPoints(mapPointRepository);
+    const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);
     const refreshToken = new RefreshToken(jwtService);
@@ -60,6 +64,7 @@ export function createTestApp() {
             createMapPoint,
             createUser,
             getMapPoints,
+            getUserGroups,
             loginUser,
             logoutUser,
             refreshToken,
