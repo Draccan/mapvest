@@ -11,5 +11,6 @@ export default interface MapRepository {
     ): Promise<MapPointEntity>;
     findMapPointById(id: number): Promise<MapPointEntity | null>;
     findMapByGroupId(groupId: string): Promise<MapEntity[]>;
+    memoizedFindMapByGroupId(groupId: string): Promise<MapEntity[]>;
     createMap(groupId: string, data: CreateMapDto): Promise<MapEntity>;
 }

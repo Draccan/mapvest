@@ -10,7 +10,7 @@ export default class GetGroupMaps {
     ) {}
 
     async execute(groupId: string, userId: string): Promise<MapDto[]> {
-        const groups = await this.groupRepository.findByUserId(userId);
+        const groups = await this.groupRepository.memoizedFindByUserId(userId);
         if (groups.find((group) => group.group.id === groupId) === undefined) {
             throw new NotAllowedActionError("User cannot access this group");
         }

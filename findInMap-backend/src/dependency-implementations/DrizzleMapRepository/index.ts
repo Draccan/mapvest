@@ -1,4 +1,5 @@
 import { eq, sql } from "drizzle-orm";
+import mem from "mem";
 
 import MapRepository from "../../core/dependencies/MapRepository";
 import CreateMapDto from "../../core/dtos/CreateMapDto";
@@ -37,6 +38,10 @@ export class DrizzleMapRepository implements MapRepository {
 
         return dbMaps.map(makeMapEntity);
     }
+
+    memoizedFindMapByGroupId = mem(this.findMapByGroupId, {
+        maxAge: 1000 * 60,
+    });
 
     async createMapPoint(
         data: CreateMapPointDto,

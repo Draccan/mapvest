@@ -5,6 +5,7 @@ import DbOrTransaction from "./DatabaseTransaction";
 
 export default interface GroupRepository {
     findByUserId(userId: string): Promise<DetailedGroupEntity[]>;
+    memoizedFindByUserId(userId: string): Promise<DetailedGroupEntity[]>;
     createGroup(
         groupName: string,
         userId: string,

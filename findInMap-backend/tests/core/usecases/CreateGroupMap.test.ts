@@ -13,12 +13,14 @@ const mockMapRepository: jest.Mocked<MapRepository> = {
     createMapPoint: jest.fn(),
     findMapPointById: jest.fn(),
     createMap: jest.fn(),
+    memoizedFindMapByGroupId: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
+    memoizedFindByUserId: jest.fn(),
 };
 
 describe("CreateGroupMap", () => {
@@ -60,7 +62,9 @@ describe("CreateGroupMap", () => {
                 name: "New Map",
             };
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.createMap.mockResolvedValue(mockCreatedMap);
 
             const result = await createGroupMap.execute(
@@ -73,9 +77,9 @@ describe("CreateGroupMap", () => {
                 id: "map-123",
                 name: "New Map",
             });
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
             expect(mockMapRepository.createMap).toHaveBeenCalledWith(
                 groupId,
                 createMapDto,
@@ -102,15 +106,17 @@ describe("CreateGroupMap", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
 
             await expect(
                 createGroupMap.execute(requestedGroupId, userId, createMapDto),
             ).rejects.toThrow(NotAllowedActionError);
 
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
             expect(mockMapRepository.createMap).not.toHaveBeenCalled();
         });
 
@@ -140,7 +146,9 @@ describe("CreateGroupMap", () => {
                 name: "Contributor Map",
             };
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.createMap.mockResolvedValue(mockCreatedMap);
 
             const result = await createGroupMap.execute(
@@ -153,9 +161,9 @@ describe("CreateGroupMap", () => {
                 id: "map-456",
                 name: "Contributor Map",
             });
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
             expect(mockMapRepository.createMap).toHaveBeenCalledWith(
                 groupId,
                 createMapDto,
@@ -169,15 +177,15 @@ describe("CreateGroupMap", () => {
                 name: "New Map",
             };
 
-            mockGroupRepository.findByUserId.mockResolvedValue([]);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([]);
 
             await expect(
                 createGroupMap.execute(groupId, userId, createMapDto),
             ).rejects.toThrow(NotAllowedActionError);
 
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
             expect(mockMapRepository.createMap).not.toHaveBeenCalled();
         });
     });

@@ -15,6 +15,7 @@ const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
+    memoizedFindByUserId: jest.fn(),
 };
 
 jest.mock("../../../src/db", () => ({

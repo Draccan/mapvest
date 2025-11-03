@@ -10,12 +10,14 @@ const mockMapPointRepository: jest.Mocked<MapRepository> = {
     findMapPointById: jest.fn(),
     findMapByGroupId: jest.fn(),
     createMap: jest.fn(),
+    memoizedFindMapByGroupId: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
+    memoizedFindByUserId: jest.fn(),
 };
 
 describe("GetMapPoints", () => {
@@ -56,7 +58,7 @@ describe("GetMapPoints", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue([
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
                 {
                     group: {
                         id: groupId,
@@ -69,7 +71,7 @@ describe("GetMapPoints", () => {
                 },
             ]);
 
-            mockMapPointRepository.findMapByGroupId.mockResolvedValue([
+            mockMapPointRepository.memoizedFindMapByGroupId.mockResolvedValue([
                 {
                     id: mapId,
                     groupId: groupId,
@@ -101,11 +103,11 @@ describe("GetMapPoints", () => {
                     createdAt: mockDate,
                 },
             ]);
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
             expect(
-                mockMapPointRepository.findMapByGroupId,
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
+            expect(
+                mockMapPointRepository.memoizedFindMapByGroupId,
             ).toHaveBeenCalledWith(groupId);
             expect(
                 mockMapPointRepository.findAllMapPoints,
@@ -116,7 +118,7 @@ describe("GetMapPoints", () => {
         });
 
         it("should return empty array when no map points exist", async () => {
-            mockGroupRepository.findByUserId.mockResolvedValue([
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
                 {
                     group: {
                         id: groupId,
@@ -129,7 +131,7 @@ describe("GetMapPoints", () => {
                 },
             ]);
 
-            mockMapPointRepository.findMapByGroupId.mockResolvedValue([
+            mockMapPointRepository.memoizedFindMapByGroupId.mockResolvedValue([
                 {
                     id: mapId,
                     groupId: groupId,
@@ -142,11 +144,11 @@ describe("GetMapPoints", () => {
             const result = await getMapPoints.exec(userId, groupId, mapId);
 
             expect(result).toEqual([]);
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
             expect(
-                mockMapPointRepository.findMapByGroupId,
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
+            expect(
+                mockMapPointRepository.memoizedFindMapByGroupId,
             ).toHaveBeenCalledWith(groupId);
             expect(
                 mockMapPointRepository.findAllMapPoints,

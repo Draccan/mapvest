@@ -15,7 +15,7 @@ export default class CreateGroupMap {
         userId: string,
         data: CreateMapDto,
     ): Promise<MapDto> {
-        const groups = await this.groupRepository.findByUserId(userId);
+        const groups = await this.groupRepository.memoizedFindByUserId(userId);
         if (groups.find((group) => group.group.id === groupId) === undefined) {
             throw new NotAllowedActionError(
                 "User cannot creates map for this group",

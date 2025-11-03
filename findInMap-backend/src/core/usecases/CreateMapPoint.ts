@@ -16,14 +16,14 @@ export default class CreateMapPoint {
         groupId: string,
         mapId: string,
     ): Promise<MapPointDto> {
-        const groups = await this.groupRepository.findByUserId(userId);
+        const groups = await this.groupRepository.memoizedFindByUserId(userId);
         if (groups.find((group) => group.group.id === groupId) === undefined) {
             throw new NotAllowedActionError(
                 "User cannot access map for this group",
             );
         }
 
-        const maps = await this.mapRepository.findMapByGroupId(groupId);
+        const maps = await this.mapRepository.memoizedFindMapByGroupId(groupId);
         if (maps.find((map) => map.id === mapId) === undefined) {
             throw new NotAllowedActionError(
                 "This group has no access to the specified map",

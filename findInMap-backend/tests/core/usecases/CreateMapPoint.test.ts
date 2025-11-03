@@ -11,12 +11,14 @@ const mockMapRepository: jest.Mocked<MapRepository> = {
     findMapPointById: jest.fn(),
     findMapByGroupId: jest.fn(),
     createMap: jest.fn(),
+    memoizedFindMapByGroupId: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
+    memoizedFindByUserId: jest.fn(),
 };
 
 describe("CreateMapPoint", () => {
@@ -53,7 +55,7 @@ describe("CreateMapPoint", () => {
                 updated_at: mockDate,
             };
 
-            mockGroupRepository.findByUserId.mockResolvedValue([
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
                 {
                     group: {
                         id: groupId,
@@ -66,7 +68,7 @@ describe("CreateMapPoint", () => {
                 },
             ]);
 
-            mockMapRepository.findMapByGroupId.mockResolvedValue([
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue([
                 {
                     id: mapId,
                     groupId: groupId,
@@ -93,12 +95,12 @@ describe("CreateMapPoint", () => {
                 date: "2025-10-02",
                 createdAt: mockDate,
             });
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
-            expect(mockMapRepository.findMapByGroupId).toHaveBeenCalledWith(
-                groupId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
+            expect(
+                mockMapRepository.memoizedFindMapByGroupId,
+            ).toHaveBeenCalledWith(groupId);
             expect(mockMapRepository.createMapPoint).toHaveBeenCalledWith(
                 mapPointData,
                 mapId,

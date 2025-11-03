@@ -12,12 +12,14 @@ const mockMapRepository: jest.Mocked<MapRepository> = {
     createMapPoint: jest.fn(),
     findMapPointById: jest.fn(),
     createMap: jest.fn(),
+    memoizedFindMapByGroupId: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
+    memoizedFindByUserId: jest.fn(),
 };
 
 describe("GetGroupMaps", () => {
@@ -60,7 +62,9 @@ describe("GetGroupMaps", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.findMapByGroupId.mockResolvedValue(mockMaps);
 
             const result = await getGroupMaps.execute(groupId, userId);
@@ -69,9 +73,9 @@ describe("GetGroupMaps", () => {
                 { id: "map-1", name: "First Map" },
                 { id: "map-2", name: "Second Map" },
             ]);
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
             expect(mockMapRepository.findMapByGroupId).toHaveBeenCalledWith(
                 groupId,
             );
@@ -94,15 +98,17 @@ describe("GetGroupMaps", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
 
             await expect(
                 getGroupMaps.execute(requestedGroupId, userId),
             ).rejects.toThrow(NotAllowedActionError);
 
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
             expect(mockMapRepository.findMapByGroupId).not.toHaveBeenCalled();
         });
 
@@ -123,7 +129,9 @@ describe("GetGroupMaps", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.findMapByGroupId.mockResolvedValue([]);
 
             const result = await getGroupMaps.execute(groupId, userId);
@@ -159,15 +167,17 @@ describe("GetGroupMaps", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.findMapByGroupId.mockResolvedValue(mockMaps);
 
             const result = await getGroupMaps.execute(groupId, userId);
 
             expect(result).toEqual([{ id: "map-1", name: "Shared Map" }]);
-            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
-                userId,
-            );
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
         });
 
         it("should allow access for users with admin role", async () => {
@@ -195,7 +205,9 @@ describe("GetGroupMaps", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.findMapByGroupId.mockResolvedValue(mockMaps);
 
             const result = await getGroupMaps.execute(groupId, userId);
@@ -238,7 +250,9 @@ describe("GetGroupMaps", () => {
                 },
             ];
 
-            mockGroupRepository.findByUserId.mockResolvedValue(mockUserGroups);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
             mockMapRepository.findMapByGroupId.mockResolvedValue(mockMaps);
 
             const result = await getGroupMaps.execute(requestedGroupId, userId);
