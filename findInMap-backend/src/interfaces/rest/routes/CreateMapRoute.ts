@@ -17,7 +17,7 @@ export default (
         method: "post",
         operationObject: {
             summary: "Create a map in a group",
-            tags: ["Maps"],
+            tags: ["maps"],
             parameters: [
                 auhtorizationParam,
                 {

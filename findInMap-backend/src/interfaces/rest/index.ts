@@ -120,21 +120,20 @@ export default class RestInterface {
         this.app.use(compression());
         this.app.use(express.json({ limit: "10mb" }));
         this.app.use(express.urlencoded({ limit: "10mb", extended: true }));
-        this.app.use(authMiddleware(this.jwtService));
-        this.app.use(
-            openapiValidator({
-                apiSpec: apiSpec,
-                validateResponses: this.validateResponses,
-                ignorePaths: (path: string) => path.startsWith("/swagger"),
-            }),
-        );
-
         this.app.use(
             "/swagger",
             swaggerUi.serve,
             swaggerUi.setup(apiSpec, {
                 explorer: true,
                 customCss: ".swagger-ui .topbar { display: none }",
+            }),
+        );
+        this.app.use(authMiddleware(this.jwtService));
+        this.app.use(
+            openapiValidator({
+                apiSpec: apiSpec,
+                validateResponses: this.validateResponses,
+                ignorePaths: (path: string) => path.startsWith("/swagger"),
             }),
         );
 

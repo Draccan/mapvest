@@ -16,7 +16,7 @@ export default (
         method: "get",
         operationObject: {
             summary: "Get maps for a group",
-            tags: ["Maps"],
+            tags: ["maps"],
             parameters: [
                 auhtorizationParam,
                 {

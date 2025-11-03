@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import JwtService, { TokenType } from "../../../core/services/JwtService";
 
-const PublicRoutes = ["/health", "/info", "/users", "/users/login"];
+const PublicRoutes = ["/health", "/info", "/swagger", "/users", "/users/login"];
 
 const RefreshTokenRoutes = ["/token/refresh", "/users/logout"];
 
