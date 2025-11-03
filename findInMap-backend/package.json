@@ -5,8 +5,7 @@
   "main": "dist/main/server.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "seed": "tsx dev/databaseSeed.ts",
-    "dev": "pnpm seed && tsx watch src/main/server.ts",
+    "dev": "tsx watch src/main/server.ts",
     "start": "node dist/main/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
