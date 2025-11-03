@@ -11,6 +11,10 @@ describe("JwtService", () => {
         jwtService = new JwtService(testSecret, tokenBlacklistService);
     });
 
+    afterEach(() => {
+        jwtService.destroy();
+    });
+
     describe("verifyToken", () => {
         it("should verify a valid token and return payload", () => {
             const payload = {
@@ -51,6 +55,8 @@ describe("JwtService", () => {
             );
 
             expect(authenticatedUser).toBeNull();
+
+            differentService.destroy();
         });
 
         it("should return null for malformed token", () => {

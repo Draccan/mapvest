@@ -3,14 +3,16 @@ import TokenBlacklistService from "../../../src/core/services/TokenBlacklistServ
 import LogoutUser from "../../../src/core/usecases/LogoutUser";
 
 describe("LogoutUser", () => {
-    let logoutUser: LogoutUser;
-    let jwtService: JwtService;
-    let tokenBlacklistService: TokenBlacklistService;
+    let tokenBlacklistService: TokenBlacklistService =
+        new TokenBlacklistService("test-secret-key");
+    let jwtService: JwtService = new JwtService(
+        "test-secret-key",
+        tokenBlacklistService,
+    );
+    let logoutUser: LogoutUser = new LogoutUser(jwtService);
 
-    beforeEach(() => {
-        tokenBlacklistService = new TokenBlacklistService("test-secret-key");
-        jwtService = new JwtService("test-secret-key", tokenBlacklistService);
-        logoutUser = new LogoutUser(jwtService);
+    afterEach(() => {
+        jwtService.destroy();
     });
 
     describe("exec", () => {

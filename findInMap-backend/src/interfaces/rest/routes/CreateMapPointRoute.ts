@@ -81,8 +81,7 @@ export default (
         },
     },
     handler: async (req, res) => {
-        const clientIp = getClientIp(req);
-        const mapPoint = await createMapPoint.exec(req.body, clientIp);
+        const mapPoint = await createMapPoint.exec(req.body);
 
         res.status(201).json(mapPoint);
     },

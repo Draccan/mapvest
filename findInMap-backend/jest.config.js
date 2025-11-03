@@ -18,6 +18,7 @@ module.exports = {
         "<rootDir>/tests/e2e/setup.ts",
     ],
     testTimeout: 10000,
+    forceExit: true,
     clearMocks: true,
     resetMocks: true,
     restoreMocks: true,

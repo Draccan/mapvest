@@ -4,7 +4,6 @@ import { error as openapiValidatorErrors } from "express-openapi-validator";
 import InvalidCredentialsError from "../../core/errors/InvalidCredentialsError";
 import InvalidPasswordError from "../../core/errors/InvalidPasswordError";
 import NotAllowedActionError from "../../core/errors/NotAllowedActionError";
-import { RateLimitError } from "../../core/errors/RateLimitError";
 import UserEmailAlreadyRegisteredError from "../../core/errors/UserEmailAlreadyRegisteredError";
 import LoggerService from "../../core/services/LoggerService";
 
@@ -41,11 +40,6 @@ export default function errorHandler(
             error: "Unsupported Media Type",
             message: "Content-Type must be application/json",
             details: error.message,
-        });
-    } else if (error instanceof RateLimitError) {
-        res.status(429).json({
-            error: error.message,
-            remainingTime: error.remainingTime,
         });
     } else if (error instanceof UserEmailAlreadyRegisteredError) {
         res.status(409).json({

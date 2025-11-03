@@ -1,6 +1,5 @@
 import AddressesManagerRepository from "../../src/core/dependencies/AddressesManagerRepository";
 import AddressEntity from "../../src/core/entities/AddressEntity";
-import { InMemoryRateLimitService } from "../../src/core/services/RateLimitService";
 import JwtService from "../../src/core/services/JwtService";
 import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
 import CreateGroupMap from "../../src/core/usecases/CreateGroupMap";
@@ -33,20 +32,19 @@ class MockGoogleRepository implements AddressesManagerRepository {
     }
 }
 
+const tokenBlacklistService = new TokenBlacklistService("test-jwt-secret");
+const jwtService: JwtService = new JwtService(
+    "test-jwt-secret",
+    tokenBlacklistService,
+);
+
 export function createTestApp() {
     const groupRepository = new DrizzleGroupRepository();
     const mapPointRepository = new DrizzleMapRepository();
     const userRepository = new DrizzleUserRepository();
     const googleRepository = new MockGoogleRepository();
 
-    const rateLimitService = new InMemoryRateLimitService(1);
-    const tokenBlacklistService = new TokenBlacklistService("test-jwt-secret");
-    const jwtService = new JwtService("test-jwt-secret", tokenBlacklistService);
-
-    const createMapPoint = new CreateMapPoint(
-        mapPointRepository,
-        rateLimitService,
-    );
+    const createMapPoint = new CreateMapPoint(mapPointRepository);
     const createUser = new CreateUser(userRepository, groupRepository);
     const createGroupMap = new CreateGroupMap(
         mapPointRepository,
@@ -83,6 +81,12 @@ export function createTestApp() {
     );
 
     return restInterface;
+}
+
+export function cleanupTestApp() {
+    if (jwtService) {
+        jwtService.destroy();
+    }
 }
 
 export const testUser = {

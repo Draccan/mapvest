@@ -1,5 +1,4 @@
 import LoggerService from "../core/services/LoggerService";
-import { InMemoryRateLimitService } from "../core/services/RateLimitService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
 import CreateGroupMap from "../core/usecases/CreateGroupMap";
@@ -29,13 +28,12 @@ const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 
 // Services
 // 15 seconds
-const rateLimitService = new InMemoryRateLimitService(15);
 const tokenBlacklistService = new TokenBlacklistService(config.jwtSecret);
 const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 
 // Usecases
 const getMapPoints = new GetMapPoints(mapRepository);
-const createMapPoint = new CreateMapPoint(mapRepository, rateLimitService);
+const createMapPoint = new CreateMapPoint(mapRepository);
 const createUser = new CreateUser(userRepository, groupRepository);
 const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
 const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
@@ -69,7 +67,6 @@ const restInterface = new RestInterface(
 
 process.on("SIGINT", async () => {
     LoggerService.info("Received SIGINT. Shutting down gracefully...");
-    rateLimitService.destroy();
     jwtService.destroy();
     await client.end();
     process.exit(0);
@@ -77,7 +74,6 @@ process.on("SIGINT", async () => {
 
 process.on("SIGTERM", async () => {
     LoggerService.info("Received SIGTERM. Shutting down gracefully...");
-    rateLimitService.destroy();
     jwtService.destroy();
     await client.end();
     process.exit(0);

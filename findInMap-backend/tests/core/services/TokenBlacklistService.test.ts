@@ -90,6 +90,8 @@ describe("TokenBlacklistService", () => {
             service.cleanupExpiredTokens();
 
             expect(service.size()).toBe(1);
+
+            jwtService.destroy();
         });
     });
 
