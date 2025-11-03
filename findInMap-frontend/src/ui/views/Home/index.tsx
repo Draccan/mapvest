@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
+import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
+import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
 import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import LogoSvg from "../../assets/logo.svg";
@@ -24,33 +26,93 @@ export const Home: React.FC = () => {
         lat: number;
         zoom?: number;
     } | null>(null);
+
+    const {
+        data: groupsData,
+        fetch: fetchGroups,
+        loading: loadingGroups,
+        error: groupsError,
+    } = useGetUserGroups();
+
+    const {
+        data: mapsData,
+        fetch: fetchMaps,
+        loading: loadingMaps,
+        error: mapsError,
+    } = useGetGroupMaps();
+
     const {
         data: mapPointsData,
         fetch: fetchMapPoints,
         loading: loadingPoints,
-        error,
+        error: mapPointsError,
         hasFetched,
     } = useGetMapPoints();
+
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
     const { loading: loadingLogout, logout } = useLogoutUser();
 
     useEffect(() => {
-        if (!loadingPoints && !mapPointsData && !error) fetchMapPoints();
-    }, [fetchMapPoints]);
+        if (!loadingGroups && !groupsData && !groupsError) {
+            fetchGroups();
+        }
+    }, [fetchGroups, loadingGroups, groupsData, groupsError]);
+
+    useEffect(() => {
+        if (
+            groupsData &&
+            groupsData.length > 0 &&
+            !mapsData &&
+            !mapsError &&
+            !loadingMaps
+        ) {
+            const firstGroup = groupsData[0];
+            fetchMaps(firstGroup.id);
+        }
+    }, [groupsData, mapsData, mapsError, loadingMaps, fetchMaps]);
+
+    useEffect(() => {
+        if (
+            mapsData &&
+            mapsData.length > 0 &&
+            groupsData &&
+            groupsData.length > 0 &&
+            !loadingPoints &&
+            !mapPointsData &&
+            !mapPointsError
+        ) {
+            const firstMap = mapsData[0];
+            fetchMapPoints(groupsData[0]!.id, firstMap.id);
+        }
+    }, [
+        mapsData,
+        groupsData,
+        loadingPoints,
+        mapPointsData,
+        mapPointsError,
+        fetchMapPoints,
+    ]);
 
     const handleMapPointSelection = (lng: number, lat: number) => {
         setSelectedCoordinates({ long: lng, lat: lat, zoom: 15 });
     };
 
     const handleSavePoint = async (pointData: CreateMapPointDto) => {
-        const result = await createMapPoint(pointData);
+        const firstGroup = groupsData![0]!;
+        const firstMap = mapsData![0]!;
+        const result = await createMapPoint(
+            firstGroup.id,
+            firstMap.id,
+            pointData,
+        );
         if (result) {
-            await fetchMapPoints();
+            await fetchMapPoints(firstGroup.id, firstMap.id);
             setSelectedCoordinates(null);
         }
     };
 
     const mapPoints = mapPointsData || [];
+    const isLoading = loadingGroups || loadingMaps || loadingPoints;
 
     return (
         <div className="v-home">
@@ -88,7 +150,7 @@ export const Home: React.FC = () => {
                             />
                         </div>
                         <div className="v-home-map">
-                            {loadingPoints && !hasFetched && <Skeleton />}
+                            {isLoading && !hasFetched && <Skeleton />}
                             <MapContainer
                                 mapPoints={mapPoints}
                                 onMapClick={handleMapPointSelection}

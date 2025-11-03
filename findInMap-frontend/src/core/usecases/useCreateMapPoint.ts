@@ -6,20 +6,27 @@ import { useRequestWrapper } from "./utils/useRequestWrapper";
 interface UseCreateMapPoint {
     loading: boolean;
     error: any;
-    createMapPoint: (data: CreateMapPointDto) => Promise<MapPointDto | null>;
+    createMapPoint: (
+        groupId: string,
+        mapId: string,
+        data: CreateMapPointDto,
+    ) => Promise<MapPointDto | null>;
 }
 
 export const useCreateMapPoint = (): UseCreateMapPoint => {
     const apiClient = useApiClient();
 
     const { fetch, loading, error } = useRequestWrapper(
-        (data: CreateMapPointDto) => apiClient.createMapPoint(data),
+        (groupId: string, mapId: string, data: CreateMapPointDto) =>
+            apiClient.createMapPointInMap(groupId, mapId, data),
     );
 
     const createMapPoint = async (
+        groupId: string,
+        mapId: string,
         data: CreateMapPointDto,
     ): Promise<MapPointDto | null> => {
-        const response = await fetch(data);
+        const response = await fetch(groupId, mapId, data);
         return response;
     };
 
