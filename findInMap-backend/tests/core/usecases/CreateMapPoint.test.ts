@@ -11,6 +11,7 @@ const mockMapPointRepository: jest.Mocked<MapRepository> = {
     findAllMapPoints: jest.fn(),
     findMapPointById: jest.fn(),
     findMapByGroupId: jest.fn(),
+    createMap: jest.fn(),
 };
 
 const mockRateLimitService: jest.Mocked<RateLimitService> = {

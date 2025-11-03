@@ -21,4 +21,7 @@ module.exports = {
     clearMocks: true,
     resetMocks: true,
     restoreMocks: true,
+    // Warning: Limit to 1 worker to avoid database problems executing tests in
+    // parallel
+    maxWorkers: 1,
 };

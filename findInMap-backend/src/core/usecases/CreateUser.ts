@@ -1,10 +1,10 @@
 import { db } from "../../db";
-import { UserGroupRole } from "../commons/enums";
 import GroupRepository from "../dependencies/GroupRepository";
 import UserRepository from "../dependencies/UserRepository";
 import CreateUserDto from "../dtos/CreateUserDto";
 import UserDto, { makeUserDto } from "../dtos/UserDto";
-import UserEmailAlreadyRegistered from "../errors/UserEmailAlreadyRegistered";
+import InvalidPasswordError from "../errors/InvalidPasswordError";
+import UserEmailAlreadyRegisteredError from "../errors/UserEmailAlreadyRegisteredError";
 import { hashPassword } from "../utils/PasswordManager";
 
 const FIRST_GROUP_NAME = "First Group";
@@ -17,14 +17,16 @@ export default class CreateUser {
 
     async exec(userData: CreateUserDto): Promise<UserDto> {
         if (userData.password.length < 8 || userData.password.length > 20) {
-            throw new Error("Password must be between 8 and 20 characters");
+            throw new InvalidPasswordError(
+                "Password must be between 8 and 20 characters",
+            );
         }
 
         const existingUser = await this.userRepository.findByEmail(
             userData.email,
         );
         if (existingUser) {
-            throw new UserEmailAlreadyRegistered();
+            throw new UserEmailAlreadyRegisteredError();
         }
 
         const hashedPassword = await hashPassword(userData.password);

@@ -39,7 +39,7 @@ export class DrizzleGroupRepository implements GroupRepository {
             })
             .returning();
 
-        this.addUserToGroup(
+        await this.addUserToGroup(
             userId,
             createdGroup.id,
             UserGroupRole.Owner,

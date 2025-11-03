@@ -1,7 +1,6 @@
 import request from "supertest";
 
 import { getTestApp } from "./setup";
-import { testMapPoint, testUser } from "./helpers";
 
 describe("Create Map Point Route", () => {
     let app: any;
@@ -10,17 +9,31 @@ describe("Create Map Point Route", () => {
     beforeAll(async () => {
         app = getTestApp();
 
-        await request(app).post("/users").send(testUser);
+        const uniqueUser = {
+            name: "MapPoint",
+            surname: "TestUser",
+            email: `mappoint-test-${Date.now()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(uniqueUser);
 
         const loginResponse = await request(app).post("/users/login").send({
-            email: testUser.email,
-            password: testUser.password,
+            email: uniqueUser.email,
+            password: uniqueUser.password,
         });
 
         accessToken = loginResponse.body.token;
     });
 
     it("POST /map-points should create a new map point with valid token", async () => {
+        const testMapPoint = {
+            long: 45.4642,
+            lat: 9.19,
+            type: "THEFT",
+            date: "01/01/2023",
+        };
+
         const response = await request(app)
             .post("/map-points")
             .set("Authorization", `Bearer ${accessToken}`)
@@ -34,6 +47,13 @@ describe("Create Map Point Route", () => {
     });
 
     it("POST /map-points should return 401 without token", async () => {
+        const testMapPoint = {
+            long: 45.4642,
+            lat: 9.19,
+            type: "THEFT",
+            date: "01/01/2023",
+        };
+
         const response = await request(app)
             .post("/map-points")
             .send(testMapPoint)
@@ -42,6 +62,13 @@ describe("Create Map Point Route", () => {
     });
 
     it("POST /map-points should return 401 with invalid token", async () => {
+        const testMapPoint = {
+            long: 45.4642,
+            lat: 9.19,
+            type: "THEFT",
+            date: "01/01/2023",
+        };
+
         const response = await request(app)
             .post("/map-points")
             .set("Authorization", "Bearer invalid-token")

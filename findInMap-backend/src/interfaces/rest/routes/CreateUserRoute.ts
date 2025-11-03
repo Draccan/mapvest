@@ -68,17 +68,7 @@ export default (
         },
     },
     handler: async (req, res) => {
-        try {
-            const user = await createUser.exec(req.body);
-            res.status(201).json(user);
-        } catch (error: any) {
-            if (error.name === "UserEmailAlreadyRegistered") {
-                res.status(409).json({ message: error.message });
-            } else if (error.message.includes("Password must be")) {
-                res.status(400).json({ message: error.message });
-            } else {
-                throw error;
-            }
-        }
+        const user = await createUser.exec(req.body);
+        res.status(201).json(user);
     },
 });

@@ -1,19 +1,27 @@
 import CreateUserDto from "../../../src/core/dtos/CreateUserDto";
 import { db } from "../../../src/db";
-import { users, usersGroups, groups } from "../../../src/db/schema";
+import {
+    users,
+    usersGroups,
+    groups,
+    maps,
+    mapPoints,
+} from "../../../src/db/schema";
 import { DrizzleUserRepository } from "../../../src/dependency-implementations/DrizzleUserRepository";
 
 describe("DrizzleUserRepository", () => {
-    let repository: DrizzleUserRepository;
-
-    beforeAll(() => {
-        repository = new DrizzleUserRepository();
-    });
+    let repository: DrizzleUserRepository = new DrizzleUserRepository();
 
     beforeEach(async () => {
-        await db.delete(usersGroups);
-        await db.delete(groups);
-        await db.delete(users);
+        try {
+            await db.delete(mapPoints);
+            await db.delete(maps);
+            await db.delete(usersGroups);
+            await db.delete(groups);
+            await db.delete(users);
+        } catch (err) {
+            console.error("Error during cleanup:", err);
+        }
     });
 
     describe("createUser", () => {
@@ -21,7 +29,7 @@ describe("DrizzleUserRepository", () => {
             const createUserDto: CreateUserDto = {
                 name: "John",
                 surname: "Doe",
-                email: "john.doe@example.com",
+                email: `john.doe${Math.random()}@example.com`,
                 password: "securePassword123",
             };
 
@@ -41,7 +49,7 @@ describe("DrizzleUserRepository", () => {
             const createUserDto: CreateUserDto = {
                 name: "Alice",
                 surname: "Johnson",
-                email: "alice@example.com",
+                email: `alice.johnson${Math.random()}@example.com`,
                 password: "password123",
             };
 
@@ -56,7 +64,7 @@ describe("DrizzleUserRepository", () => {
             const createUserDto: CreateUserDto = {
                 name: "Bob",
                 surname: "Wilson",
-                email: "bob.wilson@example.com",
+                email: `bob.wilson${Math.random()}@example.com`,
                 password: "testPassword456",
             };
 
@@ -79,17 +87,18 @@ describe("DrizzleUserRepository", () => {
         });
 
         it("should handle email case insensitivity", async () => {
+            const randomNumber = Math.random();
             const createUserDto: CreateUserDto = {
                 name: "Charlie",
                 surname: "Brown",
-                email: "charlie.brown@example.com",
+                email: `charlie.brown${randomNumber}@example.com`,
                 password: "password789",
             };
 
             await repository.create(createUserDto);
 
             const foundUser = await repository.findByEmail(
-                "CHARLIE.BROWN@EXAMPLE.COM",
+                `CHARLIE.BROWN${randomNumber}@EXAMPLE.COM`,
             );
 
             expect(foundUser).toBeDefined();

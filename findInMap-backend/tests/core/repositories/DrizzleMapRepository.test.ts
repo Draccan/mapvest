@@ -1,18 +1,29 @@
 import { MapPointType } from "../../../src/core/commons/enums";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { db } from "../../../src/db";
-import { mapPoints } from "../../../src/db/schema";
+import {
+    mapPoints,
+    maps,
+    groups,
+    users,
+    usersGroups,
+} from "../../../src/db/schema";
+import { DrizzleGroupRepository } from "../../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../../../src/dependency-implementations/DrizzleMapRepository";
+import { DrizzleUserRepository } from "../../../src/dependency-implementations/DrizzleUserRepository";
 
 describe("DrizzleMapRepository", () => {
-    let repository: DrizzleMapRepository;
-
-    beforeAll(() => {
-        repository = new DrizzleMapRepository();
-    });
+    const repository: DrizzleMapRepository = new DrizzleMapRepository();
+    const groupRepository: DrizzleGroupRepository =
+        new DrizzleGroupRepository();
+    const userRepository: DrizzleUserRepository = new DrizzleUserRepository();
 
     beforeEach(async () => {
         await db.delete(mapPoints);
+        await db.delete(maps);
+        await db.delete(usersGroups);
+        await db.delete(groups);
+        await db.delete(users);
     });
 
     describe("createMapPoint", () => {
@@ -130,6 +141,114 @@ describe("DrizzleMapRepository", () => {
             expect(result.length).toBe(1);
             expect(result[0].long).toBeCloseTo(precisePoint.long, 6);
             expect(result[0].lat).toBeCloseTo(precisePoint.lat, 6);
+        });
+    });
+
+    describe("findMapByGroupId", () => {
+        it("should return empty array when group has no maps", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const result = await repository.findMapByGroupId(group.id);
+
+            expect(Array.isArray(result)).toBe(true);
+            expect(result.length).toBe(0);
+        });
+
+        it("should return maps for a specific group", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "First Map",
+            });
+
+            const map2 = await repository.createMap(group.id, {
+                name: "Second Map",
+            });
+
+            const result = await repository.findMapByGroupId(group.id);
+
+            expect(result.length).toBe(2);
+            expect(result.map((m) => m.id)).toContain(map1.id);
+            expect(result.map((m) => m.id)).toContain(map2.id);
+            expect(result.map((m) => m.name)).toContain("First Map");
+            expect(result.map((m) => m.name)).toContain("Second Map");
+        });
+
+        it("should only return maps belonging to the specified group", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group1 = await groupRepository.createGroup(
+                "Group 1",
+                user.id,
+            );
+            const group2 = await groupRepository.createGroup(
+                "Group 2",
+                user.id,
+            );
+
+            await repository.createMap(group1.id, {
+                name: "Group 1 Map",
+            });
+
+            const group2Map = await repository.createMap(group2.id, {
+                name: "Group 2 Map",
+            });
+
+            const result = await repository.findMapByGroupId(group2.id);
+
+            expect(result.length).toBe(1);
+            expect(result[0].id).toBe(group2Map.id);
+            expect(result[0].name).toBe("Group 2 Map");
+        });
+
+        it("should return correct map structure with all fields", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const result = await repository.findMapByGroupId(group.id);
+
+            expect(result.length).toBe(1);
+            expect(typeof result[0].id).toBe("string");
+            expect(result[0].groupId).toBe(group.id);
+            expect(result[0].name).toBe("Test Map");
         });
     });
 });

@@ -2,9 +2,10 @@ import LoggerService from "../core/services/LoggerService";
 import { InMemoryRateLimitService } from "../core/services/RateLimitService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
-import GetMapPoints from "../core/usecases/GetMapPoints";
+import CreateGroupMap from "../core/usecases/CreateGroupMap";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
+import GetMapPoints from "../core/usecases/GetMapPoints";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
@@ -36,6 +37,7 @@ const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 const getMapPoints = new GetMapPoints(mapRepository);
 const createMapPoint = new CreateMapPoint(mapRepository, rateLimitService);
 const createUser = new CreateUser(userRepository, groupRepository);
+const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
 const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
 const getUserGroups = new GetUserGroups(groupRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
@@ -51,6 +53,7 @@ const restInterface = new RestInterface(
     config.corsAllowedOrigins,
     config.validateApiResponses,
     {
+        createGroupMap,
         createMapPoint,
         createUser,
         getMapPoints,

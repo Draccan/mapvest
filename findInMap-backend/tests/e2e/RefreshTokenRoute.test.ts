@@ -1,7 +1,6 @@
 import request from "supertest";
 
 import { getTestApp } from "./setup";
-import { testUser } from "./helpers";
 
 describe("Refresh Token Route", () => {
     let app: any;
@@ -11,13 +10,20 @@ describe("Refresh Token Route", () => {
     });
 
     it("POST /token/refresh should refresh access token", async () => {
-        await request(app).post("/users").send(testUser);
+        const uniqueUser = {
+            name: "Refresh",
+            surname: "TestUser",
+            email: `refresh-test-${Date.now()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(uniqueUser);
 
         const loginResponse = await request(app)
             .post("/users/login")
             .send({
-                email: testUser.email,
-                password: testUser.password,
+                email: uniqueUser.email,
+                password: uniqueUser.password,
             })
             .expect(200);
 

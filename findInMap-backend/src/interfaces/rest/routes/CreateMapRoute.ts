@@ -1,7 +1,8 @@
+import CreateMapDto from "../../../core/dtos/CreateMapDto";
 import MapDto from "../../../core/dtos/MapDto";
-import GetGroupMaps from "../../../core/usecases/GetGroupMaps";
+import CreateGroupMap from "../../../core/usecases/CreateGroupMap";
 import Route from "../Route";
-import getMapsSchema from "../schemas/getMapsSchema";
+import getMapSchema from "../schemas/getMapSchema";
 import { auhtorizationParam } from "./common/authorizationParam";
 
 interface ReqParams {
@@ -9,13 +10,13 @@ interface ReqParams {
 }
 
 export default (
-    getGroupMaps: GetGroupMaps,
-): Route<ReqParams, void, void, MapDto[]> => {
+    createGroupMap: CreateGroupMap,
+): Route<ReqParams, void, CreateMapDto, MapDto> => {
     return {
         path: "/:groupId/maps",
-        method: "get",
+        method: "post",
         operationObject: {
-            summary: "Get maps for a group",
+            summary: "Create a map in a group",
             tags: ["Maps"],
             parameters: [
                 auhtorizationParam,
@@ -26,12 +27,26 @@ export default (
                     schema: { type: "string" },
                 },
             ],
+            requestBody: {
+                required: true,
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "object",
+                            properties: {
+                                name: { type: "string" },
+                            },
+                            required: ["name"],
+                        },
+                    },
+                },
+            },
             responses: {
-                200: {
-                    description: "List of maps of the group",
+                201: {
+                    description: "Map created successfully",
                     content: {
                         "application/json": {
-                            schema: getMapsSchema(),
+                            schema: getMapSchema(),
                         },
                     },
                 },
@@ -50,7 +65,8 @@ export default (
                     },
                 },
                 403: {
-                    description: "Forbidden",
+                    description:
+                        "Forbidden - User does not have access to this group",
                     content: {
                         "application/json": {
                             schema: {
@@ -82,10 +98,11 @@ export default (
         handler: async (req, res) => {
             const userId = (req as any).user!.userId;
             const groupId = req.params.groupId;
+            const data: CreateMapDto = req.body;
 
-            const maps = await getGroupMaps.execute(groupId, userId);
+            const map = await createGroupMap.execute(groupId, userId, data);
 
-            res.status(200).json(maps);
+            res.status(201).json(map);
         },
     };
 };

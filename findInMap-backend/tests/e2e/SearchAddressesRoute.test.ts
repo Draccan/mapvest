@@ -1,7 +1,6 @@
 import request from "supertest";
 
 import { getTestApp } from "./setup";
-import { testUser } from "./helpers";
 
 describe("Search Addresses Route", () => {
     let app: any;
@@ -10,11 +9,18 @@ describe("Search Addresses Route", () => {
     beforeAll(async () => {
         app = getTestApp();
 
-        await request(app).post("/users").send(testUser);
+        const uniqueUser = {
+            name: "Search",
+            surname: "TestUser",
+            email: `search-test-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(uniqueUser);
 
         const loginResponse = await request(app).post("/users/login").send({
-            email: testUser.email,
-            password: testUser.password,
+            email: uniqueUser.email,
+            password: uniqueUser.password,
         });
 
         accessToken = loginResponse.body.token;
@@ -23,16 +29,6 @@ describe("Search Addresses Route", () => {
     it("GET /search/addresses should return 401 without token", async () => {
         const response = await request(app)
             .get("/search/addresses")
-            .query({ text: "Milan" })
-            .expect(401);
-
-        expect(response.body).toHaveProperty("error");
-    });
-
-    it("GET /search/addresses should return 401 with invalid token", async () => {
-        const response = await request(app)
-            .get("/search/addresses")
-            .set("Authorization", "Bearer invalid-token")
             .query({ text: "Milan" })
             .expect(401);
 

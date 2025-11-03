@@ -1,6 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 
 import MapRepository from "../../core/dependencies/MapRepository";
+import CreateMapDto from "../../core/dtos/CreateMapDto";
 import { CreateMapPointDto } from "../../core/dtos/CreateMapPointDto";
 import MapEntity from "../../core/entities/MapEntity";
 import { MapPointEntity } from "../../core/entities/MapPointEntity";
@@ -71,5 +72,17 @@ export class DrizzleMapRepository implements MapRepository {
             .where(eq(mapPoints.id, id));
 
         return mapPoint ? makeMapPointEntity(mapPoint) : null;
+    }
+
+    async createMap(groupId: string, data: CreateMapDto): Promise<MapEntity> {
+        const [createdMap] = await db
+            .insert(maps)
+            .values({
+                name: data.name,
+                groupId: groupId,
+            })
+            .returning();
+
+        return makeMapEntity(createdMap);
     }
 }

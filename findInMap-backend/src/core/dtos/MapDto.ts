@@ -5,7 +5,7 @@ export default interface MapDto {
     name: string;
 }
 
-export function makeGroupDto(mapEntity: MapEntity): MapDto {
+export function makeMapDto(mapEntity: MapEntity): MapDto {
     return {
         id: mapEntity.id,
         name: mapEntity.name,

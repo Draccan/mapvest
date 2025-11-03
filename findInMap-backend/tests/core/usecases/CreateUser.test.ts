@@ -3,7 +3,7 @@ import UserRepository from "../../../src/core/dependencies/UserRepository";
 import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import UserEntity from "../../../src/core/entities/UserEntity";
 import GroupEntity from "../../../src/core/entities/GroupEntity";
-import UserEmailAlreadyRegistered from "../../../src/core/errors/UserEmailAlreadyRegistered";
+import UserEmailAlreadyRegisteredError from "../../../src/core/errors/UserEmailAlreadyRegisteredError";
 import { UserGroupRole } from "../../../src/core/commons/enums";
 
 const mockUserRepository: jest.Mocked<UserRepository> = {
@@ -102,7 +102,7 @@ describe("CreateUser", () => {
             ).not.toBe(userData.password);
         });
 
-        it("should throw UserEmailAlreadyRegistered when email exists", async () => {
+        it("should throw UserEmailAlreadyRegisteredError when email exists", async () => {
             const userData = {
                 name: "Jane",
                 surname: "Smith",
@@ -123,7 +123,7 @@ describe("CreateUser", () => {
             mockUserRepository.findByEmail.mockResolvedValue(existingUser);
 
             await expect(createUser.exec(userData)).rejects.toThrow(
-                UserEmailAlreadyRegistered,
+                UserEmailAlreadyRegisteredError,
             );
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(
                 userData.email,

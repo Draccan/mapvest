@@ -10,6 +10,7 @@ import * as swaggerUi from "swagger-ui-express";
 
 import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
+import CreateGroupMap from "../../core/usecases/CreateGroupMap";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import GetGroupMaps from "../../core/usecases/GetGroupMaps";
@@ -22,6 +23,7 @@ import SearchAddresses from "../../core/usecases/SearchAddresses";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
+import CreateMapRoute from "./routes/CreateMapRoute";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
 import GetGroupsRoute from "./routes/GetGroupsRoute";
@@ -46,6 +48,7 @@ export default class RestInterface {
         private corsAllowedOrigins: string[],
         private validateResponses: boolean,
         usecases: {
+            createGroupMap: CreateGroupMap;
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
             getMapPoints: GetMapPoints;
@@ -59,6 +62,7 @@ export default class RestInterface {
         private jwtService: JwtService,
     ) {
         this.routes = [
+            CreateMapRoute(usecases.createGroupMap),
             CreateMapPointRoute(usecases.createMapPoint),
             CreateUserRoute(usecases.createUser),
             GetGroupsRoute(usecases.getUserGroups),
@@ -166,10 +170,11 @@ export default class RestInterface {
         const pathsObject: OpenAPIV3.PathsObject = {};
 
         this.routes.forEach((route) => {
-            if (!pathsObject[route.path]) {
-                pathsObject[route.path] = {};
+            const openApiPath = route.path.replace(/:([^/]+)/g, "{$1}");
+            if (!pathsObject[openApiPath]) {
+                pathsObject[openApiPath] = {};
             }
-            pathsObject[route.path][route.method] = route.operationObject;
+            pathsObject[openApiPath][route.method] = route.operationObject;
         });
 
         return pathsObject;

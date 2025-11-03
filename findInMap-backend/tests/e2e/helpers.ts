@@ -3,6 +3,7 @@ import AddressEntity from "../../src/core/entities/AddressEntity";
 import { InMemoryRateLimitService } from "../../src/core/services/RateLimitService";
 import JwtService from "../../src/core/services/JwtService";
 import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
+import CreateGroupMap from "../../src/core/usecases/CreateGroupMap";
 import CreateMapPoint from "../../src/core/usecases/CreateMapPoint";
 import CreateUser from "../../src/core/usecases/CreateUser";
 import GetGroupMaps from "../../src/core/usecases/GetGroupMaps";
@@ -47,6 +48,10 @@ export function createTestApp() {
         rateLimitService,
     );
     const createUser = new CreateUser(userRepository, groupRepository);
+    const createGroupMap = new CreateGroupMap(
+        mapPointRepository,
+        groupRepository,
+    );
     const getGroupMaps = new GetGroupMaps(mapPointRepository, groupRepository);
     const getMapPoints = new GetMapPoints(mapPointRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
@@ -61,8 +66,9 @@ export function createTestApp() {
         "1.0.0-test",
         "FindInMap Test",
         ["*"],
-        false,
+        true,
         {
+            createGroupMap,
             createMapPoint,
             createUser,
             getGroupMaps,
