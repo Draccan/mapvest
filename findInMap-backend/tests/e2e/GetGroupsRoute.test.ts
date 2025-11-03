@@ -6,7 +6,6 @@ describe("Get Groups Route", () => {
     it("GET /groups should return user groups", async () => {
         const app = getTestApp();
 
-        // Create a unique user for this test suite
         const uniqueUser = {
             name: "Groups",
             surname: "TestUser",
@@ -34,7 +33,6 @@ describe("Get Groups Route", () => {
     it("GET /groups should return correct group structure when groups exist", async () => {
         const app = getTestApp();
 
-        // Create a unique user for this test suite
         const uniqueUser = {
             name: "Groups",
             surname: "TestUser",
@@ -68,7 +66,6 @@ describe("Get Groups Route", () => {
     it("GET /groups should return 401 without token", async () => {
         const app = getTestApp();
 
-        // Create a unique user for this test suite
         const uniqueUser = {
             name: "Groups",
             surname: "TestUser",

@@ -45,7 +45,11 @@ export function createTestApp() {
     const googleRepository = new MockGoogleRepository();
 
     const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
-    const createUser = new CreateUser(userRepository, groupRepository);
+    const createUser = new CreateUser(
+        userRepository,
+        groupRepository,
+        mapRepository,
+    );
     const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
     const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
     const getMapPoints = new GetMapPoints(groupRepository, mapRepository);

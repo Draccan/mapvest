@@ -74,4 +74,42 @@ describe("Create User Route", () => {
         expect(groupsResponse.body[0].name).toBe("First Group");
         expect(groupsResponse.body[0].role).toBe("owner");
     });
+
+    it("POST /users should create a 'First Map' in the 'First Group' for the new user", async () => {
+        const newUser = {
+            name: "MapTest",
+            surname: "User",
+            email: `maptest-${Date.now()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(newUser).expect(201);
+
+        const loginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: newUser.email,
+                password: newUser.password,
+            })
+            .expect(200);
+
+        const accessToken = loginResponse.body.token;
+
+        const groupsResponse = await request(app)
+            .get("/groups")
+            .set("Authorization", `Bearer ${accessToken}`)
+            .expect(200);
+
+        const firstGroup = groupsResponse.body[0];
+        expect(firstGroup.name).toBe("First Group");
+
+        const mapsResponse = await request(app)
+            .get(`/${firstGroup.id}/maps`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .expect(200);
+
+        expect(Array.isArray(mapsResponse.body)).toBe(true);
+        expect(mapsResponse.body.length).toBe(1);
+        expect(mapsResponse.body[0].name).toBe("First Map");
+    });
 });

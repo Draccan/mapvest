@@ -1,8 +1,10 @@
 import CreateUser from "../../../src/core/usecases/CreateUser";
-import UserRepository from "../../../src/core/dependencies/UserRepository";
 import GroupRepository from "../../../src/core/dependencies/GroupRepository";
-import UserEntity from "../../../src/core/entities/UserEntity";
+import MapRepository from "../../../src/core/dependencies/MapRepository";
+import UserRepository from "../../../src/core/dependencies/UserRepository";
 import GroupEntity from "../../../src/core/entities/GroupEntity";
+import MapEntity from "../../../src/core/entities/MapEntity";
+import UserEntity from "../../../src/core/entities/UserEntity";
 import UserEmailAlreadyRegisteredError from "../../../src/core/errors/UserEmailAlreadyRegisteredError";
 import { UserGroupRole } from "../../../src/core/commons/enums";
 
@@ -16,6 +18,15 @@ const mockGroupRepository: jest.Mocked<GroupRepository> = {
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
     memoizedFindByUserId: jest.fn(),
+};
+
+const mockMapRepository: jest.Mocked<MapRepository> = {
+    createMapPoint: jest.fn(),
+    findAllMapPoints: jest.fn(),
+    findMapPointById: jest.fn(),
+    findMapByGroupId: jest.fn(),
+    memoizedFindMapByGroupId: jest.fn(),
+    createMap: jest.fn(),
 };
 
 jest.mock("../../../src/db", () => ({
@@ -43,7 +54,11 @@ describe("CreateUser", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        createUser = new CreateUser(mockUserRepository, mockGroupRepository);
+        createUser = new CreateUser(
+            mockUserRepository,
+            mockGroupRepository,
+            mockMapRepository,
+        );
     });
 
     describe("exec", () => {
@@ -73,10 +88,17 @@ describe("CreateUser", () => {
                 updatedAt: mockDate,
             };
 
+            const mockCreatedMap: MapEntity = {
+                id: "map-123",
+                name: "First Map",
+                groupId: "group-123",
+            };
+
             mockUserRepository.findByEmail.mockResolvedValue(null);
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);
             mockGroupRepository.createGroup.mockResolvedValue(mockCreatedGroup);
             mockGroupRepository.addUserToGroup.mockResolvedValue();
+            mockMapRepository.createMap.mockResolvedValue(mockCreatedMap);
 
             const result = await createUser.exec(userData);
 
@@ -96,11 +118,21 @@ describe("CreateUser", () => {
                     ...userData,
                     password: expect.any(String),
                 }),
-                expect.anything(), // Transaction parameter
+                expect.anything(),
             );
             expect(
                 mockUserRepository.create.mock.calls[0][0].password,
             ).not.toBe(userData.password);
+            expect(mockGroupRepository.createGroup).toHaveBeenCalledWith(
+                "First Group",
+                mockCreatedUser.id,
+                expect.anything(),
+            );
+            expect(mockMapRepository.createMap).toHaveBeenCalledWith(
+                mockCreatedGroup.id,
+                { name: "First Map" },
+                expect.anything(),
+            );
         });
 
         it("should throw UserEmailAlreadyRegisteredError when email exists", async () => {
@@ -170,7 +202,7 @@ describe("CreateUser", () => {
                     ...userData,
                     password: expect.any(String),
                 }),
-                expect.anything(), // Transaction parameter
+                expect.anything(),
             );
 
             const createCall = mockUserRepository.create.mock.calls[0][0];
@@ -183,7 +215,7 @@ describe("CreateUser", () => {
                 name: "José",
                 surname: "García-López",
                 email: "josé.garcía@subdomain.example.com",
-                password: "spëcial123!@#", // Valid length
+                password: "spëcial123!@#",
             };
 
             const mockCreatedUser: UserEntity = {

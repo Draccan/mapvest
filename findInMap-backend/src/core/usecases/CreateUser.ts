@@ -1,5 +1,6 @@
 import { db } from "../../db";
 import GroupRepository from "../dependencies/GroupRepository";
+import MapRepository from "../dependencies/MapRepository";
 import UserRepository from "../dependencies/UserRepository";
 import CreateUserDto from "../dtos/CreateUserDto";
 import UserDto, { makeUserDto } from "../dtos/UserDto";
@@ -8,11 +9,13 @@ import UserEmailAlreadyRegisteredError from "../errors/UserEmailAlreadyRegistere
 import { hashPassword } from "../utils/PasswordManager";
 
 const FIRST_GROUP_NAME = "First Group";
+const FIRST_MAP_NAME = "First Map";
 
 export default class CreateUser {
     constructor(
         private userRepository: UserRepository,
         private groupRepository: GroupRepository,
+        private mapRepository: MapRepository,
     ) {}
 
     async exec(userData: CreateUserDto): Promise<UserDto> {
@@ -42,9 +45,17 @@ export default class CreateUser {
                 transaction,
             );
 
-            await this.groupRepository.createGroup(
+            const group = await this.groupRepository.createGroup(
                 FIRST_GROUP_NAME,
                 createdUser.id,
+                transaction,
+            );
+
+            await this.mapRepository.createMap(
+                group.id,
+                {
+                    name: FIRST_MAP_NAME,
+                },
                 transaction,
             );
 

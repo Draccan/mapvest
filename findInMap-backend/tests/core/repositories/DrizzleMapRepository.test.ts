@@ -250,7 +250,6 @@ describe("DrizzleMapRepository", () => {
                 name: "Map 2",
             });
 
-            // Add points to map1
             await repository.createMapPoint(
                 {
                     long: 10,
@@ -261,7 +260,6 @@ describe("DrizzleMapRepository", () => {
                 map1.id,
             );
 
-            // Add points to map2
             await repository.createMapPoint(
                 {
                     long: 30,

@@ -29,12 +29,10 @@ describe("Create Map Point Route", () => {
         accessToken = loginResponse.body.token;
         const userId = loginResponse.body.user.id;
 
-        // Create a group directly using repository
         const groupRepository = new DrizzleGroupRepository();
         const group = await groupRepository.createGroup("Test Group", userId);
         groupId = group.id;
 
-        // Create a map
         const mapResponse = await request(app)
             .post(`/${groupId}/maps`)
             .set("Authorization", `Bearer ${accessToken}`)
