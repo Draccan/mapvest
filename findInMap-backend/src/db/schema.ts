@@ -71,6 +71,9 @@ export const usersGroups = pgTable(
 
 export const mapPoints = pgTable("map_points", {
     id: serial("id").primaryKey(),
+    mapId: uuid("map_id")
+        .notNull()
+        .references(() => maps.id),
     location: geometry("location").notNull(),
     type: mapPointTypeEnum("type").notNull(),
     date: text("date").notNull(),

@@ -5,19 +5,36 @@ import Route from "../Route";
 import getCreateMapPointSchema from "../schemas/getCreateMapPointSchema";
 import getMapPointSchema from "../schemas/getMapPointSchema";
 import { auhtorizationParam } from "./common/authorizationParam";
-import getClientIp from "./common/getClientIp";
+
+interface ReqParams {
+    groupId: string;
+    mapId: string;
+}
 
 export default (
     createMapPoint: CreateMapPoint,
-): Route<void, void, CreateMapPointDto, MapPointDto> => ({
-    path: "/map-points",
+): Route<ReqParams, void, CreateMapPointDto, MapPointDto> => ({
+    path: "/:groupId/maps/:mapId/points",
     method: "post",
     operationObject: {
-        tags: ["map-points"],
+        tags: ["maps"],
         summary: "Create a new map point",
-        description:
-            "Create a new crime map point. Rate limited to 1 request per 15 seconds per IP.",
-        parameters: [auhtorizationParam],
+        description: "Create a new crime map point.",
+        parameters: [
+            auhtorizationParam,
+            {
+                name: "groupId",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+            },
+            {
+                name: "mapId",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+            },
+        ],
         requestBody: {
             required: true,
             content: {
@@ -49,8 +66,9 @@ export default (
                     },
                 },
             },
-            429: {
-                description: "Rate limit exceeded - too many requests",
+            403: {
+                description:
+                    "Forbidden - User does not have access to this map",
                 content: {
                     "application/json": {
                         schema: {
@@ -58,7 +76,6 @@ export default (
                             properties: {
                                 success: { type: "boolean" },
                                 error: { type: "string" },
-                                remainingTime: { type: "number" },
                             },
                         },
                     },
@@ -81,7 +98,15 @@ export default (
         },
     },
     handler: async (req, res) => {
-        const mapPoint = await createMapPoint.exec(req.body);
+        const userId = (req as any).user!.userId;
+        const groupId = req.params.groupId;
+        const mapId = req.params.mapId;
+        const mapPoint = await createMapPoint.exec(
+            req.body,
+            userId,
+            groupId,
+            mapId,
+        );
 
         res.status(201).json(mapPoint);
     },

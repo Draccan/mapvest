@@ -11,10 +11,11 @@ import { makeMapPointEntity } from "./converters/makeMapPointEntity";
 import { makeMapEntity } from "./converters/makeMapEntity";
 
 export class DrizzleMapRepository implements MapRepository {
-    async findAllMapPoints(): Promise<MapPointEntity[]> {
+    async findAllMapPoints(mapId: string): Promise<MapPointEntity[]> {
         const allMapPoints = await db
             .select({
                 id: mapPoints.id,
+                mapId: mapPoints.mapId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 type: mapPoints.type,
@@ -22,7 +23,8 @@ export class DrizzleMapRepository implements MapRepository {
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             })
-            .from(mapPoints);
+            .from(mapPoints)
+            .where(eq(mapPoints.mapId, mapId));
 
         return allMapPoints.map(makeMapPointEntity);
     }
@@ -36,16 +38,21 @@ export class DrizzleMapRepository implements MapRepository {
         return dbMaps.map(makeMapEntity);
     }
 
-    async createMapPoint(data: CreateMapPointDto): Promise<MapPointEntity> {
+    async createMapPoint(
+        data: CreateMapPointDto,
+        mapId: string,
+    ): Promise<MapPointEntity> {
         const [createdMapPoint] = await db
             .insert(mapPoints)
             .values({
                 location: sql`ST_GeomFromText(${`POINT(${data.long} ${data.lat})`}, 4326)`,
                 type: data.type,
                 date: data.date,
+                mapId: mapId,
             })
             .returning({
                 id: mapPoints.id,
+                mapId: mapPoints.mapId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 type: mapPoints.type,
@@ -61,6 +68,7 @@ export class DrizzleMapRepository implements MapRepository {
         const [mapPoint] = await db
             .select({
                 id: mapPoints.id,
+                mapId: mapPoints.mapId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 type: mapPoints.type,

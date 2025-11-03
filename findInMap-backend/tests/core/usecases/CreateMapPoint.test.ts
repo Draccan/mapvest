@@ -1,10 +1,11 @@
-import { MapPointType } from "../../../src/core/commons/enums";
+import { MapPointType, UserGroupRole } from "../../../src/core/commons/enums";
+import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import CreateMapPoint from "../../../src/core/usecases/CreateMapPoint";
 
-const mockMapPointRepository: jest.Mocked<MapRepository> = {
+const mockMapRepository: jest.Mocked<MapRepository> = {
     createMapPoint: jest.fn(),
     findAllMapPoints: jest.fn(),
     findMapPointById: jest.fn(),
@@ -12,13 +13,25 @@ const mockMapPointRepository: jest.Mocked<MapRepository> = {
     createMap: jest.fn(),
 };
 
+const mockGroupRepository: jest.Mocked<GroupRepository> = {
+    findByUserId: jest.fn(),
+    createGroup: jest.fn(),
+    addUserToGroup: jest.fn(),
+};
+
 describe("CreateMapPoint", () => {
     let createMapPoint: CreateMapPoint;
     const mockDate = new Date("2025-10-02T00:00:00.000Z");
+    const userId = "user-id-123";
+    const groupId = "group-id-456";
+    const mapId = "map-id-789";
 
     beforeEach(() => {
         jest.clearAllMocks();
-        createMapPoint = new CreateMapPoint(mockMapPointRepository);
+        createMapPoint = new CreateMapPoint(
+            mockGroupRepository,
+            mockMapRepository,
+        );
     });
 
     describe("exec", () => {
@@ -40,11 +53,37 @@ describe("CreateMapPoint", () => {
                 updated_at: mockDate,
             };
 
-            mockMapPointRepository.createMapPoint.mockResolvedValue(
+            mockGroupRepository.findByUserId.mockResolvedValue([
+                {
+                    group: {
+                        id: groupId,
+                        name: "Test Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Admin,
+                },
+            ]);
+
+            mockMapRepository.findMapByGroupId.mockResolvedValue([
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                },
+            ]);
+
+            mockMapRepository.createMapPoint.mockResolvedValue(
                 mockCreatedMapPoint,
             );
 
-            const result = await createMapPoint.exec(mapPointData);
+            const result = await createMapPoint.exec(
+                mapPointData,
+                userId,
+                groupId,
+                mapId,
+            );
 
             expect(result).toEqual({
                 id: 1,
@@ -54,8 +93,15 @@ describe("CreateMapPoint", () => {
                 date: "2025-10-02",
                 createdAt: mockDate,
             });
-            expect(mockMapPointRepository.createMapPoint).toHaveBeenCalledWith(
+            expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
+                userId,
+            );
+            expect(mockMapRepository.findMapByGroupId).toHaveBeenCalledWith(
+                groupId,
+            );
+            expect(mockMapRepository.createMapPoint).toHaveBeenCalledWith(
                 mapPointData,
+                mapId,
             );
         });
     });

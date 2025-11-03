@@ -32,8 +32,8 @@ const tokenBlacklistService = new TokenBlacklistService(config.jwtSecret);
 const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 
 // Usecases
-const getMapPoints = new GetMapPoints(mapRepository);
-const createMapPoint = new CreateMapPoint(mapRepository);
+const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
+const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
 const createUser = new CreateUser(userRepository, groupRepository);
 const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
 const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);

@@ -40,18 +40,15 @@ const jwtService: JwtService = new JwtService(
 
 export function createTestApp() {
     const groupRepository = new DrizzleGroupRepository();
-    const mapPointRepository = new DrizzleMapRepository();
+    const mapRepository = new DrizzleMapRepository();
     const userRepository = new DrizzleUserRepository();
     const googleRepository = new MockGoogleRepository();
 
-    const createMapPoint = new CreateMapPoint(mapPointRepository);
+    const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
     const createUser = new CreateUser(userRepository, groupRepository);
-    const createGroupMap = new CreateGroupMap(
-        mapPointRepository,
-        groupRepository,
-    );
-    const getGroupMaps = new GetGroupMaps(mapPointRepository, groupRepository);
-    const getMapPoints = new GetMapPoints(mapPointRepository);
+    const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
+    const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
+    const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);

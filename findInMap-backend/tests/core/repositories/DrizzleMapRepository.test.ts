@@ -28,6 +28,22 @@ describe("DrizzleMapRepository", () => {
 
     describe("createMapPoint", () => {
         it("should createMapPoint a new map point in the database", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
             const createMapPointDto: CreateMapPointDto = {
                 long: 12.4964,
                 lat: 41.9028,
@@ -35,7 +51,10 @@ describe("DrizzleMapRepository", () => {
                 date: "2024-01-01",
             };
 
-            const result = await repository.createMapPoint(createMapPointDto);
+            const result = await repository.createMapPoint(
+                createMapPointDto,
+                map.id,
+            );
 
             expect(result).toBeDefined();
             expect(result.id).toBeDefined();
@@ -47,6 +66,22 @@ describe("DrizzleMapRepository", () => {
         });
 
         it("should handle different map point types", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
             const testCases = [
                 {
                     type: MapPointType.Theft,
@@ -69,7 +104,10 @@ describe("DrizzleMapRepository", () => {
             ];
 
             for (const testCase of testCases) {
-                const result = await repository.createMapPoint(testCase);
+                const result = await repository.createMapPoint(
+                    testCase,
+                    map.id,
+                );
                 expect(result.type).toBe(testCase.type);
                 expect(result.long).toBe(testCase.long);
                 expect(result.lat).toBe(testCase.lat);
@@ -78,13 +116,45 @@ describe("DrizzleMapRepository", () => {
     });
 
     describe("findAllMapPoints", () => {
-        it("should return empty array when no map points exist", async () => {
-            const result = await repository.findAllMapPoints();
+        it("should return empty array when no map points exist for a map", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const result = await repository.findAllMapPoints(map.id);
             expect(Array.isArray(result)).toBe(true);
             expect(result.length).toBe(0);
         });
 
         it("should return all map points when they exist", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
             const testPoints = [
                 {
                     long: 10,
@@ -107,10 +177,10 @@ describe("DrizzleMapRepository", () => {
             ];
 
             for (const point of testPoints) {
-                await repository.createMapPoint(point);
+                await repository.createMapPoint(point, map.id);
             }
 
-            const result = await repository.findAllMapPoints();
+            const result = await repository.findAllMapPoints(map.id);
 
             expect(result.length).toBe(3);
             expect(result.every((point) => point.id !== undefined)).toBe(true);
@@ -128,6 +198,22 @@ describe("DrizzleMapRepository", () => {
         });
 
         it("should preserve coordinate precision", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
             const precisePoint = {
                 long: 12.123456789,
                 lat: 41.987654321,
@@ -135,12 +221,61 @@ describe("DrizzleMapRepository", () => {
                 date: "2024-01-01",
             };
 
-            await repository.createMapPoint(precisePoint);
-            const result = await repository.findAllMapPoints();
+            await repository.createMapPoint(precisePoint, map.id);
+            const result = await repository.findAllMapPoints(map.id);
 
             expect(result.length).toBe(1);
             expect(result[0].long).toBeCloseTo(precisePoint.long, 6);
             expect(result[0].lat).toBeCloseTo(precisePoint.lat, 6);
+        });
+
+        it("should only return map points for the specified map", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "Map 1",
+            });
+
+            const map2 = await repository.createMap(group.id, {
+                name: "Map 2",
+            });
+
+            // Add points to map1
+            await repository.createMapPoint(
+                {
+                    long: 10,
+                    lat: 20,
+                    type: MapPointType.Theft,
+                    date: "2024-01-01",
+                },
+                map1.id,
+            );
+
+            // Add points to map2
+            await repository.createMapPoint(
+                {
+                    long: 30,
+                    lat: 40,
+                    type: MapPointType.Aggression,
+                    date: "2024-01-02",
+                },
+                map2.id,
+            );
+
+            const result = await repository.findAllMapPoints(map1.id);
+
+            expect(result.length).toBe(1);
+            expect(result[0].type).toBe(MapPointType.Theft);
         });
     });
 

@@ -1,0 +1,2 @@
+ALTER TABLE "map_points" ADD COLUMN "map_id" uuid;--> statement-breakpoint
+ALTER TABLE "map_points" ADD CONSTRAINT "map_points_map_id_maps_id_fk" FOREIGN KEY ("map_id") REFERENCES "public"."maps"("id") ON DELETE no action ON UPDATE no action;

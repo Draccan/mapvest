@@ -1,0 +1,1 @@
+ALTER TABLE "map_points" ALTER COLUMN "map_id" SET NOT NULL;

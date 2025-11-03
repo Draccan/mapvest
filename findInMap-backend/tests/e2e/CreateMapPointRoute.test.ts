@@ -1,10 +1,13 @@
 import request from "supertest";
 
+import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { getTestApp } from "./setup";
 
 describe("Create Map Point Route", () => {
     let app: any;
     let accessToken: string;
+    let groupId: string;
+    let mapId: string;
 
     beforeAll(async () => {
         app = getTestApp();
@@ -24,9 +27,23 @@ describe("Create Map Point Route", () => {
         });
 
         accessToken = loginResponse.body.token;
+        const userId = loginResponse.body.user.id;
+
+        // Create a group directly using repository
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", userId);
+        groupId = group.id;
+
+        // Create a map
+        const mapResponse = await request(app)
+            .post(`/${groupId}/maps`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({ name: "Test Map" });
+
+        mapId = mapResponse.body.id;
     });
 
-    it("POST /map-points should create a new map point with valid token", async () => {
+    it("POST /:groupId/maps/:mapId/points should create a new map point with valid token", async () => {
         const testMapPoint = {
             long: 45.4642,
             lat: 9.19,
@@ -35,7 +52,7 @@ describe("Create Map Point Route", () => {
         };
 
         const response = await request(app)
-            .post("/map-points")
+            .post(`/${groupId}/maps/${mapId}/points`)
             .set("Authorization", `Bearer ${accessToken}`)
             .send(testMapPoint)
             .expect(201);
@@ -46,7 +63,7 @@ describe("Create Map Point Route", () => {
         expect(response.body.type).toBe(testMapPoint.type);
     });
 
-    it("POST /map-points should return 401 without token", async () => {
+    it("POST /:groupId/maps/:mapId/points should return 401 without token", async () => {
         const testMapPoint = {
             long: 45.4642,
             lat: 9.19,
@@ -55,7 +72,7 @@ describe("Create Map Point Route", () => {
         };
 
         const response = await request(app)
-            .post("/map-points")
+            .post(`/${groupId}/maps/${mapId}/points`)
             .send(testMapPoint)
             .expect(401);
         expect(response.body).toHaveProperty("error");
