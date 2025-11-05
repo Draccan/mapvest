@@ -2,13 +2,25 @@ import { Request, Response, NextFunction } from "express";
 
 import JwtService, { TokenType } from "../../../core/services/JwtService";
 
-const PublicRoutes = ["/health", "/info", "/swagger", "/users", "/users/login"];
+const PublicRoutes = [
+    "/health",
+    "/info",
+    "/swagger/*",
+    "/users",
+    "/users/login",
+    "/favicon.ico",
+];
 
 const RefreshTokenRoutes = ["/token/refresh", "/users/logout"];
 
 export default function authMiddleware(jwtService: JwtService) {
     return (req: Request, res: Response, next: NextFunction) => {
-        const isPublicRoute = PublicRoutes.some((route) => req.path === route);
+        const isPublicRoute = PublicRoutes.some(
+            (route) =>
+                req.path === route ||
+                (route.endsWith("/*") &&
+                    req.path.startsWith(route.slice(0, -2))),
+        );
 
         if (isPublicRoute) {
             return next();

@@ -3,7 +3,7 @@ import Route from "../Route";
 import getInfoSchema from "../schemas/getInfoSchema";
 
 interface HealthResponse {
-    name: string;
+    appName: string;
     description: string;
     swagger: string;
     version: string;
@@ -27,9 +27,9 @@ export default (): Route<void, void, void, HealthResponse> => ({
             },
         },
     },
-    handler: async (req, res) => {
+    handler: async (_req, res) => {
         res.status(200).json({
-            name: config.appName,
+            appName: config.appName,
             version: config.appVersion,
             description: "MapVest Backend API for managing crime map points",
             swagger: `${config.publicUrl}/swagger`,
