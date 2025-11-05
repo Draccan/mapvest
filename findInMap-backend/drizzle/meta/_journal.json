@@ -5,57 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1761839620890,
-      "tag": "0000_productive_cobalt_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1761842206566,
-      "tag": "0001_cloudy_jack_flag",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1761842206567,
-      "tag": "0002_insert_maps",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1762177992425,
-      "tag": "0003_cuddly_unus",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1762177992426,
-      "tag": "0004_update_map_points_with_map",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1762178208802,
-      "tag": "0005_flaky_meggan",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1730826000000,
-      "tag": "0006_change_map_points_id_to_uuid",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1730826000001,
-      "tag": "0007_change_map_points_id_to_uuid_2",
+      "when": 1762366486879,
+      "tag": "0000_loose_penance",
       "breakpoints": true
     }
   ]
