@@ -2,7 +2,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { UserGroupRole } from "../../../core/commons/enums";
 
-export default function getGroupDtoSchema(): OpenAPIV3.SchemaObject {
+export default function getGroupSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
         properties: {

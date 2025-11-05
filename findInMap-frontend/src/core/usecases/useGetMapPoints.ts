@@ -8,7 +8,7 @@ interface UseGetMapPoints {
     loading: boolean;
     error: any;
     data: MapPointDto[] | null;
-    fetch: () => Promise<void>;
+    fetch: (groupId: string, mapId: string) => Promise<void>;
     hasFetched: boolean;
 }
 
@@ -17,12 +17,13 @@ export const useGetMapPoints = (): UseGetMapPoints => {
     const [data, setData] = useState<MapPointDto[] | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
-    const { fetch, loading, error } = useRequestWrapper(() =>
-        apiClient.getMapPoints(),
+    const { fetch, loading, error } = useRequestWrapper(
+        (groupId: string, mapId: string) =>
+            apiClient.getMapPointsByMap(groupId, mapId),
     );
 
-    const fetchMapPoints = async () => {
-        const result: MapPointDto[] | null = await fetch();
+    const fetchMapPoints = async (groupId: string, mapId: string) => {
+        const result: MapPointDto[] | null = await fetch(groupId, mapId);
 
         if (result) {
             setData(result);

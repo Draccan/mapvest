@@ -1,28 +1,46 @@
-import { MapPointType } from "../../../src/core/commons/enums";
-import MapPointRepository from "../../../src/core/dependencies/MapPointRepository";
+import { MapPointType, UserGroupRole } from "../../../src/core/commons/enums";
+import GroupRepository from "../../../src/core/dependencies/GroupRepository";
+import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import GetMapPoints from "../../../src/core/usecases/GetMapPoints";
 
-const mockMapPointRepository: jest.Mocked<MapPointRepository> = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findById: jest.fn(),
+const mockMapPointRepository: jest.Mocked<MapRepository> = {
+    createMapPoint: jest.fn(),
+    deleteMapPoints: jest.fn(),
+    findAllMapPoints: jest.fn(),
+    findMapPointById: jest.fn(),
+    findMapByGroupId: jest.fn(),
+    createMap: jest.fn(),
+    memoizedFindMapByGroupId: jest.fn(),
+};
+
+const mockGroupRepository: jest.Mocked<GroupRepository> = {
+    findByUserId: jest.fn(),
+    createGroup: jest.fn(),
+    addUserToGroup: jest.fn(),
+    memoizedFindByUserId: jest.fn(),
 };
 
 describe("GetMapPoints", () => {
     let getMapPoints: GetMapPoints;
     const mockDate = new Date("2025-10-02T00:00:00.000Z");
+    const userId = "user-id-123";
+    const groupId = "group-id-456";
+    const mapId = "map-id-789";
 
     beforeEach(() => {
         jest.clearAllMocks();
-        getMapPoints = new GetMapPoints(mockMapPointRepository);
+        getMapPoints = new GetMapPoints(
+            mockGroupRepository,
+            mockMapPointRepository,
+        );
     });
 
     describe("exec", () => {
         it("should return all map points", async () => {
             const mockMapPoints: MapPointEntity[] = [
                 {
-                    id: 1,
+                    id: "1",
                     long: 45.0,
                     lat: 9.0,
                     type: MapPointType.Theft,
@@ -31,7 +49,7 @@ describe("GetMapPoints", () => {
                     updated_at: mockDate,
                 },
                 {
-                    id: 2,
+                    id: "2",
                     long: 46.0,
                     lat: 10.0,
                     type: MapPointType.Aggression,
@@ -41,13 +59,36 @@ describe("GetMapPoints", () => {
                 },
             ];
 
-            mockMapPointRepository.findAll.mockResolvedValue(mockMapPoints);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
+                {
+                    group: {
+                        id: groupId,
+                        name: "Test Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Admin,
+                },
+            ]);
 
-            const result = await getMapPoints.exec();
+            mockMapPointRepository.memoizedFindMapByGroupId.mockResolvedValue([
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                },
+            ]);
+
+            mockMapPointRepository.findAllMapPoints.mockResolvedValue(
+                mockMapPoints,
+            );
+
+            const result = await getMapPoints.exec(userId, groupId, mapId);
 
             expect(result).toEqual([
                 {
-                    id: 1,
+                    id: "1",
                     long: 45.0,
                     lat: 9.0,
                     type: MapPointType.Theft,
@@ -55,7 +96,7 @@ describe("GetMapPoints", () => {
                     createdAt: mockDate,
                 },
                 {
-                    id: 2,
+                    id: "2",
                     long: 46.0,
                     lat: 10.0,
                     type: MapPointType.Aggression,
@@ -63,16 +104,59 @@ describe("GetMapPoints", () => {
                     createdAt: mockDate,
                 },
             ]);
-            expect(mockMapPointRepository.findAll).toHaveBeenCalledTimes(1);
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
+            expect(
+                mockMapPointRepository.memoizedFindMapByGroupId,
+            ).toHaveBeenCalledWith(groupId);
+            expect(
+                mockMapPointRepository.findAllMapPoints,
+            ).toHaveBeenCalledWith(mapId);
+            expect(
+                mockMapPointRepository.findAllMapPoints,
+            ).toHaveBeenCalledTimes(1);
         });
 
         it("should return empty array when no map points exist", async () => {
-            mockMapPointRepository.findAll.mockResolvedValue([]);
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
+                {
+                    group: {
+                        id: groupId,
+                        name: "Test Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Admin,
+                },
+            ]);
 
-            const result = await getMapPoints.exec();
+            mockMapPointRepository.memoizedFindMapByGroupId.mockResolvedValue([
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                },
+            ]);
+
+            mockMapPointRepository.findAllMapPoints.mockResolvedValue([]);
+
+            const result = await getMapPoints.exec(userId, groupId, mapId);
 
             expect(result).toEqual([]);
-            expect(mockMapPointRepository.findAll).toHaveBeenCalledTimes(1);
+            expect(
+                mockGroupRepository.memoizedFindByUserId,
+            ).toHaveBeenCalledWith(userId);
+            expect(
+                mockMapPointRepository.memoizedFindMapByGroupId,
+            ).toHaveBeenCalledWith(groupId);
+            expect(
+                mockMapPointRepository.findAllMapPoints,
+            ).toHaveBeenCalledWith(mapId);
+            expect(
+                mockMapPointRepository.findAllMapPoints,
+            ).toHaveBeenCalledTimes(1);
         });
     });
 });

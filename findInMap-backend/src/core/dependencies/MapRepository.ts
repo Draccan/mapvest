@@ -1,0 +1,22 @@
+import CreateMapDto from "../dtos/CreateMapDto";
+import { CreateMapPointDto } from "../dtos/CreateMapPointDto";
+import MapEntity from "../entities/MapEntity";
+import { MapPointEntity } from "../entities/MapPointEntity";
+import DbOrTransaction from "./DatabaseTransaction";
+
+export default interface MapRepository {
+    createMapPoint(
+        data: CreateMapPointDto,
+        mapId: string,
+    ): Promise<MapPointEntity>;
+    deleteMapPoints(mapId: string, pointIds: string[]): Promise<void>;
+    findAllMapPoints(mapId: string): Promise<MapPointEntity[]>;
+    findMapPointById(id: string): Promise<MapPointEntity | null>;
+    findMapByGroupId(groupId: string): Promise<MapEntity[]>;
+    memoizedFindMapByGroupId(groupId: string): Promise<MapEntity[]>;
+    createMap(
+        groupId: string,
+        data: CreateMapDto,
+        dbInstance?: DbOrTransaction,
+    ): Promise<MapEntity>;
+}

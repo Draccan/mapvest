@@ -87,7 +87,9 @@
 }
 
 .v-home-button {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     background: linear-gradient(
         135deg,
         var(--color-primary),
@@ -101,6 +103,10 @@
     border-radius: 50px;
     transition: all 0.3s ease;
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.v-home-button svg {
+    flex-shrink: 0;
 }
 
 .v-home-button:hover {
@@ -124,10 +130,18 @@
 }
 
 .v-notfound-footer p {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0;
     font-style: italic;
+}
+
+.v-notfound-footer p svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
 }
 
 /* Responsive design */

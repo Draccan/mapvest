@@ -3,8 +3,10 @@ import TokenStorageService from "../../utils/TokenStorageService";
 import type AddressDto from "../dtos/AddressDto";
 import type { CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type CreateUserDto from "../dtos/CreateUserDto";
+import type { GroupDto } from "../dtos/GroupDto";
 import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
+import type { MapDto } from "../dtos/MapDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
 import type TokenResponseDto from "../dtos/TokenResponseDto";
 import type UserDto from "../dtos/UserDto";
@@ -138,6 +140,8 @@ export default class ApiClient {
     async logout(): Promise<void> {
         const refreshToken = TokenStorageService.getRefreshToken();
         if (!refreshToken) {
+            TokenStorageService.clearTokens();
+            this.token = null;
             throw new UnauthorizedError();
         }
 
@@ -183,9 +187,21 @@ export default class ApiClient {
         return response.json();
     }
 
-    async getMapPoints(): Promise<MapPointDto[]> {
+    async getUserGroups(): Promise<GroupDto[]> {
+        const response = await this.fetchWithInterceptors(`${API_URL}/groups`, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async getGroupMaps(groupId: string): Promise<MapDto[]> {
         const response = await this.fetchWithInterceptors(
-            `${API_URL}/map-points`,
+            `${API_URL}/${groupId}/maps`,
             {
                 method: "GET",
             },
@@ -198,9 +214,31 @@ export default class ApiClient {
         return response.json();
     }
 
-    async createMapPoint(data: CreateMapPointDto): Promise<MapPointDto> {
+    async getMapPointsByMap(
+        groupId: string,
+        mapId: string,
+    ): Promise<MapPointDto[]> {
         const response = await this.fetchWithInterceptors(
-            `${API_URL}/map-points`,
+            `${API_URL}/${groupId}/maps/${mapId}/points`,
+            {
+                method: "GET",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async createMapPointInMap(
+        groupId: string,
+        mapId: string,
+        data: CreateMapPointDto,
+    ): Promise<MapPointDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}/points`,
             {
                 method: "POST",
                 body: JSON.stringify(data),

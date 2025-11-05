@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import mem from "mem";
 
 import { UserGroupRole } from "../../core/commons/enums";
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
@@ -26,6 +27,10 @@ export class DrizzleGroupRepository implements GroupRepository {
         );
     }
 
+    memoizedFindByUserId = mem(this.findByUserId, {
+        maxAge: 1000 * 60,
+    });
+
     async createGroup(
         groupName: string,
         userId: string,
@@ -39,7 +44,7 @@ export class DrizzleGroupRepository implements GroupRepository {
             })
             .returning();
 
-        this.addUserToGroup(
+        await this.addUserToGroup(
             userId,
             createdGroup.id,
             UserGroupRole.Owner,

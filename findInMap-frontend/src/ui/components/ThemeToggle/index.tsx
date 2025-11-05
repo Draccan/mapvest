@@ -1,3 +1,4 @@
+import { Sun, Moon } from "lucide-react";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -32,9 +33,11 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
             <div
                 className={`c-themeToggle-slider ${theme === "dark" ? "c-themeToggle-dark" : ""}`}
             >
-                <span className="c-themeToggle-icon c-themeToggle-sun">☀️</span>
+                <span className="c-themeToggle-icon c-themeToggle-sun">
+                    <Sun size={18} />
+                </span>
                 <span className="c-themeToggle-icon c-themeToggle-moon">
-                    🌙
+                    <Moon size={18} />
                 </span>
             </div>
         </button>

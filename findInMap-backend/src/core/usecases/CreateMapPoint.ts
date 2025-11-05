@@ -1,28 +1,36 @@
-import MapPointRepository from "../dependencies/MapPointRepository";
+import GroupRepository from "../dependencies/GroupRepository";
+import MapRepository from "../dependencies/MapRepository";
 import { CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import { makeMapPointDto, MapPointDto } from "../dtos/MapPointDto";
-import { RateLimitError } from "../errors/RateLimitError";
-import { RateLimitService } from "../services/RateLimitService";
+import NotAllowedActionError from "../errors/NotAllowedActionError";
 
 export default class CreateMapPoint {
     constructor(
-        private mapPointRepository: MapPointRepository,
-        private rateLimitService: RateLimitService,
+        private groupRepository: GroupRepository,
+        private mapRepository: MapRepository,
     ) {}
 
     async exec(
         data: CreateMapPointDto,
-        clientIp: string,
+        userId: string,
+        groupId: string,
+        mapId: string,
     ): Promise<MapPointDto> {
-        if (!this.rateLimitService.isAllowed(clientIp)) {
-            const remainingTime =
-                this.rateLimitService.getRemainingTime(clientIp);
-            throw new RateLimitError(remainingTime);
+        const groups = await this.groupRepository.memoizedFindByUserId(userId);
+        if (groups.find((group) => group.group.id === groupId) === undefined) {
+            throw new NotAllowedActionError(
+                "User cannot access map for this group",
+            );
         }
 
-        const mapPoint = await this.mapPointRepository.create(data);
+        const maps = await this.mapRepository.memoizedFindMapByGroupId(groupId);
+        if (maps.find((map) => map.id === mapId) === undefined) {
+            throw new NotAllowedActionError(
+                "This group has no access to the specified map",
+            );
+        }
 
-        this.rateLimitService.recordRequest(clientIp);
+        const mapPoint = await this.mapRepository.createMapPoint(data, mapId);
 
         return makeMapPointDto(mapPoint);
     }

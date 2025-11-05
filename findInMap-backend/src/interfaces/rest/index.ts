@@ -10,8 +10,11 @@ import * as swaggerUi from "swagger-ui-express";
 
 import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
+import CreateGroupMap from "../../core/usecases/CreateGroupMap";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
+import DeleteMapPoints from "../../core/usecases/DeleteMapPoints";
+import GetGroupMaps from "../../core/usecases/GetGroupMaps";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
@@ -21,10 +24,13 @@ import SearchAddresses from "../../core/usecases/SearchAddresses";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
+import CreateMapRoute from "./routes/CreateMapRoute";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
+import DeleteMapPointsRoute from "./routes/DeleteMapPointsRoute";
 import GetGroupsRoute from "./routes/GetGroupsRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
+import GetMapsRoute from "./routes/GetMapsRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
 import LoginUserRoute from "./routes/LoginUserRoute";
@@ -44,22 +50,28 @@ export default class RestInterface {
         private corsAllowedOrigins: string[],
         private validateResponses: boolean,
         usecases: {
+            createGroupMap: CreateGroupMap;
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
+            deleteMapPoints: DeleteMapPoints;
             getMapPoints: GetMapPoints;
             getUserGroups: GetUserGroups;
             loginUser: LoginUser;
             logoutUser: LogoutUser;
             refreshToken: RefreshToken;
             searchAddresses: SearchAddresses;
+            getGroupMaps: GetGroupMaps;
         },
         private jwtService: JwtService,
     ) {
         this.routes = [
+            CreateMapRoute(usecases.createGroupMap),
             CreateMapPointRoute(usecases.createMapPoint),
             CreateUserRoute(usecases.createUser),
+            DeleteMapPointsRoute(usecases.deleteMapPoints),
             GetGroupsRoute(usecases.getUserGroups),
             GetMapPointsRoute(usecases.getMapPoints),
+            GetMapsRoute(usecases.getGroupMaps),
             HealthRoute(),
             InfoRoute(),
             LoginUserRoute(usecases.loginUser),
@@ -121,6 +133,7 @@ export default class RestInterface {
             }),
         );
 
+        // Register API routes
         this.app.use(
             "/swagger",
             swaggerUi.serve,
@@ -129,8 +142,6 @@ export default class RestInterface {
                 customCss: ".swagger-ui .topbar { display: none }",
             }),
         );
-
-        // Register API routes
         this.registerHandlers();
 
         this.app.use((req, res) => {
@@ -162,10 +173,11 @@ export default class RestInterface {
         const pathsObject: OpenAPIV3.PathsObject = {};
 
         this.routes.forEach((route) => {
-            if (!pathsObject[route.path]) {
-                pathsObject[route.path] = {};
+            const openApiPath = route.path.replace(/:([^/]+)/g, "{$1}");
+            if (!pathsObject[openApiPath]) {
+                pathsObject[openApiPath] = {};
             }
-            pathsObject[route.path][route.method] = route.operationObject;
+            pathsObject[openApiPath][route.method] = route.operationObject;
         });
 
         return pathsObject;

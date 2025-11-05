@@ -18,7 +18,11 @@ module.exports = {
         "<rootDir>/tests/e2e/setup.ts",
     ],
     testTimeout: 10000,
+    forceExit: true,
     clearMocks: true,
     resetMocks: true,
     restoreMocks: true,
+    // Warning: Limit to 1 worker to avoid database problems executing tests in
+    // parallel
+    maxWorkers: 1,
 };

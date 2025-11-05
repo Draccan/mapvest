@@ -70,7 +70,10 @@ export const usersGroups = pgTable(
 );
 
 export const mapPoints = pgTable("map_points", {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
+    mapId: uuid("map_id")
+        .notNull()
+        .references(() => maps.id),
     location: geometry("location").notNull(),
     type: mapPointTypeEnum("type").notNull(),
     date: text("date").notNull(),
@@ -81,6 +84,14 @@ export const mapPoints = pgTable("map_points", {
         .$onUpdate(() => new Date()),
 });
 
+export const maps = pgTable("maps", {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    groupId: uuid("group_id")
+        .notNull()
+        .references(() => groups.id),
+    name: varchar("name").notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Group = typeof groups.$inferSelect;
@@ -89,3 +100,5 @@ export type UserGroup = typeof usersGroups.$inferSelect;
 export type NewUserGroup = typeof usersGroups.$inferInsert;
 export type MapPoint = typeof mapPoints.$inferSelect;
 export type NewMapPoint = typeof mapPoints.$inferInsert;
+export type Map = typeof maps.$inferSelect;
+export type NewMap = typeof maps.$inferInsert;

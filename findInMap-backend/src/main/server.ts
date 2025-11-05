@@ -1,10 +1,11 @@
 import LoggerService from "../core/services/LoggerService";
-import { InMemoryRateLimitService } from "../core/services/RateLimitService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
-import GetMapPoints from "../core/usecases/GetMapPoints";
+import CreateGroupMap from "../core/usecases/CreateGroupMap";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
+import DeleteMapPoints from "../core/usecases/DeleteMapPoints";
+import GetMapPoints from "../core/usecases/GetMapPoints";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
@@ -12,28 +13,36 @@ import RefreshToken from "../core/usecases/RefreshToken";
 import SearchAddresses from "../core/usecases/SearchAddresses";
 import { client } from "../db";
 import { DrizzleGroupRepository } from "../dependency-implementations/DrizzleGroupRepository";
-import { DrizzleMapPointRepository } from "../dependency-implementations/DrizzleMapPointRepository";
+import { DrizzleMapRepository } from "../dependency-implementations/DrizzleMapRepository";
 import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUserRepository";
 import GoogleRepository from "../dependency-implementations/GoogleRepository";
 import RestInterface from "../interfaces/rest";
 import config from "./config";
 
+import GetGroupMaps from "../core/usecases/GetGroupMaps";
+
 // Repositories
 const groupRepository = new DrizzleGroupRepository();
-const mapPointRepository = new DrizzleMapPointRepository();
+const mapRepository = new DrizzleMapRepository();
 const userRepository = new DrizzleUserRepository();
 const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 
 // Services
 // 15 seconds
-const rateLimitService = new InMemoryRateLimitService(15);
 const tokenBlacklistService = new TokenBlacklistService(config.jwtSecret);
 const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 
 // Usecases
-const getMapPoints = new GetMapPoints(mapPointRepository);
-const createMapPoint = new CreateMapPoint(mapPointRepository, rateLimitService);
-const createUser = new CreateUser(userRepository, groupRepository);
+const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
+const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
+const createUser = new CreateUser(
+    userRepository,
+    groupRepository,
+    mapRepository,
+);
+const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
+const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
 const getUserGroups = new GetUserGroups(groupRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
 const logoutUser = new LogoutUser(jwtService);
@@ -48,21 +57,23 @@ const restInterface = new RestInterface(
     config.corsAllowedOrigins,
     config.validateApiResponses,
     {
+        createGroupMap,
         createMapPoint,
         createUser,
+        deleteMapPoints,
         getMapPoints,
         getUserGroups,
         loginUser,
         logoutUser,
         refreshToken,
         searchAddresses,
+        getGroupMaps,
     },
     jwtService,
 );
 
 process.on("SIGINT", async () => {
     LoggerService.info("Received SIGINT. Shutting down gracefully...");
-    rateLimitService.destroy();
     jwtService.destroy();
     await client.end();
     process.exit(0);
@@ -70,7 +81,6 @@ process.on("SIGINT", async () => {
 
 process.on("SIGTERM", async () => {
     LoggerService.info("Received SIGTERM. Shutting down gracefully...");
-    rateLimitService.destroy();
     jwtService.destroy();
     await client.end();
     process.exit(0);

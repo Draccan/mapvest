@@ -1,4 +1,4 @@
-import { createTestApp } from "./helpers";
+import { cleanupTestApp, createTestApp } from "./helpers";
 
 let server: any;
 let app: any;
@@ -10,9 +10,14 @@ export const setupTestServer = () => {
         server = app.listen(0);
     });
 
-    afterAll(async () => {
+    afterAll((done) => {
+        cleanupTestApp();
         if (server) {
-            server.close();
+            server.close(() => {
+                done();
+            });
+        } else {
+            done();
         }
     });
 };

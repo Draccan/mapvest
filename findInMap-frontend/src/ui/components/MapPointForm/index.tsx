@@ -1,3 +1,4 @@
+import { MapPin, AlertCircle } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 import { MapPointType } from "../../../core/commons/enums";
@@ -150,7 +151,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         <div className="c-errors">
                             {errors.map((error, index) => (
                                 <div key={index} className="c-error">
-                                    {error}
+                                    <AlertCircle size={16} />
+                                    <span>{error}</span>
                                 </div>
                             ))}
                         </div>
@@ -167,7 +169,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     </Button>
                 </form>
                 <div className="c-instructions">
-                    <p>📍 {fm("clickOnMapInstructions")}</p>
+                    <MapPin size={18} />
+                    <p>{fm("clickOnMapInstructions")}</p>
                 </div>
             </div>
         </ErrorBoundary>
