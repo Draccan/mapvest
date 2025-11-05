@@ -140,6 +140,8 @@ export default class ApiClient {
     async logout(): Promise<void> {
         const refreshToken = TokenStorageService.getRefreshToken();
         if (!refreshToken) {
+            TokenStorageService.clearTokens();
+            this.token = null;
             throw new UnauthorizedError();
         }
 
