@@ -5,11 +5,12 @@ import { MapPointEntity } from "../entities/MapPointEntity";
 import DbOrTransaction from "./DatabaseTransaction";
 
 export default interface MapRepository {
-    findAllMapPoints(mapId: string): Promise<MapPointEntity[]>;
     createMapPoint(
         data: CreateMapPointDto,
         mapId: string,
     ): Promise<MapPointEntity>;
+    deleteMapPoints(mapId: string, pointIds: string[]): Promise<void>;
+    findAllMapPoints(mapId: string): Promise<MapPointEntity[]>;
     findMapPointById(id: number): Promise<MapPointEntity | null>;
     findMapByGroupId(groupId: string): Promise<MapEntity[]>;
     memoizedFindMapByGroupId(groupId: string): Promise<MapEntity[]>;

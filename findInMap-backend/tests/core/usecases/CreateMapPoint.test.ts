@@ -6,6 +6,7 @@ import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import CreateMapPoint from "../../../src/core/usecases/CreateMapPoint";
 
 const mockMapRepository: jest.Mocked<MapRepository> = {
+    deleteMapPoints: jest.fn(),
     createMapPoint: jest.fn(),
     findAllMapPoints: jest.fn(),
     findMapPointById: jest.fn(),

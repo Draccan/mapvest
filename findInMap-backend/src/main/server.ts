@@ -4,6 +4,7 @@ import TokenBlacklistService from "../core/services/TokenBlacklistService";
 import CreateGroupMap from "../core/usecases/CreateGroupMap";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
+import DeleteMapPoints from "../core/usecases/DeleteMapPoints";
 import GetMapPoints from "../core/usecases/GetMapPoints";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
@@ -34,6 +35,7 @@ const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 // Usecases
 const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
 const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
 const createUser = new CreateUser(
     userRepository,
     groupRepository,
@@ -58,6 +60,7 @@ const restInterface = new RestInterface(
         createGroupMap,
         createMapPoint,
         createUser,
+        deleteMapPoints,
         getMapPoints,
         getUserGroups,
         loginUser,

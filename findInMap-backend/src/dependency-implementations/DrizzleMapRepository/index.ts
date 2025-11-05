@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, inArray, and } from "drizzle-orm";
 import mem from "mem";
 
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
@@ -68,6 +68,23 @@ export class DrizzleMapRepository implements MapRepository {
             });
 
         return makeMapPointEntity(createdMapPoint);
+    }
+
+    async deleteMapPoints(mapId: string, pointIds: string[]): Promise<void> {
+        if (pointIds.length === 0) {
+            return;
+        }
+
+        const numericIds = pointIds.map((id) => parseInt(id, 10));
+
+        await db
+            .delete(mapPoints)
+            .where(
+                and(
+                    inArray(mapPoints.id, numericIds),
+                    eq(mapPoints.mapId, mapId),
+                ),
+            );
     }
 
     async findMapPointById(id: number): Promise<MapPointEntity | null> {

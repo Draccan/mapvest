@@ -7,6 +7,7 @@ import GetGroupMaps from "../../../src/core/usecases/GetGroupMaps";
 import { UserGroupRole } from "../../../src/core/commons/enums";
 
 const mockMapRepository: jest.Mocked<MapRepository> = {
+    deleteMapPoints: jest.fn(),
     findAllMapPoints: jest.fn(),
     findMapByGroupId: jest.fn(),
     createMapPoint: jest.fn(),

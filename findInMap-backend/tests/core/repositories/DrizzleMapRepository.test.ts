@@ -384,4 +384,184 @@ describe("DrizzleMapRepository", () => {
             expect(result[0].name).toBe("Test Map");
         });
     });
+
+    describe("deleteMapPoints", () => {
+        it("should delete map points by their ids", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const point1 = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    type: MapPointType.Theft,
+                    date: "2024-01-01",
+                },
+                map.id,
+            );
+
+            const point2 = await repository.createMapPoint(
+                {
+                    long: 13.4964,
+                    lat: 42.9028,
+                    type: MapPointType.Aggression,
+                    date: "2024-01-02",
+                },
+                map.id,
+            );
+
+            const point3 = await repository.createMapPoint(
+                {
+                    long: 14.4964,
+                    lat: 43.9028,
+                    type: MapPointType.Robbery,
+                    date: "2024-01-03",
+                },
+                map.id,
+            );
+
+            await repository.deleteMapPoints(map.id, [
+                point1.id.toString(),
+                point2.id.toString(),
+            ]);
+
+            const remainingPoints = await repository.findAllMapPoints(map.id);
+
+            expect(remainingPoints.length).toBe(1);
+            expect(remainingPoints[0].id).toBe(point3.id);
+        });
+
+        it("should not delete points from other maps", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "Test Map 1",
+            });
+
+            const map2 = await repository.createMap(group.id, {
+                name: "Test Map 2",
+            });
+
+            const point1 = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    type: MapPointType.Theft,
+                    date: "2024-01-01",
+                },
+                map1.id,
+            );
+
+            const point2 = await repository.createMapPoint(
+                {
+                    long: 13.4964,
+                    lat: 42.9028,
+                    type: MapPointType.Aggression,
+                    date: "2024-01-02",
+                },
+                map2.id,
+            );
+
+            await repository.deleteMapPoints(map2.id, [point1.id.toString()]);
+
+            const map1Points = await repository.findAllMapPoints(map1.id);
+            const map2Points = await repository.findAllMapPoints(map2.id);
+
+            expect(map1Points.length).toBe(1);
+            expect(map1Points[0].id).toBe(point1.id);
+
+            expect(map2Points.length).toBe(1);
+            expect(map2Points[0].id).toBe(point2.id);
+        });
+
+        it("should handle empty array", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    type: MapPointType.Theft,
+                    date: "2024-01-01",
+                },
+                map.id,
+            );
+
+            await repository.deleteMapPoints(map.id, []);
+
+            const points = await repository.findAllMapPoints(map.id);
+            expect(points.length).toBe(1);
+        });
+
+        it("should handle non-existing point ids correctly", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const point = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    type: MapPointType.Theft,
+                    date: "2024-01-01",
+                },
+                map.id,
+            );
+
+            await repository.deleteMapPoints(map.id, ["999999", "888888"]);
+
+            const points = await repository.findAllMapPoints(map.id);
+            expect(points.length).toBe(1);
+            expect(points[0].id).toBe(point.id);
+        });
+    });
 });

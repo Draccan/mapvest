@@ -6,6 +6,7 @@ import GetMapPoints from "../../../src/core/usecases/GetMapPoints";
 
 const mockMapPointRepository: jest.Mocked<MapRepository> = {
     createMapPoint: jest.fn(),
+    deleteMapPoints: jest.fn(),
     findAllMapPoints: jest.fn(),
     findMapPointById: jest.fn(),
     findMapByGroupId: jest.fn(),

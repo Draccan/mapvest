@@ -13,6 +13,7 @@ import LoggerService from "../../core/services/LoggerService";
 import CreateGroupMap from "../../core/usecases/CreateGroupMap";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
+import DeleteMapPoints from "../../core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../../core/usecases/GetGroupMaps";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import GetUserGroups from "../../core/usecases/GetUserGroups";
@@ -26,6 +27,7 @@ import Route from "./Route";
 import CreateMapRoute from "./routes/CreateMapRoute";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
+import DeleteMapPointsRoute from "./routes/DeleteMapPointsRoute";
 import GetGroupsRoute from "./routes/GetGroupsRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import GetMapsRoute from "./routes/GetMapsRoute";
@@ -51,6 +53,7 @@ export default class RestInterface {
             createGroupMap: CreateGroupMap;
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
+            deleteMapPoints: DeleteMapPoints;
             getMapPoints: GetMapPoints;
             getUserGroups: GetUserGroups;
             loginUser: LoginUser;
@@ -65,6 +68,7 @@ export default class RestInterface {
             CreateMapRoute(usecases.createGroupMap),
             CreateMapPointRoute(usecases.createMapPoint),
             CreateUserRoute(usecases.createUser),
+            DeleteMapPointsRoute(usecases.deleteMapPoints),
             GetGroupsRoute(usecases.getUserGroups),
             GetMapPointsRoute(usecases.getMapPoints),
             GetMapsRoute(usecases.getGroupMaps),

@@ -21,6 +21,7 @@ const mockGroupRepository: jest.Mocked<GroupRepository> = {
 };
 
 const mockMapRepository: jest.Mocked<MapRepository> = {
+    deleteMapPoints: jest.fn(),
     createMapPoint: jest.fn(),
     findAllMapPoints: jest.fn(),
     findMapPointById: jest.fn(),
