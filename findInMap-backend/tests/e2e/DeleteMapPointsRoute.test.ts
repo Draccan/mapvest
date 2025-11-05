@@ -281,7 +281,12 @@ describe("Delete Map Points Route", () => {
         await request(app)
             .delete(`/${groupId}/maps/${mapId}/points`)
             .set("Authorization", `Bearer ${accessToken}`)
-            .send({ pointIds: ["999999", "888888"] })
+            .send({
+                pointIds: [
+                    "00000000-0000-0000-0000-000000000001",
+                    "00000000-0000-0000-0000-000000000002",
+                ],
+            })
             .expect(204);
 
         const afterResponse = await request(app)

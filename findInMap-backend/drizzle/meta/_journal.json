@@ -50,6 +50,13 @@
       "when": 1730826000000,
       "tag": "0006_change_map_points_id_to_uuid",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1730826000001,
+      "tag": "0007_change_map_points_id_to_uuid_2",
+      "breakpoints": true
     }
   ]
 }

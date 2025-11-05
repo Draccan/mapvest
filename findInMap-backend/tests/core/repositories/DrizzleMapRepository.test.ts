@@ -433,10 +433,7 @@ describe("DrizzleMapRepository", () => {
                 map.id,
             );
 
-            await repository.deleteMapPoints(map.id, [
-                point1.id.toString(),
-                point2.id.toString(),
-            ]);
+            await repository.deleteMapPoints(map.id, [point1.id, point2.id]);
 
             const remainingPoints = await repository.findAllMapPoints(map.id);
 
@@ -485,7 +482,7 @@ describe("DrizzleMapRepository", () => {
                 map2.id,
             );
 
-            await repository.deleteMapPoints(map2.id, [point1.id.toString()]);
+            await repository.deleteMapPoints(map2.id, [point1.id]);
 
             const map1Points = await repository.findAllMapPoints(map1.id);
             const map2Points = await repository.findAllMapPoints(map2.id);
@@ -557,7 +554,10 @@ describe("DrizzleMapRepository", () => {
                 map.id,
             );
 
-            await repository.deleteMapPoints(map.id, ["999999", "888888"]);
+            await repository.deleteMapPoints(map.id, [
+                "00000000-0000-0000-0000-000000000001",
+                "00000000-0000-0000-0000-000000000002",
+            ]);
 
             const points = await repository.findAllMapPoints(map.id);
             expect(points.length).toBe(1);

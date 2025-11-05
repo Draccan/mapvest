@@ -6,7 +6,7 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
         properties: {
-            id: { type: "integer" },
+            id: { type: "string" },
             long: { type: "number", description: "Longitude coordinate" },
             lat: { type: "number", description: "Latitude coordinate" },
             type: {
