@@ -70,7 +70,7 @@ export const usersGroups = pgTable(
 );
 
 export const mapPoints = pgTable("map_points", {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     mapId: uuid("map_id")
         .notNull()
         .references(() => maps.id),

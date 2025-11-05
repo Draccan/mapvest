@@ -1,7 +1,7 @@
 import { MapPointType } from "../commons/enums";
 
 export interface MapPointDto {
-    id: number;
+    id: string;
     long: number;
     lat: number;
     type: MapPointType;

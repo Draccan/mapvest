@@ -43,6 +43,13 @@
       "when": 1762178208802,
       "tag": "0005_flaky_meggan",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1730826000000,
+      "tag": "0006_change_map_points_id_to_uuid",
+      "breakpoints": true
     }
   ]
 }

@@ -47,7 +47,7 @@ describe("CreateMapPoint", () => {
             };
 
             const mockCreatedMapPoint: MapPointEntity = {
-                id: 1,
+                id: "1",
                 long: mapPointData.long,
                 lat: mapPointData.lat,
                 type: mapPointData.type,
@@ -89,7 +89,7 @@ describe("CreateMapPoint", () => {
             );
 
             expect(result).toEqual({
-                id: 1,
+                id: "1",
                 long: 45.0,
                 lat: 9.0,
                 type: MapPointType.Theft,

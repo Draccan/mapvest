@@ -75,19 +75,17 @@ export class DrizzleMapRepository implements MapRepository {
             return;
         }
 
-        const numericIds = pointIds.map((id) => parseInt(id, 10));
-
         await db
             .delete(mapPoints)
             .where(
                 and(
-                    inArray(mapPoints.id, numericIds),
+                    inArray(mapPoints.id, pointIds),
                     eq(mapPoints.mapId, mapId),
                 ),
             );
     }
 
-    async findMapPointById(id: number): Promise<MapPointEntity | null> {
+    async findMapPointById(id: string): Promise<MapPointEntity | null> {
         const [mapPoint] = await db
             .select({
                 id: mapPoints.id,

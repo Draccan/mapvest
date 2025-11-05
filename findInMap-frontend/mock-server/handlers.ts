@@ -4,7 +4,7 @@ import { MapPointType } from "../src/core/commons/enums";
 
 let mockMapPoints: MapPointDto[] = [
     {
-        id: 1,
+        id: "1",
         lat: 41.90195,
         long: 12.504533,
         type: MapPointType.Theft,
@@ -12,7 +12,7 @@ let mockMapPoints: MapPointDto[] = [
         createdAt: new Date("2024-01-01"),
     },
     {
-        id: 2,
+        id: "2",
         lat: 41.9109,
         long: 12.4818,
         type: MapPointType.Aggression,
@@ -20,7 +20,7 @@ let mockMapPoints: MapPointDto[] = [
         createdAt: new Date("2024-01-02"),
     },
     {
-        id: 3,
+        id: "3",
         lat: 41.8986,
         long: 12.4768,
         type: MapPointType.Robbery,
@@ -123,7 +123,7 @@ export const handlers = [
 
             const mapPoint: MapPointDto = {
                 ...newPoint,
-                id: Date.now() + Math.random(),
+                id: `${Date.now()}${Math.random()}`,
                 createdAt: new Date(),
             };
 

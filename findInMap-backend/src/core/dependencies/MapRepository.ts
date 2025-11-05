@@ -11,7 +11,7 @@ export default interface MapRepository {
     ): Promise<MapPointEntity>;
     deleteMapPoints(mapId: string, pointIds: string[]): Promise<void>;
     findAllMapPoints(mapId: string): Promise<MapPointEntity[]>;
-    findMapPointById(id: number): Promise<MapPointEntity | null>;
+    findMapPointById(id: string): Promise<MapPointEntity | null>;
     findMapByGroupId(groupId: string): Promise<MapEntity[]>;
     memoizedFindMapByGroupId(groupId: string): Promise<MapEntity[]>;
     createMap(

@@ -40,7 +40,7 @@ describe("GetMapPoints", () => {
         it("should return all map points", async () => {
             const mockMapPoints: MapPointEntity[] = [
                 {
-                    id: 1,
+                    id: "1",
                     long: 45.0,
                     lat: 9.0,
                     type: MapPointType.Theft,
@@ -49,7 +49,7 @@ describe("GetMapPoints", () => {
                     updated_at: mockDate,
                 },
                 {
-                    id: 2,
+                    id: "2",
                     long: 46.0,
                     lat: 10.0,
                     type: MapPointType.Aggression,
@@ -88,7 +88,7 @@ describe("GetMapPoints", () => {
 
             expect(result).toEqual([
                 {
-                    id: 1,
+                    id: "1",
                     long: 45.0,
                     lat: 9.0,
                     type: MapPointType.Theft,
@@ -96,7 +96,7 @@ describe("GetMapPoints", () => {
                     createdAt: mockDate,
                 },
                 {
-                    id: 2,
+                    id: "2",
                     long: 46.0,
                     lat: 10.0,
                     type: MapPointType.Aggression,
