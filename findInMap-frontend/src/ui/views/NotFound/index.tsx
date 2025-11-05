@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Compass, Search } from "lucide-react";
 
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import routes from "../../commons/routes";
@@ -22,13 +23,12 @@ const NotFound: React.FC = () => {
                 </p>
                 <div className="v-notfound-actions">
                     <Link to={routes.home()} className="v-home-button">
-                        🧭 {fm("backToMap")}
+                        <Compass size={18} /> {fm("backToMap")}
                     </Link>
                 </div>
                 <div className="v-notfound-footer">
                     <p>
-                        {fm("footerMessage")}
-                        🔎
+                        {fm("footerMessage")} <Search size={18} />
                     </p>
                 </div>
             </div>

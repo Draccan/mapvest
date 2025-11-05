@@ -52,7 +52,6 @@
 }
 
 .c-themeToggle-icon {
-    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,18 +61,22 @@
 
 .c-themeToggle-sun {
     opacity: 1;
+    color: #fbbf24;
 }
 
 .c-themeToggle-dark .c-themeToggle-sun {
     opacity: 0.3;
+    color: #fbbf24;
 }
 
 .c-themeToggle-moon {
     opacity: 0.3;
+    color: #60a5fa;
 }
 
 .c-themeToggle-dark .c-themeToggle-moon {
     opacity: 1;
+    color: #60a5fa;
 }
 
 [data-theme="dark"] .c-themeToggle {

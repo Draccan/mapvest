@@ -22,6 +22,7 @@
   "dependencies": {
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
+    "lucide-react": "^0.552.0",
     "mem": "^10.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

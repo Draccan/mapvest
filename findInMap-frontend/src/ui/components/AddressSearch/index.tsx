@@ -1,3 +1,4 @@
+import { Search, MapPin } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import type AddressDto from "../../../core/dtos/AddressDto";
@@ -55,7 +56,9 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
                     </div>
                 )}
 
-                <div className="c-address-search-icon">🔍</div>
+                <div className="c-address-search-icon">
+                    <Search size={18} />
+                </div>
             </div>
 
             {showResults && results.length > 0 && (
@@ -67,7 +70,7 @@ export const AddressSearch: React.FC<AddressSearchProps> = ({
                             onMouseDown={() => handleResultSelect(result)}
                         >
                             <span className="c-address-search-result-icon">
-                                📍
+                                <MapPin size={16} />
                             </span>
                             <span className="c-address-search-result-text">
                                 {result.label}
