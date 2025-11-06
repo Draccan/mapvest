@@ -21,8 +21,7 @@ export const useCreateUser = (): UseCreateUser => {
     const createUser = async (
         userData: CreateUserDto,
     ): Promise<UserDto | { message: string } | null> => {
-        const response = await fetch(userData);
-        return response;
+        return await fetch(userData);
     };
 
     return {
