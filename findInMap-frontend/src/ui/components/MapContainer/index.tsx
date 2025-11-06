@@ -14,7 +14,7 @@ import {
 import { MapPointType } from "../../../core/commons/enums";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
-import { LoadingSpinner } from "../LoadingSpinner";
+import { Button } from "../Button";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapContainer");
@@ -126,19 +126,19 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                     <strong>{fm("coordinates")}:</strong>{" "}
                                     {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
                                 </div>
-                                <button
-                                    className="c-map-container-delete-btn"
+                                <Button
+                                    kind="danger"
+                                    size="icon"
                                     onClick={(e) => deletePoint(e, point.id)}
                                     title={deletePointLabel}
                                     aria-label={deletePointLabel}
                                     disabled={deletingPointId === point.id}
+                                    loading={deletingPointId === point.id}
+                                    fullWidth={false}
+                                    className="c-map-container-delete-btn"
                                 >
-                                    {deletingPointId === point.id ? (
-                                        <LoadingSpinner />
-                                    ) : (
-                                        <Trash2 size={18} />
-                                    )}
-                                </button>
+                                    <Trash2 size={18} />
+                                </Button>
                             </div>
                         </div>
                     </Popup>

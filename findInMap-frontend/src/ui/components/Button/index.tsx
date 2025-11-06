@@ -1,13 +1,14 @@
 import React from "react";
 
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
+import { LoadingSpinner } from "../LoadingSpinner";
 import "./style.css";
 
 export type ButtonKind = "primary" | "danger";
 
 export interface ButtonProps {
     kind?: ButtonKind;
-    size?: "small" | "large";
+    size?: "small" | "large" | "icon";
     type?: "button" | "submit" | "reset";
     disabled?: boolean;
     loading?: boolean;
@@ -15,6 +16,8 @@ export interface ButtonProps {
     children: React.ReactNode;
     className?: string;
     fullWidth?: boolean;
+    title?: string;
+    "aria-label"?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -27,6 +30,8 @@ export const Button: React.FC<ButtonProps> = ({
     children,
     className = "",
     fullWidth = true,
+    title,
+    "aria-label": ariaLabel,
 }) => {
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!disabled && !loading && onClick) {
@@ -49,12 +54,18 @@ export const Button: React.FC<ButtonProps> = ({
             disabled={disabled || loading}
             onClick={handleClick}
             className={classNames}
+            title={title}
+            aria-label={ariaLabel}
         >
             {loading ? (
-                <span className="c-button-loading-content">
-                    <span className="c-button-spinner" />
-                    {children}
-                </span>
+                size === "icon" ? (
+                    <LoadingSpinner />
+                ) : (
+                    <span className="c-button-loading-content">
+                        <LoadingSpinner />
+                        {children}
+                    </span>
+                )
             ) : (
                 children
             )}
