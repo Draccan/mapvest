@@ -1,4 +1,6 @@
+import { Trash2 } from "lucide-react";
 import React, { useEffect } from "react";
+import { useIntl } from "react-intl";
 import {
     MapContainer as LeafletMapContainer,
     TileLayer,
@@ -12,6 +14,8 @@ import {
 import { MapPointType } from "../../../core/commons/enums";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import { LoadingSpinner } from "../LoadingSpinner";
+import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapContainer");
 
@@ -19,6 +23,8 @@ interface MapContainerProps {
     mapPoints: MapPointDto[];
     onMapClick: (lat: number, lng: number) => void;
     selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
+    onDeletePoint: (pointId: string) => void;
+    deletingPointId?: string | null;
 }
 
 const MapClickHandler: React.FC<{
@@ -67,7 +73,20 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     mapPoints,
     onMapClick,
     selectedCoordinates,
+    onDeletePoint,
+    deletingPointId,
 }) => {
+    const intl = useIntl();
+    const deletePointLabel = intl.formatMessage({
+        id: "components.MapContainer.deletePoint",
+    });
+
+    function deletePoint(e: React.MouseEvent, pointId: string) {
+        // Warning: Prevent the map click event from firing
+        e.stopPropagation();
+        onDeletePoint(pointId);
+    }
+
     return (
         <LeafletMapContainer
             center={[41.9028, 12.4964]}
@@ -96,14 +115,31 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                     }}
                 >
                     <Popup>
-                        <div>
-                            <strong>{fm("type")}:</strong>{" "}
-                            {fm(`types.${point.type}`)}
-                            <br />
-                            <strong>{fm("date")}:</strong> {point.date}
-                            <br />
-                            <strong>{fm("coordinates")}:</strong>{" "}
-                            {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
+                        <div className="c-map-container-popup">
+                            <div className="c-map-container-popup-content">
+                                <div>
+                                    <strong>{fm("type")}:</strong>{" "}
+                                    {fm(`types.${point.type}`)}
+                                    <br />
+                                    <strong>{fm("date")}:</strong> {point.date}
+                                    <br />
+                                    <strong>{fm("coordinates")}:</strong>{" "}
+                                    {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
+                                </div>
+                                <button
+                                    className="c-map-container-delete-btn"
+                                    onClick={(e) => deletePoint(e, point.id)}
+                                    title={deletePointLabel}
+                                    aria-label={deletePointLabel}
+                                    disabled={deletingPointId === point.id}
+                                >
+                                    {deletingPointId === point.id ? (
+                                        <LoadingSpinner />
+                                    ) : (
+                                        <Trash2 size={18} />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </Popup>
                 </CircleMarker>

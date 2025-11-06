@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
+import { useDeleteMapPoint } from "../../../core/usecases/useDeleteMapPoint";
 import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
@@ -26,6 +27,7 @@ export const Home: React.FC = () => {
         lat: number;
         zoom?: number;
     } | null>(null);
+    const [deletingPointId, setDeletingPointId] = useState<string | null>(null);
 
     const {
         data: groupsData,
@@ -50,6 +52,7 @@ export const Home: React.FC = () => {
     } = useGetMapPoints();
 
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
+    const { deleteMapPoint } = useDeleteMapPoint();
     const { loading: loadingLogout, logout } = useLogoutUser();
 
     useEffect(() => {
@@ -111,6 +114,15 @@ export const Home: React.FC = () => {
         }
     };
 
+    const handleDeletePoint = async (pointId: string) => {
+        const firstGroup = groupsData![0]!;
+        const firstMap = mapsData![0]!;
+        setDeletingPointId(pointId);
+        await deleteMapPoint(firstGroup.id, firstMap.id, [pointId]);
+        await fetchMapPoints(firstGroup.id, firstMap.id);
+        setDeletingPointId(null);
+    };
+
     const mapPoints = mapPointsData || [];
     const isLoading = loadingGroups || loadingMaps || loadingPoints;
 
@@ -155,6 +167,8 @@ export const Home: React.FC = () => {
                                 mapPoints={mapPoints}
                                 onMapClick={handleMapPointSelection}
                                 selectedCoordinates={selectedCoordinates}
+                                onDeletePoint={handleDeletePoint}
+                                deletingPointId={deletingPointId}
                             />
                         </div>
                     </div>

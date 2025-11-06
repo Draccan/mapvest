@@ -62,7 +62,7 @@ let mapIdCounter = 2;
 export const handlers = [
     http.all("https://maps.googleapis.com/*", () => passthrough()),
     http.get("http://localhost:3001/search/addresses", async ({ request }) => {
-        await delay(2000);
+        await delay(1000);
         const url = new URL(request.url);
         const text = url.searchParams.get("text") || "";
 
@@ -81,11 +81,11 @@ export const handlers = [
         return HttpResponse.json(mockAddresses);
     }),
     http.get("http://localhost:3001/groups", async () => {
-        await delay(2000);
+        await delay(1000);
         return HttpResponse.json(mockGroups);
     }),
     http.get("http://localhost:3001/:groupId/maps", async ({ params }) => {
-        await delay(2000);
+        await delay(1000);
         const { groupId } = params;
         const groupMaps = mockMaps.filter((map) => map.groupId === groupId);
         return HttpResponse.json(groupMaps);
@@ -93,7 +93,7 @@ export const handlers = [
     http.post(
         "http://localhost:3001/:groupId/maps",
         async ({ params, request }) => {
-            await delay(2000);
+            await delay(1000);
             const { groupId } = params;
             const mapData = (await request.json()) as { name: string };
 
@@ -109,13 +109,13 @@ export const handlers = [
         },
     ),
     http.get("http://localhost:3001/:groupId/maps/:mapId/points", async () => {
-        await delay(2000);
+        await delay(1000);
         return HttpResponse.json(mockMapPoints);
     }),
     http.post(
         "http://localhost:3001/:groupId/maps/:mapId/points",
         async ({ request }) => {
-            await delay(2000);
+            await delay(1000);
             const newPoint = (await request.json()) as Omit<
                 MapPointDto,
                 "id" | "createdAt"
@@ -132,9 +132,45 @@ export const handlers = [
             return HttpResponse.json(mapPoint, { status: 201 });
         },
     ),
+    http.delete(
+        "http://localhost:3001/:groupId/maps/:mapId/points",
+        async ({ request }) => {
+            await delay(1000);
+            const payload = (await request.json()) as { pointIds: string[] };
+
+            if (!payload.pointIds || !Array.isArray(payload.pointIds)) {
+                return HttpResponse.json(
+                    { error: "pointIds array is required" },
+                    { status: 400 },
+                );
+            }
+
+            if (payload.pointIds.length === 0) {
+                return HttpResponse.json(
+                    { error: "pointIds array cannot be empty" },
+                    { status: 400 },
+                );
+            }
+
+            const deletedIds: string[] = [];
+
+            payload.pointIds.forEach((pointId) => {
+                const pointIndex = mockMapPoints.findIndex(
+                    (point) => point.id === pointId,
+                );
+
+                if (pointIndex !== -1) {
+                    mockMapPoints.splice(pointIndex, 1);
+                    deletedIds.push(pointId);
+                }
+            });
+
+            return HttpResponse.json(undefined, { status: 200 });
+        },
+    ),
 
     http.post("http://localhost:3001/users", async ({ request }) => {
-        await delay(2000);
+        await delay(1000);
         const userData = (await request.json()) as {
             name: string;
             surname: string;
@@ -180,7 +216,7 @@ export const handlers = [
         return HttpResponse.json(userResponse, { status: 201 });
     }),
     http.post("http://localhost:3001/users/login", async ({ request }) => {
-        await delay(2000);
+        await delay(1000);
         const credentials = (await request.json()) as {
             email: string;
             password: string;
@@ -211,7 +247,7 @@ export const handlers = [
         });
     }),
     http.post("http://localhost:3001/token/refresh", async ({ request }) => {
-        await delay(2000);
+        await delay(1000);
         const authHeader = request.headers.get("Authorization");
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -241,7 +277,7 @@ export const handlers = [
         });
     }),
     http.post("http://localhost:3001/users/logout", async () => {
-        await delay(2000);
+        await delay(1000);
         return HttpResponse.json();
     }),
 ];

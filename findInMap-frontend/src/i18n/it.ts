@@ -12,6 +12,7 @@ export default flattenObject({
             date: "Data",
             coordinates: "Coordinate",
             selectedPoint: "Punto Selezionato",
+            deletePoint: "Elimina Punto",
         },
         MapPointForm: {
             addMapPoint: "Aggiungi Punto Mappa",
