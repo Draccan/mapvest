@@ -20,7 +20,9 @@
   "license": "CC-BY-NC-SA-4.0",
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
+    "@geoman-io/leaflet-geoman-free": "^2.18.3",
     "@types/lodash-es": "^4.17.12",
+    "leaflet": "^1.9.4",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.552.0",
     "mem": "^10.0.0",

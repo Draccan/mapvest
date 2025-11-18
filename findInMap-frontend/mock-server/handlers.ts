@@ -9,7 +9,7 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.504533,
         type: MapPointType.Theft,
         date: "01/01/2024",
-        createdAt: new Date("2024-01-01"),
+        createdAt: new Date("2024-01-01").toISOString(),
     },
     {
         id: "2",
@@ -17,7 +17,7 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.4818,
         type: MapPointType.Aggression,
         date: "02/01/2024",
-        createdAt: new Date("2024-01-02"),
+        createdAt: new Date("2024-01-02").toISOString(),
     },
     {
         id: "3",
@@ -25,7 +25,7 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.4768,
         type: MapPointType.Robbery,
         date: "03/01/2024",
-        createdAt: new Date("2024-01-03"),
+        createdAt: new Date("2024-01-03").toISOString(),
     },
 ];
 
@@ -124,7 +124,7 @@ export const handlers = [
             const mapPoint: MapPointDto = {
                 ...newPoint,
                 id: `${Date.now()}${Math.random()}`,
-                createdAt: new Date(),
+                createdAt: new Date().toISOString(),
             };
 
             mockMapPoints.push(mapPoint);

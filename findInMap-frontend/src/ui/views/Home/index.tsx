@@ -1,16 +1,21 @@
+import { ScanSearch, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { useIntl } from "react-intl";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
+import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
-import { useDeleteMapPoint } from "../../../core/usecases/useDeleteMapPoint";
+import { useDeleteMapPoints } from "../../../core/usecases/useDeleteMapPoints";
 import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
 import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import getPointsInBounds from "../../../utils/getPointsInBounds";
 import LogoSvg from "../../assets/logo.svg";
 import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
+import { AreaAnalysis } from "../../components/AreaAnalysis";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
@@ -22,12 +27,15 @@ import "./style.css";
 const fm = getFormattedMessageWithScope("views.Home");
 
 export const Home: React.FC = () => {
+    const intl = useIntl();
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
         long: number;
         lat: number;
         zoom?: number;
     } | null>(null);
     const [deletingPointId, setDeletingPointId] = useState<string | null>(null);
+    const [isAnalysisMode, setIsAnalysisMode] = useState(false);
+    const [pointsInArea, setPointsInArea] = useState<MapPointDto[]>([]);
 
     const {
         data: groupsData,
@@ -52,7 +60,7 @@ export const Home: React.FC = () => {
     } = useGetMapPoints();
 
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
-    const { deleteMapPoint } = useDeleteMapPoint();
+    const { deleteMapPoints } = useDeleteMapPoints();
     const { loading: loadingLogout, logout } = useLogoutUser();
 
     useEffect(() => {
@@ -118,9 +126,27 @@ export const Home: React.FC = () => {
         const firstGroup = groupsData![0]!;
         const firstMap = mapsData![0]!;
         setDeletingPointId(pointId);
-        await deleteMapPoint(firstGroup.id, firstMap.id, [pointId]);
-        await fetchMapPoints(firstGroup.id, firstMap.id);
-        setDeletingPointId(null);
+        try {
+            await deleteMapPoints(firstGroup.id, firstMap.id, [pointId]);
+            await fetchMapPoints(firstGroup.id, firstMap.id);
+        } finally {
+            setDeletingPointId(null);
+        }
+    };
+
+    const toggleAnalysisMode = () => {
+        setIsAnalysisMode(!isAnalysisMode);
+        if (isAnalysisMode) {
+            setPointsInArea([]);
+            setSelectedCoordinates(null);
+        }
+    };
+
+    const handleAreaDrawn = (bounds: L.LatLngBounds | null) => {
+        const pointsInArea = bounds
+            ? getPointsInBounds(mapPointsData || [], bounds)
+            : [];
+        setPointsInArea(pointsInArea);
     };
 
     const mapPoints = mapPointsData || [];
@@ -156,10 +182,34 @@ export const Home: React.FC = () => {
                 <div className="v-home-content">
                     <div className="v-home-map-section">
                         <div className="v-home-search-wrapper">
-                            <AddressSearch
-                                onAddressSelect={handleMapPointSelection}
-                                className="v-home-address-search"
-                            />
+                            {!isAnalysisMode && (
+                                <AddressSearch
+                                    onAddressSelect={handleMapPointSelection}
+                                    className="v-home-address-search"
+                                />
+                            )}
+                            <Button
+                                kind={isAnalysisMode ? "danger" : "primary"}
+                                size="icon"
+                                onClick={toggleAnalysisMode}
+                                title={intl.formatMessage({
+                                    id: isAnalysisMode
+                                        ? "views.Home.exitAnalysisMode"
+                                        : "views.Home.enterAnalysisMode",
+                                })}
+                                aria-label={intl.formatMessage({
+                                    id: isAnalysisMode
+                                        ? "views.Home.exitAnalysisMode"
+                                        : "views.Home.enterAnalysisMode",
+                                })}
+                                className="v-home-analysis-toggle"
+                            >
+                                {isAnalysisMode ? (
+                                    <X size={20} />
+                                ) : (
+                                    <ScanSearch size={20} />
+                                )}
+                            </Button>
                         </div>
                         <div className="v-home-map">
                             {isLoading && !hasFetched && <Skeleton />}
@@ -169,15 +219,21 @@ export const Home: React.FC = () => {
                                 selectedCoordinates={selectedCoordinates}
                                 onDeletePoint={handleDeletePoint}
                                 deletingPointId={deletingPointId}
+                                drawingEnabled={isAnalysisMode}
+                                onAreaDrawn={handleAreaDrawn}
                             />
                         </div>
                     </div>
                     <div className="v-home-form-section">
-                        <MapPointForm
-                            selectedCoordinates={selectedCoordinates}
-                            onSave={handleSavePoint}
-                            loading={creatingPoint}
-                        />
+                        {isAnalysisMode ? (
+                            <AreaAnalysis pointsInArea={pointsInArea} />
+                        ) : (
+                            <MapPointForm
+                                selectedCoordinates={selectedCoordinates}
+                                onSave={handleSavePoint}
+                                loading={creatingPoint}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

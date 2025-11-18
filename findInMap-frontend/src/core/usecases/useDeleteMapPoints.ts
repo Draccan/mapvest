@@ -4,22 +4,22 @@ import { useRequestWrapper } from "./utils/useRequestWrapper";
 interface UseDeleteMapPoint {
     loading: boolean;
     error: any;
-    deleteMapPoint: (
+    deleteMapPoints: (
         groupId: string,
         mapId: string,
         pointIds: string[],
     ) => Promise<void>;
 }
 
-export const useDeleteMapPoint = (): UseDeleteMapPoint => {
+export const useDeleteMapPoints = (): UseDeleteMapPoint => {
     const apiClient = useApiClient();
 
     const { fetch, loading, error } = useRequestWrapper(
         (groupId: string, mapId: string, pointIds: string[]) =>
-            apiClient.deleteMapPoint(groupId, mapId, pointIds),
+            apiClient.deleteMapPoints(groupId, mapId, pointIds),
     );
 
-    const deleteMapPoint = async (
+    const deleteMapPoints = async (
         groupId: string,
         mapId: string,
         pointIds: string[],
@@ -30,6 +30,6 @@ export const useDeleteMapPoint = (): UseDeleteMapPoint => {
     return {
         loading,
         error,
-        deleteMapPoint,
+        deleteMapPoints,
     };
 };

@@ -2,6 +2,21 @@ import flattenObject from "../utils/flattenObject";
 
 export default flattenObject({
     components: {
+        AreaAnalysis: {
+            title: "Area Analysis",
+            summary: "Summary",
+            totalPoints: "Total Points",
+            byType: "By Type",
+            types: {
+                THEFT: "Thefts",
+                AGGRESSION: "Aggressions",
+                ROBBERY: "Robberies",
+            },
+            recentPoints: "Recent Points",
+            morePoints: "+ {count} more points",
+            noPoints:
+                "No points in the selected area. Draw an area on the map to analyze.",
+        },
         MapContainer: {
             type: "Type",
             types: {
@@ -43,6 +58,8 @@ export default flattenObject({
         Home: {
             about: "About",
             logout: "Logout",
+            enterAnalysisMode: "Analyze Area",
+            exitAnalysisMode: "Exit Analysis Mode",
         },
         Login: {
             emailLabel: "Email:",

@@ -6,5 +6,6 @@ export interface MapPointDto {
     lat: number;
     type: MapPointType;
     date: string;
-    createdAt: Date;
+    // timestamp in ISO format
+    createdAt: string;
 }

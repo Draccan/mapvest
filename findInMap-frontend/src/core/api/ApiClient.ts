@@ -252,7 +252,7 @@ export default class ApiClient {
         return response.json();
     }
 
-    async deleteMapPoint(
+    async deleteMapPoints(
         groupId: string,
         mapId: string,
         pointIds: string[],

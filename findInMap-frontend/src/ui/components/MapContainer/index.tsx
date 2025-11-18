@@ -1,3 +1,4 @@
+import L from "leaflet";
 import { Trash2 } from "lucide-react";
 import React, { useEffect } from "react";
 import { useIntl } from "react-intl";
@@ -15,6 +16,7 @@ import { MapPointType } from "../../../core/commons/enums";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
+import { GeomanControl } from "./GeomanControl";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapContainer");
@@ -25,6 +27,8 @@ interface MapContainerProps {
     selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
     onDeletePoint: (pointId: string) => void;
     deletingPointId?: string | null;
+    drawingEnabled?: boolean;
+    onAreaDrawn: (bounds: L.LatLngBounds | null) => void;
 }
 
 const MapClickHandler: React.FC<{
@@ -75,6 +79,8 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     selectedCoordinates,
     onDeletePoint,
     deletingPointId,
+    drawingEnabled = false,
+    onAreaDrawn,
 }) => {
     const intl = useIntl();
     const deletePointLabel = intl.formatMessage({
@@ -87,6 +93,10 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         onDeletePoint(pointId);
     }
 
+    const handleAreaDrawn = (bounds: L.LatLngBounds | null) => {
+        onAreaDrawn(bounds);
+    };
+
     return (
         <LeafletMapContainer
             center={[41.9028, 12.4964]}
@@ -97,8 +107,12 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <MapClickHandler onMapClick={onMapClick} />
+            {!drawingEnabled && <MapClickHandler onMapClick={onMapClick} />}
             <MapController selectedCoordinates={selectedCoordinates} />
+            <GeomanControl
+                enabled={drawingEnabled}
+                onAreaDrawn={handleAreaDrawn}
+            />
             {mapPoints.map((point) => (
                 <CircleMarker
                     key={point.id}
