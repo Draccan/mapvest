@@ -4,6 +4,8 @@ import L from "leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 
+import usePrevious from "../../commons/hooks/usePrevious";
+
 interface GeomanControlProps {
     enabled: boolean;
     onAreaDrawn: (bounds: L.LatLngBounds | null) => void;
@@ -14,6 +16,8 @@ export const GeomanControl: React.FC<GeomanControlProps> = ({
     onAreaDrawn,
 }) => {
     const map = useMap();
+
+    const previousEnabled = usePrevious(enabled);
 
     useEffect(() => {
         if (!enabled) {
@@ -27,7 +31,9 @@ export const GeomanControl: React.FC<GeomanControlProps> = ({
                     map.removeLayer(layer);
                 }
             });
-            onAreaDrawn(null);
+            if (previousEnabled) {
+                onAreaDrawn(null);
+            }
             return;
         }
 
@@ -76,7 +82,7 @@ export const GeomanControl: React.FC<GeomanControlProps> = ({
             map.off("pm:remove", handleRemove);
             map.off("pm:edit", handleEdit);
         };
-    }, [map, enabled, onAreaDrawn]);
+    }, [map, enabled, previousEnabled, onAreaDrawn]);
 
     return null;
 };
