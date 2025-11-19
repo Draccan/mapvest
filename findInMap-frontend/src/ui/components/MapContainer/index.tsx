@@ -92,10 +92,6 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         onDeletePoint(pointId);
     }
 
-    const handleAreaDrawn = (bounds: L.LatLngBounds | null) => {
-        onAreaDrawn(bounds);
-    };
-
     return (
         <LeafletMapContainer
             center={[41.9028, 12.4964]}
@@ -108,10 +104,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
             />
             {!drawingEnabled && <MapClickHandler onMapClick={onMapClick} />}
             <MapController selectedCoordinates={selectedCoordinates} />
-            <GeomanControl
-                enabled={drawingEnabled}
-                onAreaDrawn={handleAreaDrawn}
-            />
+            <GeomanControl enabled={drawingEnabled} onAreaDrawn={onAreaDrawn} />
             {mapPoints.map((point) => (
                 <CircleMarker
                     key={point.id}

@@ -42,8 +42,8 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({ pointsInArea }) => {
 
             <div className="c-area-analysis-section">
                 <h3>{fm("byType")}</h3>
-                {types.map((type: string) => (
-                    <div className="c-area-analysis-stat-item">
+                {types.map((type: string, index) => (
+                    <div key={index} className="c-area-analysis-stat-item">
                         <span className="c-area-analysis-stat-label">
                             {type}
                         </span>

@@ -1,5 +1,5 @@
 import { ScanSearch, X } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useIntl } from "react-intl";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
@@ -142,12 +142,21 @@ export const Home: React.FC = () => {
         }
     };
 
-    const handleAreaDrawn = (bounds: L.LatLngBounds | null) => {
+    // Warning: to avoid problems with the GeomanControl we need to avoid that
+    // the handleAreaDrawn function changes on every render, but it needs always
+    // the latest mapPointsData value.
+    const mapPointsDataRef = useRef<MapPointDto[]>([]);
+
+    useEffect(() => {
+        mapPointsDataRef.current = mapPointsData || [];
+    }, [mapPointsData]);
+
+    const handleAreaDrawn = useCallback((bounds: L.LatLngBounds | null) => {
         const pointsInArea = bounds
-            ? getPointsInBounds(mapPointsData || [], bounds)
+            ? getPointsInBounds(mapPointsDataRef.current || [], bounds)
             : [];
         setPointsInArea(pointsInArea);
-    };
+    }, []);
 
     const mapPoints = mapPointsData || [];
     const isLoading = loadingGroups || loadingMaps || loadingPoints;

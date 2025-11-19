@@ -37,6 +37,10 @@ export const GeomanControl: React.FC<GeomanControlProps> = ({
             return;
         }
 
+        if (map.pm.controlsVisible()) {
+            return;
+        }
+
         map.pm.addControls({
             position: "topleft",
             drawCircle: true,
@@ -82,7 +86,7 @@ export const GeomanControl: React.FC<GeomanControlProps> = ({
             map.off("pm:remove", handleRemove);
             map.off("pm:edit", handleEdit);
         };
-    }, [map, enabled, previousEnabled, onAreaDrawn]);
+    }, [map, enabled, previousEnabled]);
 
     return null;
 };
