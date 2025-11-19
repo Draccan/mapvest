@@ -145,6 +145,7 @@ export const Home: React.FC = () => {
     // Warning: to avoid problems with the GeomanControl we need to avoid that
     // the handleAreaDrawn function changes on every render, but it needs always
     // the latest mapPointsData value.
+    // TODO: think about using a useAreaDrawn hook to encapsulate this logic
     const mapPointsDataRef = useRef<MapPointDto[]>([]);
 
     useEffect(() => {
