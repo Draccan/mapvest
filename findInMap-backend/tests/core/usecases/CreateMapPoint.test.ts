@@ -1,4 +1,4 @@
-import { MapPointType, UserGroupRole } from "../../../src/core/commons/enums";
+import { UserGroupRole } from "../../../src/core/commons/enums";
 import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
@@ -42,7 +42,7 @@ describe("CreateMapPoint", () => {
             const mapPointData: CreateMapPointDto = {
                 long: 45.0,
                 lat: 9.0,
-                type: MapPointType.Theft,
+                type: "Theft",
                 date: "2025-10-02",
             };
 
@@ -92,7 +92,7 @@ describe("CreateMapPoint", () => {
                 id: "1",
                 long: 45.0,
                 lat: 9.0,
-                type: MapPointType.Theft,
+                type: "Theft",
                 date: "2025-10-02",
                 createdAt: mockDate,
             });

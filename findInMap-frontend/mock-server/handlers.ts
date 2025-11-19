@@ -1,13 +1,12 @@
 import { http, HttpResponse, passthrough, delay } from "msw";
 import { type MapPointDto } from "../src/core/dtos/MapPointDto";
-import { MapPointType } from "../src/core/commons/enums";
 
 let mockMapPoints: MapPointDto[] = [
     {
         id: "1",
         lat: 41.90195,
         long: 12.504533,
-        type: MapPointType.Theft,
+        type: "Theft",
         date: "01/01/2024",
         createdAt: new Date("2024-01-01").toISOString(),
     },
@@ -15,7 +14,7 @@ let mockMapPoints: MapPointDto[] = [
         id: "2",
         lat: 41.9109,
         long: 12.4818,
-        type: MapPointType.Aggression,
+        type: "Aggression",
         date: "02/01/2024",
         createdAt: new Date("2024-01-02").toISOString(),
     },
@@ -23,7 +22,7 @@ let mockMapPoints: MapPointDto[] = [
         id: "3",
         lat: 41.8986,
         long: 12.4768,
-        type: MapPointType.Robbery,
+        type: "Robbery",
         date: "03/01/2024",
         createdAt: new Date("2024-01-03").toISOString(),
     },

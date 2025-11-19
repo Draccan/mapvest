@@ -1,4 +1,4 @@
-import { MapPointType, UserGroupRole } from "../../../src/core/commons/enums";
+import { UserGroupRole } from "../../../src/core/commons/enums";
 import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
@@ -43,7 +43,7 @@ describe("GetMapPoints", () => {
                     id: "1",
                     long: 45.0,
                     lat: 9.0,
-                    type: MapPointType.Theft,
+                    type: "Theft",
                     date: "2025-10-02",
                     created_at: mockDate,
                     updated_at: mockDate,
@@ -52,7 +52,7 @@ describe("GetMapPoints", () => {
                     id: "2",
                     long: 46.0,
                     lat: 10.0,
-                    type: MapPointType.Aggression,
+                    type: "Aggression",
                     date: "2023-01-02",
                     created_at: mockDate,
                     updated_at: mockDate,
@@ -91,7 +91,7 @@ describe("GetMapPoints", () => {
                     id: "1",
                     long: 45.0,
                     lat: 9.0,
-                    type: MapPointType.Theft,
+                    type: "Theft",
                     date: "2025-10-02",
                     createdAt: mockDate,
                 },
@@ -99,7 +99,7 @@ describe("GetMapPoints", () => {
                     id: "2",
                     long: 46.0,
                     lat: 10.0,
-                    type: MapPointType.Aggression,
+                    type: "Aggression",
                     date: "2023-01-02",
                     createdAt: mockDate,
                 },

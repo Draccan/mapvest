@@ -1,11 +1,10 @@
-import { MapPointType } from "../commons/enums";
 import { MapPointEntity } from "../entities/MapPointEntity";
 
 export interface MapPointDto {
     id: string;
     long: number;
     lat: number;
-    type: MapPointType;
+    type?: string;
     date: string;
     createdAt: Date;
 }

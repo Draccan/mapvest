@@ -1,7 +1,6 @@
 import { MapPin, AlertCircle } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
-import { MapPointType } from "../../../core/commons/enums";
 import type { CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
@@ -40,7 +39,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     onSave,
     loading,
 }) => {
-    const [type, setType] = useState<MapPointType>(MapPointType.Theft);
+    const [type, setType] = useState<string>("");
     const [date, setDate] = useState(new Date().toLocaleDateString("it-IT"));
     const [errors, setErrors] = useState<string[]>([]);
 
@@ -73,11 +72,11 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 await onSave({
                     long: selectedCoordinates.long,
                     lat: selectedCoordinates.lat,
-                    type,
+                    type: type.trim() === "" ? undefined : type,
                     date,
                 });
 
-                setType(MapPointType.Theft);
+                setType("");
                 const formattedToday = new Date().toLocaleDateString("it-IT");
                 setDate(formattedToday);
             } catch (error) {
@@ -117,24 +116,13 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     </div>
                     <div className="c-form-group">
                         <label htmlFor="type">{fm("type")}:</label>
-                        <select
+                        <input
+                            type="text"
                             id="type"
                             value={type}
-                            onChange={(e) =>
-                                setType(e.target.value as MapPointType)
-                            }
-                            className="c-type-select"
-                        >
-                            <option value={MapPointType.Theft}>
-                                {fm("options.theft")}
-                            </option>
-                            <option value={MapPointType.Aggression}>
-                                {fm("options.aggression")}
-                            </option>
-                            <option value={MapPointType.Robbery}>
-                                {fm("options.robbery")}
-                            </option>
-                        </select>
+                            className="c-type-input"
+                            onChange={(e) => setType(e.target.value)}
+                        />
                     </div>
                     <div className="c-form-group">
                         <label htmlFor="date">{fm("date")} (DD/MM/YYYY):</label>

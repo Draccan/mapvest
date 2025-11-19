@@ -1,6 +1,7 @@
+import compact from "lodash-es/compact";
+import uniq from "lodash-es/uniq";
 import React from "react";
 
-import { MapPointType } from "../../../core/commons/enums";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import "./style.css";
@@ -12,7 +13,7 @@ interface AreaAnalysisProps {
 }
 
 export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({ pointsInArea }) => {
-    const getTypeCount = (type: MapPointType): number => {
+    const getTypeCount = (type?: string): number => {
         return pointsInArea.filter((point) => point.type === type).length;
     };
 
@@ -20,6 +21,8 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({ pointsInArea }) => {
         (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
+
+    const types = uniq(compact(pointsInArea.map((p) => p.type)));
 
     return (
         <div className="c-area-analysis">
@@ -39,30 +42,16 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({ pointsInArea }) => {
 
             <div className="c-area-analysis-section">
                 <h3>{fm("byType")}</h3>
-                <div className="c-area-analysis-stat-item">
-                    <span className="c-area-analysis-stat-label">
-                        {fm("types.THEFT")}:
-                    </span>
-                    <span className="c-area-analysis-stat-value c-area-analysis-stat-theft">
-                        {getTypeCount(MapPointType.Theft)}
-                    </span>
-                </div>
-                <div className="c-area-analysis-stat-item">
-                    <span className="c-area-analysis-stat-label">
-                        {fm("types.AGGRESSION")}:
-                    </span>
-                    <span className="c-area-analysis-stat-value c-area-analysis-stat-aggression">
-                        {getTypeCount(MapPointType.Aggression)}
-                    </span>
-                </div>
-                <div className="c-area-analysis-stat-item">
-                    <span className="c-area-analysis-stat-label">
-                        {fm("types.ROBBERY")}:
-                    </span>
-                    <span className="c-area-analysis-stat-value c-area-analysis-stat-robbery">
-                        {getTypeCount(MapPointType.Robbery)}
-                    </span>
-                </div>
+                {types.map((type: string) => (
+                    <div className="c-area-analysis-stat-item">
+                        <span className="c-area-analysis-stat-label">
+                            {type}
+                        </span>
+                        <span className="c-area-analysis-stat-value c-area-analysis-stat-type">
+                            {getTypeCount(type)}
+                        </span>
+                    </div>
+                ))}
             </div>
 
             {sortedByDate.length > 0 && (
@@ -75,7 +64,7 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({ pointsInArea }) => {
                                 className="c-area-analysis-point-item"
                             >
                                 <span className="c-area-analysis-point-type">
-                                    {fm(`types.${point.type}`)}
+                                    {point.type}
                                 </span>
                                 <span className="c-area-analysis-point-date">
                                     {point.date}

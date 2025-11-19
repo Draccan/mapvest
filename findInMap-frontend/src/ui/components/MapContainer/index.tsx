@@ -12,7 +12,6 @@ import {
     useMap,
 } from "react-leaflet";
 
-import { MapPointType } from "../../../core/commons/enums";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
@@ -60,13 +59,13 @@ const MapController: React.FC<{
     return null;
 };
 
-const getMarkerColor = (type: MapPointType): string => {
+const getMarkerColor = (type?: string): string => {
     switch (type) {
-        case MapPointType.Theft:
+        case "Theft":
             return "#ff6b6b";
-        case MapPointType.Aggression:
+        case "Aggression":
             return "#feca57";
-        case MapPointType.Robbery:
+        case "Robbery":
             return "#ff9ff3";
         default:
             return "#74b9ff";
@@ -133,7 +132,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                             <div className="c-map-container-popup-content">
                                 <div>
                                     <strong>{fm("type")}:</strong>{" "}
-                                    {fm(`types.${point.type}`)}
+                                    {point.type || "/"}
                                     <br />
                                     <strong>{fm("date")}:</strong> {point.date}
                                     <br />

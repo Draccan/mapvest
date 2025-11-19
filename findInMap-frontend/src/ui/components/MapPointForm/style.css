@@ -56,7 +56,7 @@
     transform: translateY(-1px);
 }
 
-.c-type-select,
+.c-type-input,
 .c-date-input {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -69,7 +69,7 @@
     box-sizing: border-box;
 }
 
-.c-type-select:focus,
+.c-type-input:focus,
 .c-date-input:focus {
     outline: none;
     border-color: var(--color-primary);

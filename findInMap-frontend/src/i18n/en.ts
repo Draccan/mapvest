@@ -7,11 +7,6 @@ export default flattenObject({
             summary: "Summary",
             totalPoints: "Total Points",
             byType: "By Type",
-            types: {
-                THEFT: "Thefts",
-                AGGRESSION: "Aggressions",
-                ROBBERY: "Robberies",
-            },
             recentPoints: "Recent Points",
             morePoints: "+ {count} more points",
             noPoints:
@@ -19,11 +14,6 @@ export default flattenObject({
         },
         MapContainer: {
             type: "Type",
-            types: {
-                THEFT: "Theft",
-                AGGRESSION: "Aggression",
-                ROBBERY: "Robbery",
-            },
             date: "Date",
             coordinates: "Coordinates",
             selectedPoint: "Selected Point",
