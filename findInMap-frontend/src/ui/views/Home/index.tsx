@@ -5,6 +5,7 @@ import { useIntl } from "react-intl";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
+import { useCalculateOptimizedRoute } from "../../../core/usecases/useCalculateOptimizedRoute";
 import { useDeleteMapPoints } from "../../../core/usecases/useDeleteMapPoints";
 import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
@@ -36,6 +37,12 @@ export const Home: React.FC = () => {
     const [deletingPointId, setDeletingPointId] = useState<string | null>(null);
     const [isAnalysisMode, setIsAnalysisMode] = useState(false);
     const [pointsInArea, setPointsInArea] = useState<MapPointDto[]>([]);
+    const [startPoint, setStartPoint] = useState<MapPointDto | null>(null);
+    const [endPoint, setEndPoint] = useState<MapPointDto | null>(null);
+
+    const pointsInAreaRef = useRef<MapPointDto[]>([]);
+    const startPointRef = useRef<MapPointDto | null>(null);
+    const endPointRef = useRef<MapPointDto | null>(null);
 
     const {
         data: groupsData,
@@ -62,6 +69,12 @@ export const Home: React.FC = () => {
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
     const { deleteMapPoints } = useDeleteMapPoints();
     const { loading: loadingLogout, logout } = useLogoutUser();
+    const {
+        calculateOptimizedRoute,
+        reset: resetOptimizedRoute,
+        loading: isOptimizingRoute,
+        data: optimizedRoute,
+    } = useCalculateOptimizedRoute();
 
     useEffect(() => {
         if (!loadingGroups && !groupsData && !groupsError) {
@@ -134,23 +147,64 @@ export const Home: React.FC = () => {
         }
     };
 
-    const toggleAnalysisMode = () => {
-        setIsAnalysisMode(!isAnalysisMode);
-        if (isAnalysisMode) {
-            setPointsInArea([]);
-            setSelectedCoordinates(null);
-        }
-    };
-
     // Warning: to avoid problems with the GeomanControl we need to avoid that
     // the handleAreaDrawn function changes on every render, but it needs always
     // the latest mapPointsData value.
+    // Warning: the same for handleOptimizeRoute.
     // TODO: think about using a useAreaDrawn hook to encapsulate this logic
     const mapPointsDataRef = useRef<MapPointDto[]>([]);
 
     useEffect(() => {
         mapPointsDataRef.current = mapPointsData || [];
     }, [mapPointsData]);
+
+    useEffect(() => {
+        pointsInAreaRef.current = pointsInArea;
+    }, [pointsInArea]);
+
+    useEffect(() => {
+        startPointRef.current = startPoint;
+    }, [startPoint]);
+
+    useEffect(() => {
+        endPointRef.current = endPoint;
+    }, [endPoint]);
+
+    const toggleAnalysisMode = () => {
+        setIsAnalysisMode(!isAnalysisMode);
+        if (isAnalysisMode) {
+            setPointsInArea([]);
+            setSelectedCoordinates(null);
+            setStartPoint(null);
+            setEndPoint(null);
+            resetOptimizedRoute();
+        }
+    };
+
+    const handleOptimizeRoute = useCallback(async () => {
+        const currentStartPoint = startPointRef.current;
+        const currentEndPoint = endPointRef.current;
+        const currentPointsInArea = pointsInAreaRef.current;
+
+        if (
+            !currentStartPoint ||
+            !currentEndPoint ||
+            currentPointsInArea.length === 0
+        ) {
+            return;
+        }
+
+        const destinations = currentPointsInArea.filter(
+            (point) =>
+                point.id !== currentStartPoint.id &&
+                point.id !== currentEndPoint.id,
+        );
+        await calculateOptimizedRoute(
+            currentStartPoint,
+            destinations,
+            currentEndPoint,
+        );
+    }, []);
 
     const handleAreaDrawn = useCallback((bounds: L.LatLngBounds | null) => {
         const pointsInArea = bounds
@@ -231,12 +285,23 @@ export const Home: React.FC = () => {
                                 deletingPointId={deletingPointId}
                                 drawingEnabled={isAnalysisMode}
                                 onAreaDrawn={handleAreaDrawn}
+                                optimizedRoute={optimizedRoute}
+                                startPoint={startPoint}
+                                endPoint={endPoint}
                             />
                         </div>
                     </div>
                     <div className="v-home-form-section">
                         {isAnalysisMode ? (
-                            <AreaAnalysis pointsInArea={pointsInArea} />
+                            <AreaAnalysis
+                                pointsInArea={pointsInArea}
+                                startPoint={startPoint}
+                                endPoint={endPoint}
+                                onStartPointSelect={setStartPoint}
+                                onEndPointSelect={setEndPoint}
+                                onOptimizeRoute={handleOptimizeRoute}
+                                isOptimizingRoute={isOptimizingRoute}
+                            />
                         ) : (
                             <MapPointForm
                                 selectedCoordinates={selectedCoordinates}

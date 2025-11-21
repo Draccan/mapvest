@@ -8,11 +8,13 @@ import {
     CircleMarker,
     Popup,
     Marker,
+    Polyline,
     useMapEvents,
     useMap,
 } from "react-leaflet";
 
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
+import type { RouteDto } from "../../../core/dtos/RouteDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
 import { GeomanControl } from "./GeomanControl";
@@ -28,6 +30,9 @@ interface MapContainerProps {
     deletingPointId?: string | null;
     drawingEnabled?: boolean;
     onAreaDrawn: (bounds: L.LatLngBounds | null) => void;
+    optimizedRoute?: RouteDto | null;
+    startPoint?: MapPointDto | null;
+    endPoint?: MapPointDto | null;
 }
 
 const MapClickHandler: React.FC<{
@@ -80,6 +85,9 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     deletingPointId,
     drawingEnabled = false,
     onAreaDrawn,
+    optimizedRoute,
+    startPoint,
+    endPoint,
 }) => {
     const intl = useIntl();
     const deletePointLabel = intl.formatMessage({
@@ -91,6 +99,27 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         e.stopPropagation();
         onDeletePoint(pointId);
     }
+
+    const getWaypointIndex = (point: MapPointDto): number | null => {
+        if (!optimizedRoute) return null;
+
+        const pointLatLng = L.latLng(point.lat, point.long);
+
+        const waypoint = optimizedRoute.waypoints.find((wp) => {
+            const wpLatLng = L.latLng(wp.location[0], wp.location[1]);
+            return pointLatLng.equals(wpLatLng);
+        });
+
+        return waypoint ? waypoint.waypointIndex : null;
+    };
+
+    const isStartOrEndPoint = (point: MapPointDto): boolean => {
+        return point.id === startPoint?.id || point.id === endPoint?.id;
+    };
+
+    const optimezedRouteLeafletGeometry = optimizedRoute
+        ? optimizedRoute.geometry.map((coord) => L.latLng(coord[0], coord[1]))
+        : [];
 
     return (
         <LeafletMapContainer
@@ -105,51 +134,100 @@ export const MapContainer: React.FC<MapContainerProps> = ({
             {!drawingEnabled && <MapClickHandler onMapClick={onMapClick} />}
             <MapController selectedCoordinates={selectedCoordinates} />
             <GeomanControl enabled={drawingEnabled} onAreaDrawn={onAreaDrawn} />
-            {mapPoints.map((point) => (
-                <CircleMarker
-                    key={point.id}
-                    center={[point.lat, point.long]}
-                    radius={8}
-                    color={getMarkerColor(point.type)}
-                    fillColor={getMarkerColor(point.type)}
-                    fillOpacity={1}
-                    eventHandlers={{
-                        click: (e) => {
-                            e.originalEvent.stopPropagation();
-                            onMapClick(point.long, point.lat);
-                        },
-                    }}
+            {optimizedRoute && (
+                <Polyline
+                    positions={optimezedRouteLeafletGeometry}
+                    color="#2563eb"
+                    weight={4}
+                    opacity={0.7}
+                />
+            )}
+            {startPoint && (
+                <Marker
+                    position={[startPoint.lat, startPoint.long]}
+                    icon={L.divIcon({
+                        className: "c-map-container-start-marker",
+                        html: '<div class="c-map-container-marker-icon c-map-container-marker-start">S</div>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
+                    })}
                 >
-                    <Popup>
-                        <div className="c-map-container-popup">
-                            <div className="c-map-container-popup-content">
-                                <div>
-                                    <strong>{fm("type")}:</strong>{" "}
-                                    {point.type || "/"}
-                                    <br />
-                                    <strong>{fm("date")}:</strong> {point.date}
-                                    <br />
-                                    <strong>{fm("coordinates")}:</strong>{" "}
-                                    {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
+                    <Popup>{fm("startPoint")}</Popup>
+                </Marker>
+            )}
+            {endPoint && (
+                <Marker
+                    position={[endPoint.lat, endPoint.long]}
+                    icon={L.divIcon({
+                        className: "c-map-container-end-marker",
+                        html: '<div class="c-map-container-marker-icon c-map-container-marker-end">E</div>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
+                    })}
+                >
+                    <Popup>{fm("endPoint")}</Popup>
+                </Marker>
+            )}
+            {mapPoints.map((point) => {
+                const waypointIndex = getWaypointIndex(point);
+                const isSpecialPoint = isStartOrEndPoint(point);
+
+                return (
+                    <CircleMarker
+                        key={point.id}
+                        center={[point.lat, point.long]}
+                        radius={8}
+                        color={getMarkerColor(point.type)}
+                        fillColor={getMarkerColor(point.type)}
+                        fillOpacity={isSpecialPoint ? 0.3 : 1}
+                        eventHandlers={{
+                            click: (e) => {
+                                e.originalEvent.stopPropagation();
+                                onMapClick(point.long, point.lat);
+                            },
+                        }}
+                    >
+                        <Popup>
+                            <div className="c-map-container-popup">
+                                <div className="c-map-container-popup-content">
+                                    {waypointIndex !== null && (
+                                        <div className="c-map-container-waypoint-badge">
+                                            {fm("stop")} #{waypointIndex}
+                                        </div>
+                                    )}
+                                    <div>
+                                        <strong>{fm("type")}:</strong>{" "}
+                                        {point.type || "/"}
+                                        <br />
+                                        <strong>{fm("date")}:</strong>{" "}
+                                        {point.date}
+                                        <br />
+                                        <strong>
+                                            {fm("coordinates")}:
+                                        </strong>{" "}
+                                        {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
+                                    </div>
+                                    <Button
+                                        kind="danger"
+                                        size="icon"
+                                        onClick={(e) =>
+                                            deletePoint(e, point.id)
+                                        }
+                                        title={deletePointLabel}
+                                        aria-label={deletePointLabel}
+                                        disabled={deletingPointId === point.id}
+                                        loading={deletingPointId === point.id}
+                                        fullWidth={false}
+                                        className="c-map-container-delete-btn"
+                                    >
+                                        <Trash2 size={18} />
+                                    </Button>
                                 </div>
-                                <Button
-                                    kind="danger"
-                                    size="icon"
-                                    onClick={(e) => deletePoint(e, point.id)}
-                                    title={deletePointLabel}
-                                    aria-label={deletePointLabel}
-                                    disabled={deletingPointId === point.id}
-                                    loading={deletingPointId === point.id}
-                                    fullWidth={false}
-                                    className="c-map-container-delete-btn"
-                                >
-                                    <Trash2 size={18} />
-                                </Button>
                             </div>
-                        </div>
-                    </Popup>
-                </CircleMarker>
-            ))}
+                        </Popup>
+                    </CircleMarker>
+                );
+            })}
             {selectedCoordinates && (
                 <Marker
                     position={[

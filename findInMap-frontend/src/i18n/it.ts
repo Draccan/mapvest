@@ -11,6 +11,11 @@ export default flattenObject({
             morePoints: "+ {count} altri punti",
             noPoints:
                 "Nessun punto nell'area selezionata. Disegna un'area sulla mappa per analizzarla.",
+            routePlanning: "Pianificazione Percorso",
+            startPoint: "Punto di Partenza",
+            endPoint: "Punto di Arrivo",
+            selectPoint: "Seleziona un punto",
+            calculateOptimizedRoute: "Calcola Percorso Ottimizzato",
         },
         MapContainer: {
             type: "Tipo",
@@ -18,6 +23,9 @@ export default flattenObject({
             coordinates: "Coordinate",
             selectedPoint: "Punto Selezionato",
             deletePoint: "Elimina Punto",
+            startPoint: "Punto di Partenza",
+            endPoint: "Punto di Arrivo",
+            stop: "Tappa",
         },
         MapPointForm: {
             addMapPoint: "Aggiungi Punto Mappa",
