@@ -41,7 +41,6 @@
     background-color: var(--color-background-secondary);
     border-radius: 12px;
     border: 2px solid var(--color-border);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c-area-analysis-section:hover {
@@ -90,7 +89,6 @@
     padding: 0.75rem;
     background-color: var(--color-background-primary);
     border-radius: 8px;
-    transition: all 0.2s ease;
 }
 
 .c-area-analysis-point-item:hover {
@@ -152,7 +150,6 @@
     border: 2px solid var(--color-border);
     border-radius: 8px;
     font-size: 0.95rem;
-    transition: all 0.2s ease;
     cursor: pointer;
 }
 
