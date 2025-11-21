@@ -43,6 +43,7 @@ export const Home: React.FC = () => {
     const pointsInAreaRef = useRef<MapPointDto[]>([]);
     const startPointRef = useRef<MapPointDto | null>(null);
     const endPointRef = useRef<MapPointDto | null>(null);
+    const mapPointsDataRef = useRef<MapPointDto[]>([]);
 
     const {
         data: groupsData,
@@ -147,13 +148,6 @@ export const Home: React.FC = () => {
         }
     };
 
-    // Warning: to avoid problems with the GeomanControl we need to avoid that
-    // the handleAreaDrawn function changes on every render, but it needs always
-    // the latest mapPointsData value.
-    // Warning: the same for handleOptimizeRoute.
-    // TODO: think about using a useAreaDrawn hook to encapsulate this logic
-    const mapPointsDataRef = useRef<MapPointDto[]>([]);
-
     useEffect(() => {
         mapPointsDataRef.current = mapPointsData || [];
     }, [mapPointsData]);
@@ -206,6 +200,11 @@ export const Home: React.FC = () => {
         );
     }, []);
 
+    // Warning: to avoid problems with the GeomanControl we need to avoid that
+    // the handleAreaDrawn function changes on every render, but it needs always
+    // the latest mapPointsData value.
+    // Warning: the same for handleOptimizeRoute.
+    // TODO: think about using a useAreaDrawn hook to encapsulate this logic
     const handleAreaDrawn = useCallback((bounds: L.LatLngBounds | null) => {
         const pointsInArea = bounds
             ? getPointsInBounds(mapPointsDataRef.current || [], bounds)
