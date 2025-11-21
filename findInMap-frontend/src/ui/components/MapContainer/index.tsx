@@ -8,7 +8,6 @@ import {
     CircleMarker,
     Popup,
     Marker,
-    Polyline,
     useMapEvents,
     useMap,
 } from "react-leaflet";
@@ -18,6 +17,7 @@ import type { RouteDto } from "../../../core/dtos/RouteDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
 import { GeomanControl } from "./GeomanControl";
+import { PolylineWithArrows } from "./PolylineWithArrows";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapContainer");
@@ -117,7 +117,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         return point.id === startPoint?.id || point.id === endPoint?.id;
     };
 
-    const optimezedRouteLeafletGeometry = optimizedRoute
+    const optimezedRouteGeometry = optimizedRoute
         ? optimizedRoute.geometry.map((coord) => L.latLng(coord[0], coord[1]))
         : [];
 
@@ -135,12 +135,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
             <MapController selectedCoordinates={selectedCoordinates} />
             <GeomanControl enabled={drawingEnabled} onAreaDrawn={onAreaDrawn} />
             {optimizedRoute && (
-                <Polyline
-                    positions={optimezedRouteLeafletGeometry}
-                    color="#2563eb"
-                    weight={4}
-                    opacity={0.7}
-                />
+                <PolylineWithArrows positions={optimezedRouteGeometry} />
             )}
             {startPoint && (
                 <Marker
