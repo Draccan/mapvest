@@ -1,5 +1,5 @@
 import { ScanSearch, X } from "lucide-react";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
@@ -39,11 +39,6 @@ export const Home: React.FC = () => {
     const [pointsInArea, setPointsInArea] = useState<MapPointDto[]>([]);
     const [startPoint, setStartPoint] = useState<MapPointDto | null>(null);
     const [endPoint, setEndPoint] = useState<MapPointDto | null>(null);
-
-    const pointsInAreaRef = useRef<MapPointDto[]>([]);
-    const startPointRef = useRef<MapPointDto | null>(null);
-    const endPointRef = useRef<MapPointDto | null>(null);
-    const mapPointsDataRef = useRef<MapPointDto[]>([]);
 
     const {
         data: groupsData,
@@ -148,22 +143,6 @@ export const Home: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        mapPointsDataRef.current = mapPointsData || [];
-    }, [mapPointsData]);
-
-    useEffect(() => {
-        pointsInAreaRef.current = pointsInArea;
-    }, [pointsInArea]);
-
-    useEffect(() => {
-        startPointRef.current = startPoint;
-    }, [startPoint]);
-
-    useEffect(() => {
-        endPointRef.current = endPoint;
-    }, [endPoint]);
-
     const toggleAnalysisMode = () => {
         setIsAnalysisMode(!isAnalysisMode);
         if (isAnalysisMode) {
@@ -175,42 +154,23 @@ export const Home: React.FC = () => {
         }
     };
 
-    const handleOptimizeRoute = useCallback(async () => {
-        const currentStartPoint = startPointRef.current;
-        const currentEndPoint = endPointRef.current;
-        const currentPointsInArea = pointsInAreaRef.current;
-
-        if (
-            !currentStartPoint ||
-            !currentEndPoint ||
-            currentPointsInArea.length === 0
-        ) {
+    const handleOptimizeRoute = async () => {
+        if (!startPoint || !endPoint || pointsInArea.length === 0) {
             return;
         }
 
-        const destinations = currentPointsInArea.filter(
-            (point) =>
-                point.id !== currentStartPoint.id &&
-                point.id !== currentEndPoint.id,
+        const destinations = pointsInArea.filter(
+            (point) => point.id !== startPoint.id && point.id !== endPoint.id,
         );
-        await calculateOptimizedRoute(
-            currentStartPoint,
-            destinations,
-            currentEndPoint,
-        );
-    }, []);
+        await calculateOptimizedRoute(startPoint, destinations, endPoint);
+    };
 
-    // Warning: to avoid problems with the GeomanControl we need to avoid that
-    // the handleAreaDrawn function changes on every render, but it needs always
-    // the latest mapPointsData value.
-    // Warning: the same for handleOptimizeRoute.
-    // TODO: think about using a useAreaDrawn hook to encapsulate this logic
-    const handleAreaDrawn = useCallback((bounds: L.LatLngBounds | null) => {
+    const handleAreaDrawn = (bounds: L.LatLngBounds | null) => {
         const pointsInArea = bounds
-            ? getPointsInBounds(mapPointsDataRef.current || [], bounds)
+            ? getPointsInBounds(mapPointsData || [], bounds)
             : [];
         setPointsInArea(pointsInArea);
-    }, []);
+    };
 
     const mapPoints = mapPointsData || [];
     const isLoading = loadingGroups || loadingMaps || loadingPoints;
