@@ -1,10 +1,9 @@
-import { MapPointType } from "../commons/enums";
-
 export interface MapPointDto {
     id: string;
     long: number;
     lat: number;
-    type: MapPointType;
+    description?: string;
     date: string;
-    createdAt: Date;
+    // timestamp in ISO format
+    createdAt: string;
 }

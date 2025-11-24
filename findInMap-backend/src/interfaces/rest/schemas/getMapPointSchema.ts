@@ -1,7 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import { MapPointType } from "../../../core/commons/enums";
-
 export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
@@ -9,10 +7,9 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
             id: { type: "string" },
             long: { type: "number", description: "Longitude coordinate" },
             lat: { type: "number", description: "Latitude coordinate" },
-            type: {
+            description: {
                 type: "string",
-                enum: Object.values(MapPointType),
-                description: "Type of crime",
+                description: "Description of the map point",
             },
             date: {
                 type: "string",
@@ -24,7 +21,7 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
                 description: "Creation timestamp",
             },
         },
-        required: ["id", "long", "lat", "type", "date", "createdAt"],
+        required: ["id", "long", "lat", "date", "createdAt"],
         additionalProperties: false,
     };
 }

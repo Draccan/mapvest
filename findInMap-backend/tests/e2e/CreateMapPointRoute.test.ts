@@ -45,7 +45,7 @@ describe("Create Map Point Route", () => {
         const testMapPoint = {
             long: 45.4642,
             lat: 9.19,
-            type: "THEFT",
+            description: "THEFT",
             date: "01/01/2023",
         };
 
@@ -58,14 +58,14 @@ describe("Create Map Point Route", () => {
         expect(response.body).toHaveProperty("id");
         expect(response.body.long).toBe(testMapPoint.long);
         expect(response.body.lat).toBe(testMapPoint.lat);
-        expect(response.body.type).toBe(testMapPoint.type);
+        expect(response.body.description).toBe(testMapPoint.description);
     });
 
     it("POST /:groupId/maps/:mapId/points should return 401 without token", async () => {
         const testMapPoint = {
             long: 45.4642,
             lat: 9.19,
-            type: "THEFT",
+            description: "THEFT",
             date: "01/01/2023",
         };
 
@@ -80,7 +80,7 @@ describe("Create Map Point Route", () => {
         const testMapPoint = {
             long: 45.4642,
             lat: 9.19,
-            type: "THEFT",
+            description: "THEFT",
             date: "01/01/2023",
         };
 

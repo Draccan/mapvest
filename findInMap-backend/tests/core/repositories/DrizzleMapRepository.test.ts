@@ -1,4 +1,3 @@
-import { MapPointType } from "../../../src/core/commons/enums";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { db } from "../../../src/db";
 import {
@@ -47,7 +46,7 @@ describe("DrizzleMapRepository", () => {
             const createMapPointDto: CreateMapPointDto = {
                 long: 12.4964,
                 lat: 41.9028,
-                type: MapPointType.Theft,
+                description: "Theft",
                 date: "2024-01-01",
             };
 
@@ -60,7 +59,7 @@ describe("DrizzleMapRepository", () => {
             expect(result.id).toBeDefined();
             expect(result.long).toBe(createMapPointDto.long);
             expect(result.lat).toBe(createMapPointDto.lat);
-            expect(result.type).toBe(createMapPointDto.type);
+            expect(result.description).toBe(createMapPointDto.description);
             expect(result.created_at).toBeInstanceOf(Date);
             expect(result.updated_at).toBeInstanceOf(Date);
         });
@@ -84,19 +83,19 @@ describe("DrizzleMapRepository", () => {
 
             const testCases = [
                 {
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     long: 10.0,
                     lat: 20.0,
                     date: "2024-01-01",
                 },
                 {
-                    type: MapPointType.Aggression,
+                    description: "Aggression",
                     long: 15.0,
                     lat: 25.0,
                     date: "2024-01-02",
                 },
                 {
-                    type: MapPointType.Robbery,
+                    description: "Robbery",
                     long: 20.0,
                     lat: 30.0,
                     date: "2024-01-03",
@@ -108,7 +107,7 @@ describe("DrizzleMapRepository", () => {
                     testCase,
                     map.id,
                 );
-                expect(result.type).toBe(testCase.type);
+                expect(result.description).toBe(testCase.description);
                 expect(result.long).toBe(testCase.long);
                 expect(result.lat).toBe(testCase.lat);
             }
@@ -159,19 +158,19 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 10,
                     lat: 20,
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     date: "2024-01-01",
                 },
                 {
                     long: 30,
                     lat: 40,
-                    type: MapPointType.Aggression,
+                    description: "Aggression",
                     date: "2024-01-02",
                 },
                 {
                     long: 50,
                     lat: 60,
-                    type: MapPointType.Robbery,
+                    description: "Robbery",
                     date: "2024-01-03",
                 },
             ];
@@ -191,10 +190,10 @@ describe("DrizzleMapRepository", () => {
                 result.every((point) => point.updated_at instanceof Date),
             ).toBe(true);
 
-            const types = result.map((point) => point.type);
-            expect(types).toContain(MapPointType.Theft);
-            expect(types).toContain(MapPointType.Aggression);
-            expect(types).toContain(MapPointType.Robbery);
+            const types = result.map((point) => point.description);
+            expect(types).toContain("Theft");
+            expect(types).toContain("Aggression");
+            expect(types).toContain("Robbery");
         });
 
         it("should preserve coordinate precision", async () => {
@@ -217,7 +216,7 @@ describe("DrizzleMapRepository", () => {
             const precisePoint = {
                 long: 12.123456789,
                 lat: 41.987654321,
-                type: MapPointType.Theft,
+                description: "Theft",
                 date: "2024-01-01",
             };
 
@@ -254,7 +253,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 10,
                     lat: 20,
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     date: "2024-01-01",
                 },
                 map1.id,
@@ -264,7 +263,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 30,
                     lat: 40,
-                    type: MapPointType.Aggression,
+                    description: "Aggression",
                     date: "2024-01-02",
                 },
                 map2.id,
@@ -273,7 +272,7 @@ describe("DrizzleMapRepository", () => {
             const result = await repository.findAllMapPoints(map1.id);
 
             expect(result.length).toBe(1);
-            expect(result[0].type).toBe(MapPointType.Theft);
+            expect(result[0].description).toBe("Theft");
         });
     });
 
@@ -407,7 +406,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 12.4964,
                     lat: 41.9028,
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     date: "2024-01-01",
                 },
                 map.id,
@@ -417,7 +416,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 13.4964,
                     lat: 42.9028,
-                    type: MapPointType.Aggression,
+                    description: "Aggression",
                     date: "2024-01-02",
                 },
                 map.id,
@@ -427,7 +426,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 14.4964,
                     lat: 43.9028,
-                    type: MapPointType.Robbery,
+                    description: "Robbery",
                     date: "2024-01-03",
                 },
                 map.id,
@@ -466,7 +465,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 12.4964,
                     lat: 41.9028,
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     date: "2024-01-01",
                 },
                 map1.id,
@@ -476,7 +475,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 13.4964,
                     lat: 42.9028,
-                    type: MapPointType.Aggression,
+                    description: "Aggression",
                     date: "2024-01-02",
                 },
                 map2.id,
@@ -515,7 +514,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 12.4964,
                     lat: 41.9028,
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     date: "2024-01-01",
                 },
                 map.id,
@@ -548,7 +547,7 @@ describe("DrizzleMapRepository", () => {
                 {
                     long: 12.4964,
                     lat: 41.9028,
-                    type: MapPointType.Theft,
+                    description: "Theft",
                     date: "2024-01-01",
                 },
                 map.id,

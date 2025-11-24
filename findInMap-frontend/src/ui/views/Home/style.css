@@ -73,11 +73,18 @@
 .v-home-search-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
 .v-home-address-search {
+    flex: 1;
     z-index: 1000;
+}
+
+.v-home-analysis-toggle {
+    flex-shrink: 0;
 }
 
 .v-home-map {

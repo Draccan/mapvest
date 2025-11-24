@@ -1,6 +1,5 @@
 import {
     pgTable,
-    serial,
     uuid,
     varchar,
     text,
@@ -15,12 +14,6 @@ const geometry = customType<{ data: string; driverData: string }>({
         return "geometry(Point, 4326)";
     },
 });
-
-export const mapPointTypeEnum = pgEnum("MapPointType", [
-    "THEFT",
-    "AGGRESSION",
-    "ROBBERY",
-]);
 
 export const userGroupRoleEnum = pgEnum("UserGroupRole", [
     "owner",
@@ -75,7 +68,7 @@ export const mapPoints = pgTable("map_points", {
         .notNull()
         .references(() => maps.id),
     location: geometry("location").notNull(),
-    type: mapPointTypeEnum("type").notNull(),
+    description: varchar("description"),
     date: text("date").notNull(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 })

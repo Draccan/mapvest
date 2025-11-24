@@ -1,0 +1,41 @@
+.c-map-container-popup {
+    min-width: 200px;
+}
+
+.c-map-container-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.c-map-container-waypoint-badge {
+    padding: 4px 8px;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.c-map-container-marker-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.c-map-container-marker-start {
+    background-color: var(--color-success);
+}
+
+.c-map-container-marker-end {
+    background-color: var(--color-danger);
+}

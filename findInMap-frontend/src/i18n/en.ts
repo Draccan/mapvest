@@ -2,22 +2,35 @@ import flattenObject from "../utils/flattenObject";
 
 export default flattenObject({
     components: {
+        AreaAnalysis: {
+            title: "Area Analysis",
+            summary: "Summary",
+            totalPoints: "Total Points",
+            recentPoints: "Recent Points",
+            morePoints: "+ {count} more points",
+            noPoints:
+                "No points in the selected area. Draw an area on the map to analyze.",
+            routePlanning: "Route Planning",
+            startPoint: "Start Point",
+            endPoint: "End Point",
+            selectPoint: "Select a point",
+            calculateOptimizedRoute: "Calculate Optimized Route",
+        },
         MapContainer: {
-            type: "Type",
-            types: {
-                THEFT: "Theft",
-                AGGRESSION: "Aggression",
-                ROBBERY: "Robbery",
-            },
+            description: "Description",
             date: "Date",
             coordinates: "Coordinates",
             selectedPoint: "Selected Point",
+            deletePoint: "Delete Point",
+            startPoint: "Start Point",
+            endPoint: "End Point",
+            stop: "Stop",
         },
         MapPointForm: {
             addMapPoint: "Add Map Point",
             XCoordinateLabel: "X Coordinate (Longitude)",
             YCoordinateLabel: "Y Coordinate (Latitude)",
-            type: "Type",
+            description: "Description",
             date: "Date",
             options: {
                 theft: "Theft",
@@ -42,6 +55,8 @@ export default flattenObject({
         Home: {
             about: "About",
             logout: "Logout",
+            enterAnalysisMode: "Analyze Area",
+            exitAnalysisMode: "Exit Analysis Mode",
         },
         Login: {
             emailLabel: "Email:",

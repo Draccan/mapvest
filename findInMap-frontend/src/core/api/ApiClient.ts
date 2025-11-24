@@ -8,6 +8,7 @@ import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
 import type { MapDto } from "../dtos/MapDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
+import type { RouteDto } from "../dtos/RouteDto";
 import type TokenResponseDto from "../dtos/TokenResponseDto";
 import type UserDto from "../dtos/UserDto";
 import { UnauthorizedError } from "./errors/UnauthorizedError";
@@ -250,5 +251,68 @@ export default class ApiClient {
         }
 
         return response.json();
+    }
+
+    async deleteMapPoints(
+        groupId: string,
+        mapId: string,
+        pointIds: string[],
+    ): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}/points`,
+            {
+                method: "DELETE",
+                body: JSON.stringify({ pointIds }),
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+
+    async calculateOptimizedRoute(mapPoints: MapPointDto[]): Promise<RouteDto> {
+        const coordinates = mapPoints
+            .map((point) => `${point.long},${point.lat}`)
+            .join(";");
+
+        const url = `https://router.project-osrm.org/trip/v1/driving/${coordinates}?source=first&destination=last&roundtrip=false&geometries=geojson`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`OSRM API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.code !== "Ok") {
+            throw new Error(`OSRM API error: ${data.code}`);
+        }
+
+        const trip = data.trips[0];
+
+        // Warning: OSRM returns coordinates in [long, lat] format (GeoJson) and
+        // we prefer [lat, long] (leaflet)
+        const geometry = trip.geometry.coordinates.map(
+            (coord: [number, number]) =>
+                [coord[1], coord[0]] as [number, number],
+        );
+
+        // Docs: waypoint_index has the order of waypoints in the optimized
+        // route. Instead, trips_index is the index of the waypoint in the input
+        // list.
+        const waypoints = data.waypoints.map((wp: any) => ({
+            location: [wp.location[1], wp.location[0]] as [number, number],
+            waypointIndex: wp.waypoint_index,
+            originalIndex: wp.trips_index,
+        }));
+
+        return {
+            waypoints,
+            distance: trip.distance,
+            duration: trip.duration,
+            geometry,
+        };
     }
 }

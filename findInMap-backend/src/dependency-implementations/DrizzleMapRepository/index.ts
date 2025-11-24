@@ -20,7 +20,7 @@ export class DrizzleMapRepository implements MapRepository {
                 mapId: mapPoints.mapId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
-                type: mapPoints.type,
+                description: mapPoints.description,
                 date: mapPoints.date,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
@@ -52,7 +52,7 @@ export class DrizzleMapRepository implements MapRepository {
             .insert(mapPoints)
             .values({
                 location: sql`ST_GeomFromText(${`POINT(${data.long} ${data.lat})`}, 4326)`,
-                type: data.type,
+                description: data.description,
                 date: data.date,
                 mapId: mapId,
             })
@@ -61,7 +61,7 @@ export class DrizzleMapRepository implements MapRepository {
                 mapId: mapPoints.mapId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
-                type: mapPoints.type,
+                description: mapPoints.description,
                 date: mapPoints.date,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
@@ -92,7 +92,7 @@ export class DrizzleMapRepository implements MapRepository {
                 mapId: mapPoints.mapId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
-                type: mapPoints.type,
+                description: mapPoints.description,
                 date: mapPoints.date,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
