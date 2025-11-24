@@ -1,0 +1,1 @@
+ALTER TABLE "map_points" RENAME COLUMN "type" TO "description";

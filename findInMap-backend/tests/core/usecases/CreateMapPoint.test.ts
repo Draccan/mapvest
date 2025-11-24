@@ -42,7 +42,7 @@ describe("CreateMapPoint", () => {
             const mapPointData: CreateMapPointDto = {
                 long: 45.0,
                 lat: 9.0,
-                type: "Theft",
+                description: "Theft",
                 date: "2025-10-02",
             };
 
@@ -50,7 +50,7 @@ describe("CreateMapPoint", () => {
                 id: "1",
                 long: mapPointData.long,
                 lat: mapPointData.lat,
-                type: mapPointData.type,
+                description: mapPointData.description,
                 date: mapPointData.date,
                 created_at: mockDate,
                 updated_at: mockDate,
@@ -92,7 +92,7 @@ describe("CreateMapPoint", () => {
                 id: "1",
                 long: 45.0,
                 lat: 9.0,
-                type: "Theft",
+                description: "Theft",
                 date: "2025-10-02",
                 createdAt: mockDate,
             });

@@ -1,5 +1,3 @@
-import compact from "lodash-es/compact";
-import uniq from "lodash-es/uniq";
 import { Navigation } from "lucide-react";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -32,10 +30,6 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
 }) => {
     const intl = useIntl();
 
-    const getTypeCount = (type?: string): number => {
-        return pointsInArea.filter((point) => point.type === type).length;
-    };
-
     const selectStartPoint = (e: any) => {
         const point = pointsInArea.find((p) => p.id === e.target.value)!;
         onStartPointSelect(point);
@@ -50,8 +44,6 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
         (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-
-    const types = uniq(compact(pointsInArea.map((p) => p.type)));
 
     const canCalculateOptimizedRoute =
         startPoint && endPoint && pointsInArea.length >= 2;
@@ -96,7 +88,7 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
                                 <option value="">{fm("selectPoint")}</option>
                                 {pointsInArea.map((point) => (
                                     <option key={point.id} value={point.id}>
-                                        {point.type} - {point.date}
+                                        {point.description} - {point.date}
                                     </option>
                                 ))}
                             </select>
@@ -111,7 +103,7 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
                                 <option value="">{fm("selectPoint")}</option>
                                 {pointsInArea.map((point) => (
                                     <option key={point.id} value={point.id}>
-                                        {point.type} - {point.date}
+                                        {point.description} - {point.date}
                                     </option>
                                 ))}
                             </select>
@@ -132,20 +124,6 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
                 </div>
             </div>
 
-            <div className="c-area-analysis-section">
-                <h3>{fm("byType")}</h3>
-                {types.map((type: string, index) => (
-                    <div key={index} className="c-area-analysis-stat-item">
-                        <span className="c-area-analysis-stat-label">
-                            {type}
-                        </span>
-                        <span className="c-area-analysis-stat-value c-area-analysis-stat-type">
-                            {getTypeCount(type)}
-                        </span>
-                    </div>
-                ))}
-            </div>
-
             {sortedByDate.length > 0 && (
                 <div className="c-area-analysis-section">
                     <h3>{fm("recentPoints")}</h3>
@@ -155,8 +133,8 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
                                 key={point.id}
                                 className="c-area-analysis-point-item"
                             >
-                                <span className="c-area-analysis-point-type">
-                                    {point.type}
+                                <span className="c-area-analysis-point-description">
+                                    {point.description}
                                 </span>
                                 <span className="c-area-analysis-point-date">
                                     {point.date}

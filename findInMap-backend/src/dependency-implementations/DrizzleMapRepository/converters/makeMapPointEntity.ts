@@ -6,7 +6,7 @@ export function makeMapPointEntity(mapPoint: RawMapPoint): MapPointEntity {
         id: mapPoint.id,
         long: mapPoint.long,
         lat: mapPoint.lat,
-        type: mapPoint.type ? mapPoint.type : undefined,
+        description: mapPoint.description ? mapPoint.description : undefined,
         date: mapPoint.date,
         created_at: mapPoint.createdAt,
         updated_at: mapPoint.updatedAt,

@@ -64,8 +64,8 @@ const MapController: React.FC<{
     return null;
 };
 
-const getMarkerColor = (type?: string): string => {
-    switch (type) {
+const getMarkerColor = (description?: string): string => {
+    switch (description) {
         case "Theft":
             return "#ff6b6b";
         case "Aggression":
@@ -172,8 +172,8 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                         key={point.id}
                         center={[point.lat, point.long]}
                         radius={8}
-                        color={getMarkerColor(point.type)}
-                        fillColor={getMarkerColor(point.type)}
+                        color={getMarkerColor(point.description)}
+                        fillColor={getMarkerColor(point.description)}
                         fillOpacity={isSpecialPoint ? 0.3 : 1}
                         eventHandlers={{
                             click: (e) => {
@@ -191,8 +191,8 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                         </div>
                                     )}
                                     <div>
-                                        <strong>{fm("type")}:</strong>{" "}
-                                        {point.type || "/"}
+                                        <strong>{fm("description")}:</strong>{" "}
+                                        {point.description || "/"}
                                         <br />
                                         <strong>{fm("date")}:</strong>{" "}
                                         {point.date}

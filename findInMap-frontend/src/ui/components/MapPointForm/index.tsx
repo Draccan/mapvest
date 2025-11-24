@@ -39,7 +39,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     onSave,
     loading,
 }) => {
-    const [type, setType] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState(new Date().toLocaleDateString("it-IT"));
     const [errors, setErrors] = useState<string[]>([]);
 
@@ -72,11 +72,12 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 await onSave({
                     long: selectedCoordinates.long,
                     lat: selectedCoordinates.lat,
-                    type: type.trim() === "" ? undefined : type,
+                    description:
+                        description.trim() === "" ? undefined : description,
                     date,
                 });
 
-                setType("");
+                setDescription("");
                 const formattedToday = new Date().toLocaleDateString("it-IT");
                 setDate(formattedToday);
             } catch (error) {
@@ -115,13 +116,15 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         />
                     </div>
                     <div className="c-form-group">
-                        <label htmlFor="type">{fm("type")}:</label>
+                        <label htmlFor="description">
+                            {fm("description")}:
+                        </label>
                         <input
                             type="text"
-                            id="type"
-                            value={type}
-                            className="c-type-input"
-                            onChange={(e) => setType(e.target.value)}
+                            id="description"
+                            value={description}
+                            className="c-description-input"
+                            onChange={(e) => setDescription(e.target.value)}
                         />
                     </div>
                     <div className="c-form-group">

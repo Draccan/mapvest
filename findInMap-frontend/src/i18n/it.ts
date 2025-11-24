@@ -6,7 +6,6 @@ export default flattenObject({
             title: "Analisi Area",
             summary: "Riepilogo",
             totalPoints: "Punti Totali",
-            byType: "Per Tipo",
             recentPoints: "Punti Recenti",
             morePoints: "+ {count} altri punti",
             noPoints:
@@ -18,7 +17,7 @@ export default flattenObject({
             calculateOptimizedRoute: "Calcola Percorso Ottimizzato",
         },
         MapContainer: {
-            type: "Tipo",
+            description: "Descrizione",
             date: "Data",
             coordinates: "Coordinate",
             selectedPoint: "Punto Selezionato",
@@ -31,7 +30,7 @@ export default flattenObject({
             addMapPoint: "Aggiungi Punto Mappa",
             XCoordinateLabel: "Coordinata X (Longitudine)",
             YCoordinateLabel: "Coordinata Y (Latitudine)",
-            type: "Tipo",
+            description: "Descrizione",
             date: "Data",
             options: {
                 theft: "Furto",

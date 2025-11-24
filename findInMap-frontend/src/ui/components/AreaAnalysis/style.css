@@ -96,7 +96,7 @@
     transform: translateX(4px);
 }
 
-.c-area-analysis-point-type {
+.c-area-analysis-point-description {
     color: var(--color-text-primary);
     font-size: 0.9rem;
     font-weight: 600;

@@ -7,9 +7,9 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
             id: { type: "string" },
             long: { type: "number", description: "Longitude coordinate" },
             lat: { type: "number", description: "Latitude coordinate" },
-            type: {
+            description: {
                 type: "string",
-                description: "Type of crime",
+                description: "Description of the map point",
             },
             date: {
                 type: "string",

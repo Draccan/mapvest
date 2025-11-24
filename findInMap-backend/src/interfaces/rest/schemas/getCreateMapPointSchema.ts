@@ -16,9 +16,10 @@ export default function getCreateMapPointSchema(): OpenAPIV3.SchemaObject {
                 maximum: 90,
                 minimum: -90,
             },
-            type: {
+            description: {
                 type: "string",
                 description: "Type of crime",
+                maxLength: 255,
             },
             date: {
                 type: "string",
