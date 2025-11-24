@@ -26,6 +26,10 @@ export default function getCreateMapPointSchema(): OpenAPIV3.SchemaObject {
                 description: "Date in DD/MM/YYYY format",
                 pattern: "^\\d{2}/\\d{2}/\\d{4}$",
             },
+            categoryId: {
+                type: "string",
+                description: "ID of the category associated with the map point",
+            },
         },
         required: ["long", "lat", "date"],
         additionalProperties: false,

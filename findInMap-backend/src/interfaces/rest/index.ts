@@ -11,10 +11,12 @@ import * as swaggerUi from "swagger-ui-express";
 import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
 import CreateGroupMap from "../../core/usecases/CreateGroupMap";
+import CreateMapCategory from "../../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import DeleteMapPoints from "../../core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../../core/usecases/GetGroupMaps";
+import GetMapCategories from "../../core/usecases/GetMapCategories";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
@@ -24,11 +26,13 @@ import SearchAddresses from "../../core/usecases/SearchAddresses";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
+import CreateMapCategoryRoute from "./routes/CreateMapCategoryRoute";
 import CreateMapRoute from "./routes/CreateMapRoute";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
 import DeleteMapPointsRoute from "./routes/DeleteMapPointsRoute";
 import GetGroupsRoute from "./routes/GetGroupsRoute";
+import GetMapCategoriesRoute from "./routes/GetMapCategoriesRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import GetMapsRoute from "./routes/GetMapsRoute";
 import HealthRoute from "./routes/HealthRoute";
@@ -61,6 +65,8 @@ export default class RestInterface {
             refreshToken: RefreshToken;
             searchAddresses: SearchAddresses;
             getGroupMaps: GetGroupMaps;
+            createMapCategory: CreateMapCategory;
+            getMapCategories: GetMapCategories;
         },
         private jwtService: JwtService,
     ) {
@@ -78,6 +84,8 @@ export default class RestInterface {
             LogoutUserRoute(usecases.logoutUser),
             RefreshTokenRoute(usecases.refreshToken),
             SearchAddressesRoute(usecases.searchAddresses),
+            CreateMapCategoryRoute(usecases.createMapCategory),
+            GetMapCategoriesRoute(usecases.getMapCategories),
         ];
 
         // OpenAPI Spec

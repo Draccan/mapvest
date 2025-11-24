@@ -3,10 +3,12 @@ import AddressEntity from "../../src/core/entities/AddressEntity";
 import JwtService from "../../src/core/services/JwtService";
 import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
 import CreateGroupMap from "../../src/core/usecases/CreateGroupMap";
+import CreateMapCategory from "../../src/core/usecases/CreateMapCategory";
 import CreateMapPoint from "../../src/core/usecases/CreateMapPoint";
 import CreateUser from "../../src/core/usecases/CreateUser";
 import DeleteMapPoints from "../../src/core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../../src/core/usecases/GetGroupMaps";
+import GetMapCategories from "../../src/core/usecases/GetMapCategories";
 import GetMapPoints from "../../src/core/usecases/GetMapPoints";
 import GetUserGroups from "../../src/core/usecases/GetUserGroups";
 import LoginUser from "../../src/core/usecases/LoginUser";
@@ -52,8 +54,16 @@ export function createTestApp() {
         mapRepository,
     );
     const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
+    const createMapCategory = new CreateMapCategory(
+        groupRepository,
+        mapRepository,
+    );
     const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
     const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
+    const getMapCategories = new GetMapCategories(
+        groupRepository,
+        mapRepository,
+    );
     const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
@@ -70,10 +80,12 @@ export function createTestApp() {
         true,
         {
             createGroupMap,
+            createMapCategory,
             createMapPoint,
             createUser,
             deleteMapPoints,
             getGroupMaps,
+            getMapCategories,
             getMapPoints,
             getUserGroups,
             loginUser,

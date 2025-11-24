@@ -1,7 +1,9 @@
+import CreateCategoryDto from "../../../src/core/dtos/CreateCategoryDto";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { db } from "../../../src/db";
 import {
     mapPoints,
+    mapCategories,
     maps,
     groups,
     users,
@@ -19,6 +21,7 @@ describe("DrizzleMapRepository", () => {
 
     beforeEach(async () => {
         await db.delete(mapPoints);
+        await db.delete(mapCategories);
         await db.delete(maps);
         await db.delete(usersGroups);
         await db.delete(groups);
@@ -561,6 +564,102 @@ describe("DrizzleMapRepository", () => {
             const points = await repository.findAllMapPoints(map.id);
             expect(points.length).toBe(1);
             expect(points[0].id).toBe(point.id);
+        });
+    });
+
+    describe("createCategory", () => {
+        it("should create a new category in the database", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const createCategoryDto: CreateCategoryDto = {
+                description: "Furto",
+                color: "#FF0000",
+            };
+
+            const result = await repository.createCategory(
+                map.id,
+                createCategoryDto,
+            );
+
+            expect(result).toBeDefined();
+            expect(result.id).toBeDefined();
+            expect(result.description).toBe(createCategoryDto.description);
+            expect(result.color).toBe(createCategoryDto.color);
+            expect(result.map_id).toBe(map.id);
+            expect(result.created_at).toBeInstanceOf(Date);
+            expect(result.updated_at).toBeInstanceOf(Date);
+        });
+    });
+
+    describe("findCategoriesByMapId", () => {
+        it("should return all categories for a map", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            await repository.createCategory(map.id, {
+                description: "Furto",
+                color: "#FF0000",
+            });
+
+            await repository.createCategory(map.id, {
+                description: "Rapina",
+                color: "#00FF00",
+            });
+
+            const result = await repository.findCategoriesByMapId(map.id);
+
+            expect(result).toHaveLength(2);
+            expect(result[0].description).toBe("Furto");
+            expect(result[1].description).toBe("Rapina");
+        });
+
+        it("should return empty array if no categories exist", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const result = await repository.findCategoriesByMapId(map.id);
+
+            expect(result).toHaveLength(0);
         });
     });
 });

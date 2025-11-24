@@ -20,6 +20,10 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
                 format: "date-time",
                 description: "Creation timestamp",
             },
+            categoryId: {
+                type: "string",
+                description: "ID of the category associated with the map point",
+            },
         },
         required: ["id", "long", "lat", "date", "createdAt"],
         additionalProperties: false,

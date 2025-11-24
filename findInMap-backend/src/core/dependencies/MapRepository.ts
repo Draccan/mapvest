@@ -1,7 +1,9 @@
 import CreateMapDto from "../dtos/CreateMapDto";
 import { CreateMapPointDto } from "../dtos/CreateMapPointDto";
+import CreateCategoryDto from "../dtos/CreateCategoryDto";
 import MapEntity from "../entities/MapEntity";
 import { MapPointEntity } from "../entities/MapPointEntity";
+import { MapCategoryEntity } from "../entities/MapCategoryEntity";
 import DbOrTransaction from "./DatabaseTransaction";
 
 export default interface MapRepository {
@@ -19,4 +21,9 @@ export default interface MapRepository {
         data: CreateMapDto,
         dbInstance?: DbOrTransaction,
     ): Promise<MapEntity>;
+    createCategory(
+        mapId: string,
+        data: CreateCategoryDto,
+    ): Promise<MapCategoryEntity>;
+    findCategoriesByMapId(mapId: string): Promise<MapCategoryEntity[]>;
 }

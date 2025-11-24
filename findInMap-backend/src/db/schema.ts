@@ -67,6 +67,7 @@ export const mapPoints = pgTable("map_points", {
     mapId: uuid("map_id")
         .notNull()
         .references(() => maps.id),
+    categoryId: uuid("category_id").references(() => mapCategories.id),
     location: geometry("location").notNull(),
     description: varchar("description"),
     date: text("date").notNull(),
@@ -85,6 +86,19 @@ export const maps = pgTable("maps", {
     name: varchar("name").notNull(),
 });
 
+export const mapCategories = pgTable("map_categories", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    mapId: uuid("map_id")
+        .notNull()
+        .references(() => maps.id),
+    description: varchar("description").notNull(),
+    color: varchar("color").notNull(),
+    createdAt: timestamp("created_at", { precision: 6 }).defaultNow(),
+    updatedAt: timestamp("updated_at", { precision: 6 })
+        .defaultNow()
+        .$onUpdate(() => new Date()),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Group = typeof groups.$inferSelect;
@@ -95,3 +109,5 @@ export type MapPoint = typeof mapPoints.$inferSelect;
 export type NewMapPoint = typeof mapPoints.$inferInsert;
 export type Map = typeof maps.$inferSelect;
 export type NewMap = typeof maps.$inferInsert;
+export type MapCategory = typeof mapCategories.$inferSelect;
+export type NewMapCategory = typeof mapCategories.$inferInsert;
