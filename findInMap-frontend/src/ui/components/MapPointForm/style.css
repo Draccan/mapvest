@@ -77,6 +77,18 @@
     transform: translateY(-1px);
 }
 
+/* Make calendar icon more visible in dark mode */
+.c-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+}
+
+@media (prefers-color-scheme: light) {
+    .c-date-input::-webkit-calendar-picker-indicator {
+        filter: none;
+    }
+}
+
 .c-errors {
     margin-bottom: 1.5rem;
 }

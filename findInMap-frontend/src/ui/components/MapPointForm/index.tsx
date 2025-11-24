@@ -8,6 +8,17 @@ import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapPointForm");
 
+const convertStandardDateToItDate = (yyyymmdd: string): string => {
+    const match = yyyymmdd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return "";
+    const [, year, month, day] = match;
+    return `${day}/${month}/${year}`;
+};
+
+const getTodayYyyymmdd = (): string => {
+    return new Date().toISOString().split("T")[0];
+};
+
 const ErrorBoundary = ({ children }: any) => {
     const [hasError, setHasError] = useState(false);
 
@@ -40,15 +51,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     loading,
 }) => {
     const [description, setDescription] = useState<string>("");
-    const [date, setDate] = useState(new Date().toLocaleDateString("it-IT"));
+    const [dateValue, setDateValue] = useState(getTodayYyyymmdd());
     const [errors, setErrors] = useState<string[]>([]);
-
-    const validateDate = (dateString: string): boolean => {
-        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-        const match = dateString.match(regex);
-
-        return !!match;
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,27 +63,27 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
             newErrors.push("Select a point on the map");
         }
 
-        if (!date.trim()) {
-            newErrors.push("Enter a date");
-        } else if (!validateDate(date)) {
-            newErrors.push("Invalid date format. Use DD/MM/YYYY");
+        if (!dateValue) {
+            newErrors.push("Date is required");
         }
 
         setErrors(newErrors);
 
         if (newErrors.length === 0 && selectedCoordinates) {
             try {
+                // Convert date from YYYY-MM-DD to DD/MM/YYYY for the API
+                const dateDdMmYyyy = convertStandardDateToItDate(dateValue);
+
                 await onSave({
                     long: selectedCoordinates.long,
                     lat: selectedCoordinates.lat,
                     description:
                         description.trim() === "" ? undefined : description,
-                    date,
+                    date: dateDdMmYyyy,
                 });
 
                 setDescription("");
-                const formattedToday = new Date().toLocaleDateString("it-IT");
-                setDate(formattedToday);
+                setDateValue(getTodayYyyymmdd());
             } catch (error) {
                 setErrors(["Errore durante il salvataggio"]);
             }
@@ -128,13 +132,12 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         />
                     </div>
                     <div className="c-form-group">
-                        <label htmlFor="date">{fm("date")} (DD/MM/YYYY):</label>
+                        <label htmlFor="date">{fm("date")}:</label>
                         <input
-                            type="text"
+                            type="date"
                             id="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            placeholder="DD/MM/YYYY"
+                            value={dateValue}
+                            onChange={(e) => setDateValue(e.target.value)}
                             className="c-date-input"
                         />
                     </div>
