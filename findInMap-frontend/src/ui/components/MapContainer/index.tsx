@@ -12,6 +12,7 @@ import {
     useMap,
 } from "react-leaflet";
 
+import type { CategoryDto } from "../../../core/dtos/CategoryDto";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import type { RouteDto } from "../../../core/dtos/RouteDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
@@ -24,6 +25,7 @@ const fm = getFormattedMessageWithScope("components.MapContainer");
 
 interface MapContainerProps {
     mapPoints: MapPointDto[];
+    categories: CategoryDto[];
     onMapClick: (lat: number, lng: number) => void;
     selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
     onDeletePoint: (pointId: string) => void;
@@ -64,21 +66,11 @@ const MapController: React.FC<{
     return null;
 };
 
-const getMarkerColor = (description?: string): string => {
-    switch (description) {
-        case "Theft":
-            return "#ff6b6b";
-        case "Aggression":
-            return "#feca57";
-        case "Robbery":
-            return "#ff9ff3";
-        default:
-            return "#74b9ff";
-    }
-};
+const DEFAULT_MARKER_COLOR = "#808080";
 
 export const MapContainer: React.FC<MapContainerProps> = ({
     mapPoints,
+    categories,
     onMapClick,
     selectedCoordinates,
     onDeletePoint,
@@ -89,6 +81,19 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     startPoint,
     endPoint,
 }) => {
+    const getMarkerColor = (point: MapPointDto): string => {
+        if (!point.categoryId) return DEFAULT_MARKER_COLOR;
+
+        const category = categories.find((cat) => cat.id === point.categoryId);
+        return category?.color || DEFAULT_MARKER_COLOR;
+    };
+
+    const getCategoryName = (point: MapPointDto): string | null => {
+        if (!point.categoryId) return null;
+
+        const category = categories.find((cat) => cat.id === point.categoryId);
+        return category?.description || null;
+    };
     const intl = useIntl();
     const deletePointLabel = intl.formatMessage({
         id: "components.MapContainer.deletePoint",
@@ -166,14 +171,16 @@ export const MapContainer: React.FC<MapContainerProps> = ({
             {mapPoints.map((point) => {
                 const waypointIndex = getWaypointIndex(point);
                 const isSpecialPoint = isStartOrEndPoint(point);
+                const markerColor = getMarkerColor(point);
+                const categoryName = getCategoryName(point);
 
                 return (
                     <CircleMarker
                         key={point.id}
                         center={[point.lat, point.long]}
                         radius={8}
-                        color={getMarkerColor(point.description)}
-                        fillColor={getMarkerColor(point.description)}
+                        color={markerColor}
+                        fillColor={markerColor}
                         fillOpacity={isSpecialPoint ? 0.3 : 1}
                         eventHandlers={{
                             click: (e) => {
@@ -190,17 +197,32 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                             {fm("stop")} #{waypointIndex}
                                         </div>
                                     )}
-                                    <div>
-                                        <strong>{fm("description")}:</strong>{" "}
-                                        {point.description || "/"}
-                                        <br />
-                                        <strong>{fm("date")}:</strong>{" "}
-                                        {point.date}
-                                        <br />
-                                        <strong>
-                                            {fm("coordinates")}:
-                                        </strong>{" "}
-                                        {`Long: ${point.long.toFixed(4)}, Lat: ${point.lat.toFixed(4)}`}
+                                    <div className="c-map-container-popup-info">
+                                        <div className="c-map-container-popup-left">
+                                            <div>
+                                                <strong>
+                                                    {fm("description")}:
+                                                </strong>{" "}
+                                                {point.description || "/"}
+                                            </div>
+                                            <div>
+                                                <strong>{fm("date")}:</strong>{" "}
+                                                {point.date}
+                                            </div>
+                                        </div>
+                                        {categoryName && (
+                                            <div className="c-map-container-popup-right">
+                                                <div
+                                                    className="c-map-container-category-tag"
+                                                    style={{
+                                                        borderColor:
+                                                            markerColor,
+                                                    }}
+                                                >
+                                                    {categoryName}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                     <Button
                                         kind="danger"

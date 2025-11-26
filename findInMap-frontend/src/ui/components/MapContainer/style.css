@@ -8,6 +8,24 @@
     gap: 12px;
 }
 
+.c-map-container-popup-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.c-map-container-popup-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.c-map-container-popup-right {
+    display: flex;
+    align-items: center;
+}
+
 .c-map-container-waypoint-badge {
     padding: 4px 8px;
     background-color: var(--color-primary);
@@ -38,4 +56,15 @@
 
 .c-map-container-marker-end {
     background-color: var(--color-danger);
+}
+
+.c-map-container-category-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    border: 2px solid;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background-color: transparent;
+    white-space: nowrap;
 }

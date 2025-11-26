@@ -77,6 +77,20 @@
     transform: translateY(-1px);
 }
 
+.c-category-field {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.c-category-color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 /* Make calendar icon more visible in dark mode */
 .c-date-input::-webkit-calendar-picker-indicator {
     filter: invert(0.8);

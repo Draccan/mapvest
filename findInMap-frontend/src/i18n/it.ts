@@ -28,19 +28,26 @@ export default flattenObject({
         },
         MapPointForm: {
             addMapPoint: "Aggiungi Punto Mappa",
-            XCoordinateLabel: "Coordinata X (Longitudine)",
-            YCoordinateLabel: "Coordinata Y (Latitudine)",
             description: "Descrizione",
             date: "Data",
-            options: {
-                theft: "Furto",
-                aggression: "Aggressione",
-                robbery: "Rapina",
-            },
+            category: "Categoria",
+            selectCategory: "Seleziona una categoria",
+            addNewCategory: "Aggiungi Nuova Categoria",
+            noCategories: "Nessuna categoria disponibile",
             save: "Salva Punto",
             saving: "Salvataggio...",
             clickOnMapInstructions:
                 "Clicca sulla mappa per selezionare le coordinate.",
+        },
+        CategoryModal: {
+            title: "Crea Nuova Categoria",
+            description: "Descrizione Categoria",
+            color: "Colore",
+            save: "Salva Categoria",
+            saving: "Salvataggio...",
+            cancel: "Annulla",
+            descriptionRequired: "La descrizione è obbligatoria",
+            colorRequired: "Il colore è obbligatorio",
         },
         ThemeToggle: {
             switchToDark: "Passa alla modalità scura",
