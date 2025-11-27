@@ -4,16 +4,19 @@ import { useIntl } from "react-intl";
 
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
-import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useCalculateOptimizedRoute } from "../../../core/usecases/useCalculateOptimizedRoute";
+import { useCreateMapCategory } from "../../../core/usecases/useCreateMapCategory";
+import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useDeleteMapPoints } from "../../../core/usecases/useDeleteMapPoints";
 import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
+import { useGetMapCategories } from "../../../core/usecases/useGetMapCategories";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
 import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import getPointsInBounds from "../../../utils/getPointsInBounds";
 import LogoSvg from "../../assets/logo.svg";
+import usePrevious from "../../commons/hooks/usePrevious";
 import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
 import { AreaAnalysis } from "../../components/AreaAnalysis";
@@ -62,7 +65,16 @@ export const Home: React.FC = () => {
         hasFetched,
     } = useGetMapPoints();
 
+    const {
+        data: categoriesData,
+        fetch: fetchCategories,
+        loading: loadingCategories,
+    } = useGetMapCategories();
+
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
+    const { createCategory, loading: creatingCategory } =
+        useCreateMapCategory();
+    const previousCreatingCategory = usePrevious(creatingCategory);
     const { deleteMapPoints } = useDeleteMapPoints();
     const { loading: loadingLogout, logout } = useLogoutUser();
     const {
@@ -113,6 +125,28 @@ export const Home: React.FC = () => {
         fetchMapPoints,
     ]);
 
+    useEffect(() => {
+        if (
+            mapsData &&
+            mapsData.length > 0 &&
+            groupsData &&
+            groupsData.length > 0 &&
+            !loadingCategories &&
+            (!categoriesData || (previousCreatingCategory && !creatingCategory))
+        ) {
+            const firstMap = mapsData[0];
+            fetchCategories(groupsData[0]!.id, firstMap.id);
+        }
+    }, [
+        mapsData,
+        groupsData,
+        loadingCategories,
+        categoriesData,
+        creatingCategory,
+        previousCreatingCategory,
+        fetchCategories,
+    ]);
+
     const handleMapPointSelection = (lng: number, lat: number) => {
         setSelectedCoordinates({ long: lng, lat: lat, zoom: 15 });
     };
@@ -154,7 +188,7 @@ export const Home: React.FC = () => {
         }
     };
 
-    const handleOptimizeRoute = async () => {
+    const handleOptimizeRoute = () => {
         if (!startPoint || !endPoint || pointsInArea.length === 0) {
             return;
         }
@@ -162,7 +196,7 @@ export const Home: React.FC = () => {
         const destinations = pointsInArea.filter(
             (point) => point.id !== startPoint.id && point.id !== endPoint.id,
         );
-        await calculateOptimizedRoute(startPoint, destinations, endPoint);
+        calculateOptimizedRoute(startPoint, destinations, endPoint);
     };
 
     const handleAreaDrawn = (bounds: L.LatLngBounds | null) => {
@@ -172,8 +206,19 @@ export const Home: React.FC = () => {
         setPointsInArea(pointsInArea);
     };
 
+    const handleCreateCategory = (description: string, color: string) => {
+        const firstGroup = groupsData![0]!;
+        const firstMap = mapsData![0]!;
+        createCategory(firstGroup.id, firstMap.id, {
+            description,
+            color,
+        });
+    };
+
     const mapPoints = mapPointsData || [];
-    const isLoading = loadingGroups || loadingMaps || loadingPoints;
+    const categories = categoriesData || [];
+    const isLoading =
+        loadingGroups || loadingMaps || loadingPoints || loadingCategories;
 
     return (
         <div className="v-home">
@@ -238,6 +283,7 @@ export const Home: React.FC = () => {
                             {isLoading && !hasFetched && <Skeleton />}
                             <MapContainer
                                 mapPoints={mapPoints}
+                                categories={categories}
                                 onMapClick={handleMapPointSelection}
                                 selectedCoordinates={selectedCoordinates}
                                 onDeletePoint={handleDeletePoint}
@@ -266,6 +312,9 @@ export const Home: React.FC = () => {
                                 selectedCoordinates={selectedCoordinates}
                                 onSave={handleSavePoint}
                                 loading={creatingPoint}
+                                categories={categories}
+                                onCreateCategory={handleCreateCategory}
+                                loadingCategory={creatingCategory}
                             />
                         )}
                     </div>

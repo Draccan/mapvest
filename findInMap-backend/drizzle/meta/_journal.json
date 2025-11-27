@@ -22,6 +22,13 @@
       "when": 1763980802896,
       "tag": "0002_zippy_snowbird",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1763991768620,
+      "tag": "0003_silly_sheva_callister",
+      "breakpoints": true
     }
   ]
 }

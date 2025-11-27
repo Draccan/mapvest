@@ -6,6 +6,7 @@ export interface MapPointDto {
     lat: number;
     description?: string;
     date: string;
+    categoryId?: string;
     createdAt: Date;
 }
 
@@ -16,6 +17,7 @@ export function makeMapPointDto(mapPoint: MapPointEntity): MapPointDto {
         lat: mapPoint.lat,
         description: mapPoint.description,
         date: mapPoint.date,
+        categoryId: mapPoint.category_id,
         createdAt: mapPoint.created_at,
     };
 }

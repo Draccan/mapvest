@@ -28,6 +28,8 @@ const mockMapRepository: jest.Mocked<MapRepository> = {
     findMapByGroupId: jest.fn(),
     memoizedFindMapByGroupId: jest.fn(),
     createMap: jest.fn(),
+    createCategory: jest.fn(),
+    findCategoriesByMapId: jest.fn(),
 };
 
 jest.mock("../../../src/db", () => ({

@@ -12,6 +12,8 @@ const mockMapPointRepository: jest.Mocked<MapRepository> = {
     findMapByGroupId: jest.fn(),
     createMap: jest.fn(),
     memoizedFindMapByGroupId: jest.fn(),
+    createCategory: jest.fn(),
+    findCategoriesByMapId: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {

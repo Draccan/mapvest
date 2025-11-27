@@ -1,5 +1,20 @@
 import { http, HttpResponse, passthrough, delay } from "msw";
+
+import { type CategoryDto } from "../src/core/dtos/CategoryDto";
 import { type MapPointDto } from "../src/core/dtos/MapPointDto";
+
+let mockCategories: CategoryDto[] = [
+    {
+        id: "cat-1",
+        description: "Customer",
+        color: "#FF5733",
+    },
+    {
+        id: "cat-2",
+        description: "Supplier",
+        color: "#33FF57",
+    },
+];
 
 let mockMapPoints: MapPointDto[] = [
     {
@@ -9,6 +24,7 @@ let mockMapPoints: MapPointDto[] = [
         description: "Theft",
         date: "01/01/2024",
         createdAt: new Date("2024-01-01").toISOString(),
+        categoryId: "cat-1",
     },
     {
         id: "2",
@@ -17,6 +33,7 @@ let mockMapPoints: MapPointDto[] = [
         description: "Aggression",
         date: "02/01/2024",
         createdAt: new Date("2024-01-02").toISOString(),
+        categoryId: "cat-2",
     },
     {
         id: "3",
@@ -25,6 +42,7 @@ let mockMapPoints: MapPointDto[] = [
         description: "Robbery",
         date: "03/01/2024",
         createdAt: new Date("2024-01-03").toISOString(),
+        categoryId: "cat-1",
     },
 ];
 
@@ -57,6 +75,7 @@ let mockMaps = [
 let userIdCounter = 2;
 let groupIdCounter = 2;
 let mapIdCounter = 2;
+let categoryIdCounter = 4;
 
 export const handlers = [
     http.all("https://maps.googleapis.com/*", () => passthrough()),
@@ -279,4 +298,31 @@ export const handlers = [
         await delay(1000);
         return HttpResponse.json();
     }),
+    http.get(
+        "http://localhost:3001/:groupId/maps/:mapId/categories",
+        async () => {
+            await delay(1000);
+            return HttpResponse.json(mockCategories);
+        },
+    ),
+    http.post(
+        "http://localhost:3001/:groupId/maps/:mapId/categories",
+        async ({ request }) => {
+            await delay(1000);
+            const newCategory = (await request.json()) as Omit<
+                CategoryDto,
+                "id"
+            >;
+
+            const category: CategoryDto = {
+                ...newCategory,
+                id: `cat-${categoryIdCounter}`,
+            };
+
+            mockCategories.push(category);
+            categoryIdCounter++;
+
+            return HttpResponse.json(category, { status: 201 });
+        },
+    ),
 ];

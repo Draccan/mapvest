@@ -88,7 +88,8 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
                                 <option value="">{fm("selectPoint")}</option>
                                 {pointsInArea.map((point) => (
                                     <option key={point.id} value={point.id}>
-                                        {point.description} - {point.date}
+                                        {point.description || "/"} -{" "}
+                                        {point.date}
                                     </option>
                                 ))}
                             </select>

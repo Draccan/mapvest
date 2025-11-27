@@ -3,14 +3,17 @@ import mem from "mem";
 
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import MapRepository from "../../core/dependencies/MapRepository";
+import CreateCategoryDto from "../../core/dtos/CreateCategoryDto";
 import CreateMapDto from "../../core/dtos/CreateMapDto";
 import { CreateMapPointDto } from "../../core/dtos/CreateMapPointDto";
+import { MapCategoryEntity } from "../../core/entities/MapCategoryEntity";
 import MapEntity from "../../core/entities/MapEntity";
 import { MapPointEntity } from "../../core/entities/MapPointEntity";
 import { db } from "../../db";
-import { mapPoints, maps } from "../../db/schema";
-import { makeMapPointEntity } from "./converters/makeMapPointEntity";
+import { mapPoints, maps, mapCategories } from "../../db/schema";
+import { makeMapCategoryEntity } from "./converters/makeMapCategoryEntity";
 import { makeMapEntity } from "./converters/makeMapEntity";
+import { makeMapPointEntity } from "./converters/makeMapPointEntity";
 
 export class DrizzleMapRepository implements MapRepository {
     async findAllMapPoints(mapId: string): Promise<MapPointEntity[]> {
@@ -18,6 +21,7 @@ export class DrizzleMapRepository implements MapRepository {
             .select({
                 id: mapPoints.id,
                 mapId: mapPoints.mapId,
+                categoryId: mapPoints.categoryId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
@@ -54,11 +58,13 @@ export class DrizzleMapRepository implements MapRepository {
                 location: sql`ST_GeomFromText(${`POINT(${data.long} ${data.lat})`}, 4326)`,
                 description: data.description,
                 date: data.date,
+                categoryId: data.categoryId,
                 mapId: mapId,
             })
             .returning({
                 id: mapPoints.id,
                 mapId: mapPoints.mapId,
+                categoryId: mapPoints.categoryId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
@@ -90,6 +96,7 @@ export class DrizzleMapRepository implements MapRepository {
             .select({
                 id: mapPoints.id,
                 mapId: mapPoints.mapId,
+                categoryId: mapPoints.categoryId,
                 long: sql<number>`ST_X(${mapPoints.location})`,
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
@@ -117,5 +124,30 @@ export class DrizzleMapRepository implements MapRepository {
             .returning();
 
         return makeMapEntity(createdMap);
+    }
+
+    async createCategory(
+        mapId: string,
+        data: CreateCategoryDto,
+    ): Promise<MapCategoryEntity> {
+        const [createdCategory] = await db
+            .insert(mapCategories)
+            .values({
+                mapId: mapId,
+                description: data.description,
+                color: data.color,
+            })
+            .returning();
+
+        return makeMapCategoryEntity(createdCategory);
+    }
+
+    async findCategoriesByMapId(mapId: string): Promise<MapCategoryEntity[]> {
+        const categories = await db
+            .select()
+            .from(mapCategories)
+            .where(eq(mapCategories.mapId, mapId));
+
+        return categories.map(makeMapCategoryEntity);
     }
 }

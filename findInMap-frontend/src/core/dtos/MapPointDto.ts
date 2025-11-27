@@ -6,4 +6,5 @@ export interface MapPointDto {
     date: string;
     // timestamp in ISO format
     createdAt: string;
+    categoryId?: string;
 }

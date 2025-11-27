@@ -2,9 +2,11 @@ import LoggerService from "../core/services/LoggerService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
 import CreateGroupMap from "../core/usecases/CreateGroupMap";
+import CreateMapCategory from "../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
 import DeleteMapPoints from "../core/usecases/DeleteMapPoints";
+import GetMapCategories from "../core/usecases/GetMapCategories";
 import GetMapPoints from "../core/usecases/GetMapPoints";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
@@ -48,6 +50,8 @@ const loginUser = new LoginUser(userRepository, jwtService);
 const logoutUser = new LogoutUser(jwtService);
 const refreshToken = new RefreshToken(jwtService);
 const searchAddresses = new SearchAddresses(googleRepository);
+const createMapCategory = new CreateMapCategory(groupRepository, mapRepository);
+const getMapCategories = new GetMapCategories(groupRepository, mapRepository);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -68,6 +72,8 @@ const restInterface = new RestInterface(
         refreshToken,
         searchAddresses,
         getGroupMaps,
+        createMapCategory,
+        getMapCategories,
     },
     jwtService,
 );
