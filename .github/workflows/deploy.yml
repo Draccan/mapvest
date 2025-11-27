@@ -1,8 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy Website to Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main] # o il nome del tuo branch principale
 
 permissions:
   contents: read
