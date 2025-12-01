@@ -1,53 +1,28 @@
-// Get browser language
-const browserLang = navigator.language.slice(0, 2);
-let currentLang = ["it", "en"].includes(browserLang) ? browserLang : "it";
+// Detect current language from URL path
+const isEnglishPage = window.location.pathname.includes("/en/");
+const currentLang = isEnglishPage ? "en" : "it";
 
-// Set initial language
-document.documentElement.lang = currentLang;
-
-// Language switching
+// Language switching - redirect to correct page
 const langButtons = document.querySelectorAll(".lang-btn");
 langButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-        currentLang = btn.dataset.lang;
-        setLanguage(currentLang);
+        const newLang = btn.dataset.lang;
 
-        // Update active state
-        langButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-    });
-});
-
-// Set active language button on load
-document.querySelector(`[data-lang="${currentLang}"]`).classList.add("active");
-document
-    .querySelector(`[data-lang="${currentLang === "it" ? "en" : "it"}"]`)
-    .classList.remove("active");
-
-function setLanguage(lang) {
-    document.documentElement.lang = lang;
-    const elements = document.querySelectorAll("[data-i18n]");
-    elements.forEach((el) => {
-        const key = el.dataset.i18n;
-        if (translations[lang][key]) {
-            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-                el.placeholder = translations[lang][key];
-            } else {
-                el.textContent = translations[lang][key];
-            }
+        // Redirect to the correct page based on language
+        if (newLang === "en" && !isEnglishPage) {
+            window.location.href = "en/index.html";
+        } else if (newLang === "it" && isEnglishPage) {
+            window.location.href = "../index.html";
         }
     });
-
-    // Restart rotating text with new language
-    startRotatingText();
-}
+});
 
 // Rotating text animation
 let rotatingInterval;
 function startRotatingText() {
     clearInterval(rotatingInterval);
     const rotatingElement = document.querySelector(".rotating-text");
-    const words = translations[currentLang]["rotating.words"];
+    const words = rotatingWords[currentLang];
     let currentIndex = 0;
 
     rotatingInterval = setInterval(() => {
@@ -60,8 +35,7 @@ function startRotatingText() {
     }, 2000);
 }
 
-// Initialize
-setLanguage(currentLang);
+// Initialize rotating text
 startRotatingText();
 
 // Smooth scroll for anchor links
