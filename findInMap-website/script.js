@@ -2,6 +2,9 @@
 const isEnglishPage = window.location.pathname.includes("/en/");
 const currentLang = isEnglishPage ? "en" : "it";
 
+// Detect if running locally (file:// protocol) or on a server
+const isLocalFile = window.location.protocol === "file:";
+
 // Language switching - redirect to correct page
 const langButtons = document.querySelectorAll(".lang-btn");
 langButtons.forEach((btn) => {
@@ -10,9 +13,11 @@ langButtons.forEach((btn) => {
 
         // Redirect to the correct page based on language
         if (newLang === "en" && !isEnglishPage) {
-            window.location.href = "en/index.html";
+            // Use relative path with index.html for local files, clean URL for production
+            window.location.href = isLocalFile ? "en/index.html" : "en/";
         } else if (newLang === "it" && isEnglishPage) {
-            window.location.href = "../index.html";
+            // Use relative path with index.html for local files, clean URL for production
+            window.location.href = isLocalFile ? "../index.html" : "../";
         }
     });
 });
