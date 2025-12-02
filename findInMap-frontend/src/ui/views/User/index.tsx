@@ -29,11 +29,6 @@ export const User: React.FC = () => {
     const [hasValidationError, setHasValidationError] =
         useState<boolean>(false);
 
-    if (!user) {
-        navigate(routes.login());
-        return null;
-    }
-
     useEffect(() => {
         if (previousLoading && !loading && !error) {
             setHasSuccess(true);

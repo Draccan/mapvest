@@ -6,6 +6,7 @@ import InvalidCredentialsError from "../../core/errors/InvalidCredentialsError";
 import InvalidPasswordError from "../../core/errors/InvalidPasswordError";
 import NotAllowedActionError from "../../core/errors/NotAllowedActionError";
 import UserEmailAlreadyRegisteredError from "../../core/errors/UserEmailAlreadyRegisteredError";
+import UserNotFoundError from "../../core/errors/UserNotFoundError";
 import LoggerService from "../../core/services/LoggerService";
 
 export default function errorHandler(
@@ -35,6 +36,10 @@ export default function errorHandler(
         error instanceof IncorrectPasswordError
     ) {
         res.status(403).json({
+            error: error.message,
+        });
+    } else if (error instanceof UserNotFoundError) {
+        res.status(404).json({
             error: error.message,
         });
     } else if (error instanceof UserEmailAlreadyRegisteredError) {

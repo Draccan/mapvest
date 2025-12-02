@@ -8,6 +8,7 @@ import CreateUser from "../core/usecases/CreateUser";
 import DeleteMapPoints from "../core/usecases/DeleteMapPoints";
 import GetMapCategories from "../core/usecases/GetMapCategories";
 import GetMapPoints from "../core/usecases/GetMapPoints";
+import GetUser from "../core/usecases/GetUser";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
@@ -54,6 +55,7 @@ const searchAddresses = new SearchAddresses(googleRepository);
 const createMapCategory = new CreateMapCategory(groupRepository, mapRepository);
 const getMapCategories = new GetMapCategories(groupRepository, mapRepository);
 const updateUser = new UpdateUser(userRepository);
+const getUser = new GetUser(userRepository);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -62,12 +64,12 @@ const restInterface = new RestInterface(
     config.appName,
     config.corsAllowedOrigins,
     config.validateApiResponses,
-    {
         createGroupMap,
         createMapPoint,
         createUser,
         deleteMapPoints,
         getMapPoints,
+        getUser,
         getUserGroups,
         loginUser,
         logoutUser,
@@ -78,6 +80,7 @@ const restInterface = new RestInterface(
         getMapCategories,
         updateUser,
     },
+    jwtService,
     jwtService,
 );
 

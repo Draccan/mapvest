@@ -49,6 +49,9 @@ export default flattenObject({
             descriptionRequired: "La descrizione è obbligatoria",
             colorRequired: "Il colore è obbligatorio",
         },
+        RoutesWrapper: {
+            restoringSession: "Ripristino della sessione in corso...",
+        },
         ThemeToggle: {
             switchToDark: "Passa alla modalità scura",
             switchToLight: "Passa alla modalità chiara",

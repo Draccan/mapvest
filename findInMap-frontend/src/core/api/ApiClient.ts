@@ -208,6 +208,21 @@ export default class ApiClient {
         }
     }
 
+    async getCurrentUser(): Promise<UserDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/users/me`,
+            {
+                method: "GET",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to get current user");
+        }
+
+        return response.json();
+    }
+
     async getUserGroups(): Promise<GroupDto[]> {
         const response = await this.fetchWithInterceptors(`${API_URL}/groups`, {
             method: "GET",

@@ -298,6 +298,42 @@ export const handlers = [
         await delay(1000);
         return HttpResponse.json();
     }),
+    http.get("http://localhost:3001/users/me", async ({ request }) => {
+        await delay(1000);
+        const authHeader = request.headers.get("Authorization");
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return HttpResponse.json(
+                { error: "Missing or invalid Authorization header" },
+                { status: 401 },
+            );
+        }
+
+        const token = authHeader.substring(7);
+
+        if (!token || !token.startsWith("mock.access.token")) {
+            return HttpResponse.json(
+                { error: "Invalid or expired access token" },
+                { status: 401 },
+            );
+        }
+
+        const parts = token.split(".");
+        const userId = parts[3];
+
+        const user = mockUsers.find((u) => u.id === userId);
+
+        if (!user) {
+            return HttpResponse.json(
+                { error: "User not found" },
+                { status: 404 },
+            );
+        }
+
+        const { password, ...userResponse } = user;
+
+        return HttpResponse.json(userResponse);
+    }),
     http.put(
         "http://localhost:3001/users/:userId",
         async ({ params, request }) => {

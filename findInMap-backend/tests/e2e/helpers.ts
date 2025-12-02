@@ -10,6 +10,7 @@ import DeleteMapPoints from "../../src/core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../../src/core/usecases/GetGroupMaps";
 import GetMapCategories from "../../src/core/usecases/GetMapCategories";
 import GetMapPoints from "../../src/core/usecases/GetMapPoints";
+import GetUser from "../../src/core/usecases/GetUser";
 import GetUserGroups from "../../src/core/usecases/GetUserGroups";
 import LoginUser from "../../src/core/usecases/LoginUser";
 import LogoutUser from "../../src/core/usecases/LogoutUser";
@@ -66,6 +67,7 @@ export function createTestApp() {
         mapRepository,
     );
     const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
+    const getUser = new GetUser(userRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);
@@ -89,6 +91,7 @@ export function createTestApp() {
             getGroupMaps,
             getMapCategories,
             getMapPoints,
+            getUser,
             getUserGroups,
             loginUser,
             logoutUser,
