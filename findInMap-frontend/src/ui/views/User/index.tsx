@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../../core/contexts/UserContext";
 import { useUpdateUser } from "../../../core/usecases/useUpdateUser";
@@ -14,7 +13,6 @@ import "./style.css";
 const fm = getFormattedMessageWithScope("views.User");
 
 export const User: React.FC = () => {
-    const navigate = useNavigate();
     const { user } = useUser();
     const { updatePassword, loading, error } = useUpdateUser();
     const previousLoading = usePrevious(loading);
@@ -44,7 +42,7 @@ export const User: React.FC = () => {
         }
 
         try {
-            await updatePassword(user.id, {
+            await updatePassword(user!.id, {
                 currentPassword: formData.currentPassword,
                 newPassword: formData.newPassword,
             });
@@ -81,7 +79,7 @@ export const User: React.FC = () => {
                                 {fm("name")}:
                             </span>
                             <span className="v-user-info-value">
-                                {user.name}
+                                {user!.name}
                             </span>
                         </div>
                         <div className="v-user-info-item">
@@ -89,7 +87,7 @@ export const User: React.FC = () => {
                                 {fm("surname")}:
                             </span>
                             <span className="v-user-info-value">
-                                {user.surname}
+                                {user!.surname}
                             </span>
                         </div>
                         <div className="v-user-info-item">
@@ -97,7 +95,7 @@ export const User: React.FC = () => {
                                 {fm("email")}:
                             </span>
                             <span className="v-user-info-value">
-                                {user.email}
+                                {user!.email}
                             </span>
                         </div>
                     </div>
