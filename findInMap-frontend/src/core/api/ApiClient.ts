@@ -11,6 +11,7 @@ import type { MapDto } from "../dtos/MapDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
 import type { RouteDto } from "../dtos/RouteDto";
 import type TokenResponseDto from "../dtos/TokenResponseDto";
+import type UpdateUserDto from "../dtos/UpdateUserDto";
 import type UserDto from "../dtos/UserDto";
 import { UnauthorizedError } from "./errors/UnauthorizedError";
 
@@ -187,6 +188,24 @@ export default class ApiClient {
         }
 
         return response.json();
+    }
+
+    async updateUserPassword(
+        userId: string,
+        data: UpdateUserDto,
+    ): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/users/${userId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(data),
+            },
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to update password");
+        }
     }
 
     async getUserGroups(): Promise<GroupDto[]> {

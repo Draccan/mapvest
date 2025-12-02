@@ -55,17 +55,31 @@ export default flattenObject({
         },
     },
     views: {
-        About: {
-            description: "Senior Software Engineer Freelance",
-            viewLinkedIn: "Visualizza il mio profilo LinkedIn",
-            backToMap: "Torna alla Mappa",
-        },
         Home: {
-            about: "Chi sono",
+            user: "Profilo",
             logout: "Esci",
             title: "La mia Mappa",
             enterAnalysisMode: "Analizza Area",
             exitAnalysisMode: "Esci dalla Modalità Analisi",
+        },
+        User: {
+            title: "Profilo Utente",
+            userInfo: "Informazioni Utente",
+            name: "Nome",
+            surname: "Cognome",
+            email: "Email",
+            changePassword: "Cambia Password",
+            currentPassword: "Password Attuale",
+            newPassword: "Nuova Password",
+            confirmNewPassword: "Conferma Nuova Password",
+            updatePassword: "Aggiorna Password",
+            updating: "Aggiornamento...",
+            backToMap: "Torna alla Mappa",
+            passwordUpdatedSuccess: "Password aggiornata con successo",
+            passwordsDoNotMatch: "Le password non corrispondono",
+            incorrectCurrentPassword: "La password attuale non è corretta",
+            passwordUpdateError:
+                "Errore durante l'aggiornamento della password",
         },
         Login: {
             emailLabel: "Email:",

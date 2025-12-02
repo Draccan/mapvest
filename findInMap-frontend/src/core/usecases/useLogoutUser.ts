@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { UnauthorizedError } from "../api/errors/UnauthorizedError";
 import { useApiClient } from "../contexts/ApiClientContext";
+import { useUser } from "../contexts/UserContext";
 
 interface UseLogoutUser {
     logout: () => Promise<void>;
@@ -11,6 +12,7 @@ interface UseLogoutUser {
 
 export const useLogoutUser = (): UseLogoutUser => {
     const apiClient = useApiClient();
+    const { setUser } = useUser();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>();
 
@@ -20,6 +22,7 @@ export const useLogoutUser = (): UseLogoutUser => {
 
         try {
             await apiClient.logout();
+            setUser(null);
         } catch (err) {
             if (err instanceof UnauthorizedError) {
                 throw err;

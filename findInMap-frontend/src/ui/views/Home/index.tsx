@@ -69,6 +69,7 @@ export const Home: React.FC = () => {
         data: categoriesData,
         fetch: fetchCategories,
         loading: loadingCategories,
+        hasFetched: hasFetchedCategories,
     } = useGetMapCategories();
 
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
@@ -230,11 +231,11 @@ export const Home: React.FC = () => {
                     </div>
                     <nav className="v-home-navigation">
                         <Link
-                            to={routes.about()}
+                            to={routes.user()}
                             kind="nav"
-                            className="v-home-about-nav-link"
+                            className="v-home-user-nav-link"
                         >
-                            {fm("about")}
+                            {fm("user")}
                         </Link>
                         <Button
                             onClick={logout}
@@ -280,7 +281,9 @@ export const Home: React.FC = () => {
                             </Button>
                         </div>
                         <div className="v-home-map">
-                            {isLoading && !hasFetched ? (
+                            {isLoading ||
+                            !hasFetched ||
+                            !hasFetchedCategories ? (
                                 <Skeleton />
                             ) : (
                                 <MapContainer

@@ -298,6 +298,37 @@ export const handlers = [
         await delay(1000);
         return HttpResponse.json();
     }),
+    http.put(
+        "http://localhost:3001/users/:userId",
+        async ({ params, request }) => {
+            await delay(2000);
+            const { userId } = params;
+            const data = (await request.json()) as {
+                currentPassword: string;
+                newPassword: string;
+            };
+
+            const user = mockUsers.find((u) => u.id === userId);
+
+            if (!user) {
+                return HttpResponse.json(
+                    { error: "User not found" },
+                    { status: 404 },
+                );
+            }
+
+            if (user.password !== data.currentPassword) {
+                return HttpResponse.json(
+                    { error: "Current password is incorrect" },
+                    { status: 403 },
+                );
+            }
+
+            user.password = data.newPassword;
+
+            return HttpResponse.json(undefined, { status: 204 });
+        },
+    ),
     http.get(
         "http://localhost:3001/:groupId/maps/:mapId/categories",
         async () => {

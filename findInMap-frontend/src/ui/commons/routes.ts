@@ -1,7 +1,7 @@
 const routes = {
     notFound: () => "*",
     home: () => "/",
-    about: () => "/about",
+    user: () => "/user",
     login: () => "/login",
     register: () => "/register",
 };

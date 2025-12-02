@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useApiClient } from "../contexts/ApiClientContext";
+import { useUser } from "../contexts/UserContext";
 import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
 import { useRequestWrapper } from "./utils/useRequestWrapper";
@@ -8,12 +8,11 @@ interface UseLoginUser {
     login: (credentials: LoginUserDto) => Promise<LoginResponseDto | null>;
     loading: boolean;
     error: string | null;
-    user: LoginResponseDto["user"] | null;
 }
 
 export const useLoginUser = (): UseLoginUser => {
     const apiClient = useApiClient();
-    const [user, setUser] = useState<LoginResponseDto["user"] | null>(null);
+    const { setUser } = useUser();
 
     const { fetch, loading, error } = useRequestWrapper(
         (credentials: LoginUserDto) => apiClient.login(credentials),
@@ -40,6 +39,5 @@ export const useLoginUser = (): UseLoginUser => {
                 : error
                   ? String(error)
                   : null,
-        user,
     };
 };
