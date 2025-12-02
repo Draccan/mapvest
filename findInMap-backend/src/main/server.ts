@@ -64,6 +64,7 @@ const restInterface = new RestInterface(
     config.appName,
     config.corsAllowedOrigins,
     config.validateApiResponses,
+    {
         createGroupMap,
         createMapPoint,
         createUser,
