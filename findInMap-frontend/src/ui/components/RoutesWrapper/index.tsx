@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
 
 import { useUser } from "../../../core/contexts/UserContext";
 import { useGetCurrentUser } from "../../../core/usecases/useGetCurrentUser";
@@ -16,7 +15,6 @@ interface Props {
 
 export const RoutesWrapper: React.FC<Props> = ({ children }) => {
     useGlobalErrorHandler();
-    const intl = useIntl();
     const { user } = useUser();
     const { getCurrentUser } = useGetCurrentUser();
     const [isLoading, setIsLoading] = useState(true);

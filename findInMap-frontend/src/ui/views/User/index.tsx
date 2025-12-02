@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../../core/contexts/UserContext";
@@ -15,7 +14,6 @@ import "./style.css";
 const fm = getFormattedMessageWithScope("views.User");
 
 export const User: React.FC = () => {
-    const intl = useIntl();
     const navigate = useNavigate();
     const { user } = useUser();
     const { updatePassword, loading, error } = useUpdateUser();
@@ -33,7 +31,7 @@ export const User: React.FC = () => {
         if (previousLoading && !loading && !error) {
             setHasSuccess(true);
         }
-    }, [previousLoading, loading, error, intl]);
+    }, [previousLoading, loading, error]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
