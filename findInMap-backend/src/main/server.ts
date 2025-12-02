@@ -82,7 +82,6 @@ const restInterface = new RestInterface(
         updateUser,
     },
     jwtService,
-    jwtService,
 );
 
 process.on("SIGINT", async () => {
