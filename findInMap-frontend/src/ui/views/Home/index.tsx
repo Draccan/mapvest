@@ -280,20 +280,23 @@ export const Home: React.FC = () => {
                             </Button>
                         </div>
                         <div className="v-home-map">
-                            {isLoading && !hasFetched && <Skeleton />}
-                            <MapContainer
-                                mapPoints={mapPoints}
-                                categories={categories}
-                                onMapClick={handleMapPointSelection}
-                                selectedCoordinates={selectedCoordinates}
-                                onDeletePoint={handleDeletePoint}
-                                deletingPointId={deletingPointId}
-                                drawingEnabled={isAnalysisMode}
-                                onAreaDrawn={handleAreaDrawn}
-                                optimizedRoute={optimizedRoute}
-                                startPoint={startPoint}
-                                endPoint={endPoint}
-                            />
+                            {isLoading && !hasFetched ? (
+                                <Skeleton />
+                            ) : (
+                                <MapContainer
+                                    mapPoints={mapPoints}
+                                    categories={categories}
+                                    onMapClick={handleMapPointSelection}
+                                    selectedCoordinates={selectedCoordinates}
+                                    onDeletePoint={handleDeletePoint}
+                                    deletingPointId={deletingPointId}
+                                    drawingEnabled={isAnalysisMode}
+                                    onAreaDrawn={handleAreaDrawn}
+                                    optimizedRoute={optimizedRoute}
+                                    startPoint={startPoint}
+                                    endPoint={endPoint}
+                                />
+                            )}
                         </div>
                     </div>
                     <div className="v-home-form-section">
