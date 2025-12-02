@@ -34,4 +34,29 @@ export class DrizzleUserRepository implements UserRepository {
 
         return user ? makeUserEntity(user) : null;
     }
+
+    async findById(userId: string): Promise<UserEntity | null> {
+        const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, userId));
+
+        return user ? makeUserEntity(user) : null;
+    }
+
+    async updatePassword(
+        userId: string,
+        hashedPassword: string,
+    ): Promise<UserEntity> {
+        const [updatedUser] = await db
+            .update(users)
+            .set({
+                password: hashedPassword,
+                updatedAt: new Date(),
+            })
+            .where(eq(users.id, userId))
+            .returning();
+
+        return makeUserEntity(updatedUser);
+    }
 }

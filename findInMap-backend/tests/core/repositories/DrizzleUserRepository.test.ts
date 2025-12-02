@@ -105,4 +105,78 @@ describe("DrizzleUserRepository", () => {
             expect(foundUser?.email).toBe(createUserDto.email);
         });
     });
+
+    describe("findById", () => {
+        it("should return user when found by id", async () => {
+            const createUserDto: CreateUserDto = {
+                name: "David",
+                surname: "Miller",
+                email: `david.miller${Math.random()}@example.com`,
+                password: "testPassword789",
+            };
+
+            const createdUser = await repository.create(createUserDto);
+
+            const foundUser = await repository.findById(createdUser.id);
+
+            expect(foundUser).toBeDefined();
+            expect(foundUser?.id).toBe(createdUser.id);
+            expect(foundUser?.email).toBe(createUserDto.email);
+            expect(foundUser?.name).toBe(createUserDto.name);
+            expect(foundUser?.surname).toBe(createUserDto.surname);
+        });
+
+        it("should return null when user not found by id", async () => {
+            const result = await repository.findById(
+                "00000000-0000-0000-0000-000000000000",
+            );
+            expect(result).toBeNull();
+        });
+    });
+
+    describe("updatePassword", () => {
+        it("should successfully update user password", async () => {
+            const createUserDto: CreateUserDto = {
+                name: "Emma",
+                surname: "Taylor",
+                email: `emma.taylor${Math.random()}@example.com`,
+                password: "oldPassword123",
+            };
+
+            const createdUser = await repository.create(createUserDto);
+            const newHashedPassword = "newHashedPassword456:salt";
+
+            const updatedUser = await repository.updatePassword(
+                createdUser.id,
+                newHashedPassword,
+            );
+
+            expect(updatedUser).toBeDefined();
+            expect(updatedUser.id).toBe(createdUser.id);
+            expect(updatedUser.password).toBe(newHashedPassword);
+            expect(updatedUser.password).not.toBe(createdUser.password);
+            expect(updatedUser.updatedAt.getTime()).toBeGreaterThan(
+                createdUser.updatedAt.getTime(),
+            );
+        });
+
+        it("should verify password was actually updated in database", async () => {
+            const createUserDto: CreateUserDto = {
+                name: "Frank",
+                surname: "Anderson",
+                email: `frank.anderson${Math.random()}@example.com`,
+                password: "initialPassword",
+            };
+
+            const createdUser = await repository.create(createUserDto);
+            const newHashedPassword = "updatedHashedPassword:newsalt";
+
+            await repository.updatePassword(createdUser.id, newHashedPassword);
+
+            const userAfterUpdate = await repository.findById(createdUser.id);
+
+            expect(userAfterUpdate).toBeDefined();
+            expect(userAfterUpdate?.password).toBe(newHashedPassword);
+        });
+    });
 });

@@ -11,6 +11,8 @@ import { UserGroupRole } from "../../../src/core/commons/enums";
 const mockUserRepository: jest.Mocked<UserRepository> = {
     create: jest.fn(),
     findByEmail: jest.fn(),
+    findById: jest.fn(),
+    updatePassword: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {

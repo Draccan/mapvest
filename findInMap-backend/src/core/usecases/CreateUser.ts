@@ -4,9 +4,9 @@ import MapRepository from "../dependencies/MapRepository";
 import UserRepository from "../dependencies/UserRepository";
 import CreateUserDto from "../dtos/CreateUserDto";
 import UserDto, { makeUserDto } from "../dtos/UserDto";
-import InvalidPasswordError from "../errors/InvalidPasswordError";
 import UserEmailAlreadyRegisteredError from "../errors/UserEmailAlreadyRegisteredError";
 import { hashPassword } from "../utils/PasswordManager";
+import { validatePassword } from "../utils/PasswordValidator";
 
 const FIRST_GROUP_NAME = "First Group";
 const FIRST_MAP_NAME = "First Map";
@@ -19,11 +19,7 @@ export default class CreateUser {
     ) {}
 
     async exec(userData: CreateUserDto): Promise<UserDto> {
-        if (userData.password.length < 8 || userData.password.length > 20) {
-            throw new InvalidPasswordError(
-                "Password must be between 8 and 20 characters",
-            );
-        }
+        validatePassword(userData.password);
 
         const existingUser = await this.userRepository.findByEmail(
             userData.email,

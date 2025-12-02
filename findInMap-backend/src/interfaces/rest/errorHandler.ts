@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { error as openapiValidatorErrors } from "express-openapi-validator";
 
+import IncorrectPasswordError from "../../core/errors/IncorrectPasswordError";
 import InvalidCredentialsError from "../../core/errors/InvalidCredentialsError";
 import InvalidPasswordError from "../../core/errors/InvalidPasswordError";
 import NotAllowedActionError from "../../core/errors/NotAllowedActionError";
@@ -29,7 +30,10 @@ export default function errorHandler(
         res.status(401).json({
             error: error.message,
         });
-    } else if (error instanceof NotAllowedActionError) {
+    } else if (
+        error instanceof NotAllowedActionError ||
+        error instanceof IncorrectPasswordError
+    ) {
         res.status(403).json({
             error: error.message,
         });

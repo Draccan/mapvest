@@ -13,6 +13,7 @@ import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
 import RefreshToken from "../core/usecases/RefreshToken";
 import SearchAddresses from "../core/usecases/SearchAddresses";
+import UpdateUser from "../core/usecases/UpdateUser";
 import { client } from "../db";
 import { DrizzleGroupRepository } from "../dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../dependency-implementations/DrizzleMapRepository";
@@ -52,6 +53,7 @@ const refreshToken = new RefreshToken(jwtService);
 const searchAddresses = new SearchAddresses(googleRepository);
 const createMapCategory = new CreateMapCategory(groupRepository, mapRepository);
 const getMapCategories = new GetMapCategories(groupRepository, mapRepository);
+const updateUser = new UpdateUser(userRepository);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -74,6 +76,7 @@ const restInterface = new RestInterface(
         getGroupMaps,
         createMapCategory,
         getMapCategories,
+        updateUser,
     },
     jwtService,
 );

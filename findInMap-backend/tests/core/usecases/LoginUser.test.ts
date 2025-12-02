@@ -7,6 +7,8 @@ import { hashPassword } from "../../../src/core/utils/PasswordManager";
 const mockUserRepository: jest.Mocked<UserRepository> = {
     create: jest.fn(),
     findByEmail: jest.fn(),
+    findById: jest.fn(),
+    updatePassword: jest.fn(),
 };
 
 const mockJwtService = {

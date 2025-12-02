@@ -8,4 +8,6 @@ export default interface UserRepository {
         dbInstance?: DbOrTransaction,
     ): Promise<UserEntity>;
     findByEmail(email: string): Promise<UserEntity | null>;
+    findById(userId: string): Promise<UserEntity | null>;
+    updatePassword(userId: string, hashedPassword: string): Promise<UserEntity>;
 }
