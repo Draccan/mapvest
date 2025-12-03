@@ -2,6 +2,7 @@ import { ScanSearch, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 
+import type { CategoryDto } from "../../../core/dtos/CategoryDto";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import { useCalculateOptimizedRoute } from "../../../core/usecases/useCalculateOptimizedRoute";
@@ -207,10 +208,13 @@ export const Home: React.FC = () => {
         setPointsInArea(pointsInArea);
     };
 
-    const handleCreateCategory = (description: string, color: string) => {
+    const handleCreateCategory = (
+        description: string,
+        color: string,
+    ): Promise<CategoryDto | null> => {
         const firstGroup = groupsData![0]!;
         const firstMap = mapsData![0]!;
-        createCategory(firstGroup.id, firstMap.id, {
+        return createCategory(firstGroup.id, firstMap.id, {
             description,
             color,
         });

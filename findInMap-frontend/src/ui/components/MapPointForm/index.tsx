@@ -28,7 +28,10 @@ interface MapPointFormProps {
     onSave: (data: CreateMapPointDto) => Promise<void>;
     loading: boolean;
     categories: CategoryDto[];
-    onCreateCategory: (description: string, color: string) => void;
+    onCreateCategory: (
+        description: string,
+        color: string,
+    ) => Promise<CategoryDto | null>;
     loadingCategory: boolean;
 }
 
@@ -86,7 +89,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     };
 
     const handleCreateCategory = async (description: string, color: string) => {
-        await onCreateCategory(description, color);
+        const category = await onCreateCategory(description, color);
+        setCategoryId(category ? category.id : "");
     };
 
     return (
