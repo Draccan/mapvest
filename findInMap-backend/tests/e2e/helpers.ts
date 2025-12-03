@@ -16,6 +16,7 @@ import LoginUser from "../../src/core/usecases/LoginUser";
 import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
 import SearchAddresses from "../../src/core/usecases/SearchAddresses";
+import UpdateMapPoint from "../../src/core/usecases/UpdateMapPoint";
 import UpdateUser from "../../src/core/usecases/UpdateUser";
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
@@ -73,6 +74,7 @@ export function createTestApp() {
     const logoutUser = new LogoutUser(jwtService);
     const refreshToken = new RefreshToken(jwtService);
     const searchAddresses = new SearchAddresses(googleRepository);
+    const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
     const updateUser = new UpdateUser(userRepository);
 
     const restInterface = new RestInterface(
@@ -97,6 +99,7 @@ export function createTestApp() {
             logoutUser,
             refreshToken,
             searchAddresses,
+            updateMapPoint,
             updateUser,
         },
         jwtService,

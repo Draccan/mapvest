@@ -24,6 +24,7 @@ import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
 import SearchAddresses from "../../core/usecases/SearchAddresses";
+import UpdateMapPoint from "../../core/usecases/UpdateMapPoint";
 import UpdateUser from "../../core/usecases/UpdateUser";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
@@ -44,6 +45,7 @@ import LoginUserRoute from "./routes/LoginUserRoute";
 import LogoutUserRoute from "./routes/LogoutUserRoute";
 import RefreshTokenRoute from "./routes/RefreshTokenRoute";
 import SearchAddressesRoute from "./routes/SearchAddressesRoute";
+import UpdateMapPointRoute from "./routes/UpdateMapPointRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
 
 export default class RestInterface {
@@ -72,6 +74,7 @@ export default class RestInterface {
             getGroupMaps: GetGroupMaps;
             createMapCategory: CreateMapCategory;
             getMapCategories: GetMapCategories;
+            updateMapPoint: UpdateMapPoint;
             updateUser: UpdateUser;
         },
         private jwtService: JwtService,
@@ -93,6 +96,7 @@ export default class RestInterface {
             SearchAddressesRoute(usecases.searchAddresses),
             CreateMapCategoryRoute(usecases.createMapCategory),
             GetMapCategoriesRoute(usecases.getMapCategories),
+            UpdateMapPointRoute(usecases.updateMapPoint),
             UpdateUserRoute(usecases.updateUser),
         ];
 

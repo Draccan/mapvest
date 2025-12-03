@@ -6,6 +6,7 @@ import {
     usersGroups,
     maps,
     mapPoints,
+    mapCategories,
 } from "../../../src/db/schema";
 import { DrizzleGroupRepository } from "../../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleUserRepository } from "../../../src/dependency-implementations/DrizzleUserRepository";
@@ -17,6 +18,7 @@ describe("DrizzleGroupRepository", () => {
     beforeEach(async () => {
         try {
             await db.delete(mapPoints);
+            await db.delete(mapCategories);
             await db.delete(maps);
             await db.delete(usersGroups);
             await db.delete(groups);

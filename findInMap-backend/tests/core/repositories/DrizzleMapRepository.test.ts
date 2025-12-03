@@ -662,4 +662,148 @@ describe("DrizzleMapRepository", () => {
             expect(result).toHaveLength(0);
         });
     });
+
+    describe("updateMapPoint", () => {
+        it("should update a map point successfully", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const point = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Theft",
+                    date: "2024-01-01",
+                },
+                map.id,
+            );
+
+            const updatedPoint = await repository.updateMapPoint(
+                point.id,
+                map.id,
+                {
+                    description: "Updated Theft",
+                    date: "2024-01-15",
+                },
+            );
+
+            expect(updatedPoint!.id).toBe(point.id);
+            expect(updatedPoint!.description).toBe("Updated Theft");
+            expect(updatedPoint!.date).toBe("2024-01-15");
+            expect(updatedPoint!.long).toBe(12.4964);
+            expect(updatedPoint!.lat).toBe(41.9028);
+        });
+
+        it("should update only the provided fields", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category = await repository.createCategory(map.id, {
+                description: "Furto",
+                color: "#FF0000",
+            });
+
+            const point = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Theft",
+                    date: "2024-01-01",
+                    categoryId: category.id,
+                },
+                map.id,
+            );
+
+            const updatedPoint = await repository.updateMapPoint(
+                point.id,
+                map.id,
+                {
+                    description: "Updated Description Only",
+                    date: point.date,
+                    categoryId: point.category_id,
+                },
+            );
+
+            expect(updatedPoint!.description).toBe("Updated Description Only");
+            expect(updatedPoint!.date).toBe("2024-01-01");
+            expect(updatedPoint!.category_id).toBe(category.id);
+        });
+
+        it("should update category of a map point", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category1 = await repository.createCategory(map.id, {
+                description: "Furto",
+                color: "#FF0000",
+            });
+
+            const category2 = await repository.createCategory(map.id, {
+                description: "Rapina",
+                color: "#00FF00",
+            });
+
+            const point = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Theft",
+                    date: "2024-01-01",
+                    categoryId: category1.id,
+                },
+                map.id,
+            );
+
+            const updatedPoint = await repository.updateMapPoint(
+                point.id,
+                map.id,
+                {
+                    description: point.description,
+                    date: point.date,
+                    categoryId: category2.id,
+                },
+            );
+
+            expect(updatedPoint!.category_id).toBe(category2.id);
+        });
+    });
 });

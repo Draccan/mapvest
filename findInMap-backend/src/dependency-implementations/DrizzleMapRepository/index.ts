@@ -6,6 +6,7 @@ import MapRepository from "../../core/dependencies/MapRepository";
 import CreateCategoryDto from "../../core/dtos/CreateCategoryDto";
 import CreateMapDto from "../../core/dtos/CreateMapDto";
 import { CreateMapPointDto } from "../../core/dtos/CreateMapPointDto";
+import { UpdateMapPointDto } from "../../core/dtos/UpdateMapPointDto";
 import { MapCategoryEntity } from "../../core/entities/MapCategoryEntity";
 import MapEntity from "../../core/entities/MapEntity";
 import { MapPointEntity } from "../../core/entities/MapPointEntity";
@@ -149,5 +150,37 @@ export class DrizzleMapRepository implements MapRepository {
             .where(eq(mapCategories.mapId, mapId));
 
         return categories.map(makeMapCategoryEntity);
+    }
+
+    async updateMapPoint(
+        pointId: string,
+        mapId: string,
+        data: UpdateMapPointDto,
+    ): Promise<MapPointEntity | null> {
+        const [updatedMapPoint] = await db
+            .update(mapPoints)
+            .set({
+                description: data.description,
+                date: data.date,
+                categoryId: data.categoryId,
+            })
+            .where(and(eq(mapPoints.id, pointId), eq(mapPoints.mapId, mapId)))
+            .returning({
+                id: mapPoints.id,
+                mapId: mapPoints.mapId,
+                categoryId: mapPoints.categoryId,
+                long: sql<number>`ST_X(${mapPoints.location})`,
+                lat: sql<number>`ST_Y(${mapPoints.location})`,
+                description: mapPoints.description,
+                date: mapPoints.date,
+                createdAt: mapPoints.createdAt,
+                updatedAt: mapPoints.updatedAt,
+            });
+
+        if (!updatedMapPoint) {
+            return null;
+        }
+
+        return makeMapPointEntity(updatedMapPoint);
     }
 }
