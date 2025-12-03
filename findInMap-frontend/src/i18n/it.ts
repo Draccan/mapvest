@@ -6,6 +6,8 @@ export default flattenObject({
             "Errore durante la creazione della categoria. Si prega di riprovare più tardi.",
         createMapPoint:
             "Errore durante la creazione del punto sulla mappa. Si prega di riprovare più tardi.",
+        updateMapPoint:
+            "Errore durante l'aggiornamento del punto sulla mappa. Si prega di riprovare più tardi.",
         deleteMapPoints:
             "Errore durante l'eliminazione dei punti sulla mappa. Si prega di riprovare più tardi.",
         getMapPoints:
@@ -46,6 +48,7 @@ export default flattenObject({
             coordinates: "Coordinate",
             selectedPoint: "Punto Selezionato",
             deletePoint: "Elimina Punto",
+            editPoint: "Modifica Punto",
             startPoint: "Punto di Partenza",
             endPoint: "Punto di Arrivo",
             stop: "Tappa",
@@ -59,7 +62,9 @@ export default flattenObject({
             addNewCategory: "Aggiungi Nuova Categoria",
             noCategories: "Nessuna categoria disponibile",
             save: "Salva Punto",
+            update: "Modifica Punto",
             saving: "Salvataggio...",
+            updating: "Aggiornamento...",
             clickOnMapInstructions:
                 "Clicca sulla mappa per selezionare le coordinate.",
         },

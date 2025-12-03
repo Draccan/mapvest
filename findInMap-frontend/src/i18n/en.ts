@@ -4,6 +4,7 @@ export default flattenObject({
     errors: {
         createMapCategory: "Error creating category. Please try again later.",
         createMapPoint: "Error creating map point. Please try again later.",
+        updateMapPoint: "Error updating map point. Please try again later.",
         deleteMapPoints: "Error deleting map points. Please try again later.",
         getMapPoints: "Error loading map points. Please try again later.",
         getMapCategories: "Error loading categories. Please try again later.",
@@ -38,6 +39,7 @@ export default flattenObject({
             coordinates: "Coordinates",
             selectedPoint: "Selected Point",
             deletePoint: "Delete Point",
+            editPoint: "Edit Point",
             startPoint: "Start Point",
             endPoint: "End Point",
             stop: "Stop",
@@ -51,7 +53,9 @@ export default flattenObject({
             addNewCategory: "Add New Category",
             noCategories: "No categories available",
             save: "Save Point",
+            update: "Update Point",
             saving: "Saving...",
+            updating: "Updating...",
             clickOnMapInstructions: "Click on the map to select coordinates.",
         },
         CategoryModal: {

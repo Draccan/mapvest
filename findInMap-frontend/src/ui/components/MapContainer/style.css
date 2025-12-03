@@ -68,3 +68,8 @@
     background-color: transparent;
     white-space: nowrap;
 }
+
+.c-map-container-actions {
+    display: flex;
+    gap: 8px;
+}

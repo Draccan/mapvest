@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit } from "lucide-react";
 import React, { useEffect } from "react";
 import { FormattedDate, useIntl } from "react-intl";
 import {
@@ -29,6 +29,7 @@ interface MapContainerProps {
     onMapClick: (lat: number, lng: number) => void;
     selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
     onDeletePoint: (pointId: string) => void;
+    onEditPoint: (point: MapPointDto) => void;
     deletingPointId?: string | null;
     drawingEnabled?: boolean;
     onAreaDrawn: (bounds: L.LatLngBounds | null) => void;
@@ -74,6 +75,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     onMapClick,
     selectedCoordinates,
     onDeletePoint,
+    onEditPoint,
     deletingPointId,
     drawingEnabled = false,
     onAreaDrawn,
@@ -98,11 +100,20 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     const deletePointLabel = intl.formatMessage({
         id: "components.MapContainer.deletePoint",
     });
+    const editPointLabel = intl.formatMessage({
+        id: "components.MapContainer.editPoint",
+    });
 
     function deletePoint(e: React.MouseEvent, pointId: string) {
         // Warning: Prevent the map click event from firing
         e.stopPropagation();
         onDeletePoint(pointId);
+    }
+
+    function editPoint(e: React.MouseEvent, point: MapPointDto) {
+        // Warning: Prevent the map click event from firing
+        e.stopPropagation();
+        onEditPoint(point);
     }
 
     const getWaypointIndex = (point: MapPointDto): number | null => {
@@ -229,21 +240,40 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                             </div>
                                         )}
                                     </div>
-                                    <Button
-                                        kind="danger"
-                                        size="icon"
-                                        onClick={(e) =>
-                                            deletePoint(e, point.id)
-                                        }
-                                        title={deletePointLabel}
-                                        aria-label={deletePointLabel}
-                                        disabled={deletingPointId === point.id}
-                                        loading={deletingPointId === point.id}
-                                        fullWidth={false}
-                                        className="c-map-container-delete-btn"
-                                    >
-                                        <Trash2 size={18} />
-                                    </Button>
+                                    <div className="c-map-container-actions">
+                                        <Button
+                                            kind="primary"
+                                            size="icon"
+                                            onClick={(e) => {
+                                                editPoint(e, point);
+                                            }}
+                                            title={editPointLabel}
+                                            aria-label={editPointLabel}
+                                            fullWidth={false}
+                                            className="c-map-container-edit-btn"
+                                        >
+                                            <Edit size={18} />
+                                        </Button>
+                                        <Button
+                                            kind="danger"
+                                            size="icon"
+                                            onClick={(e) =>
+                                                deletePoint(e, point.id)
+                                            }
+                                            title={deletePointLabel}
+                                            aria-label={deletePointLabel}
+                                            disabled={
+                                                deletingPointId === point.id
+                                            }
+                                            loading={
+                                                deletingPointId === point.id
+                                            }
+                                            fullWidth={false}
+                                            className="c-map-container-delete-btn"
+                                        >
+                                            <Trash2 size={18} />
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </Popup>

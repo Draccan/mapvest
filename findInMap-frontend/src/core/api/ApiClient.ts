@@ -388,4 +388,25 @@ export default class ApiClient {
 
         return response.json();
     }
+
+    async updateMapPoint(
+        groupId: string,
+        mapId: string,
+        pointId: string,
+        data: { description?: string; date: string; categoryId?: string },
+    ): Promise<MapPointDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}/points/${pointId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(data),
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
 }

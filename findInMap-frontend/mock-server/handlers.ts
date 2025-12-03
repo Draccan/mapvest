@@ -186,6 +186,38 @@ export const handlers = [
             return HttpResponse.json(undefined, { status: 200 });
         },
     ),
+    http.put(
+        "http://localhost:3001/:groupId/maps/:mapId/points/:pointId",
+        async ({ params, request }) => {
+            await delay(1000);
+            const { pointId } = params;
+            const updateData = (await request.json()) as {
+                description?: string;
+                date: string;
+                categoryId?: string;
+            };
+
+            const pointIndex = mockMapPoints.findIndex(
+                (point) => point.id === pointId,
+            );
+
+            if (pointIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Point not found" },
+                    { status: 404 },
+                );
+            }
+
+            mockMapPoints[pointIndex] = {
+                ...mockMapPoints[pointIndex],
+                ...updateData,
+            };
+
+            return HttpResponse.json(mockMapPoints[pointIndex], {
+                status: 200,
+            });
+        },
+    ),
 
     http.post("http://localhost:3001/users", async ({ request }) => {
         await delay(1000);
