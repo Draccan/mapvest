@@ -1,7 +1,7 @@
 import L from "leaflet";
 import { Trash2 } from "lucide-react";
 import React, { useEffect } from "react";
-import { useIntl } from "react-intl";
+import { FormattedDate, useIntl } from "react-intl";
 import {
     MapContainer as LeafletMapContainer,
     TileLayer,
@@ -207,7 +207,12 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                             </div>
                                             <div>
                                                 <strong>{fm("date")}:</strong>{" "}
-                                                {point.date}
+                                                <FormattedDate
+                                                    value={new Date(point.date)}
+                                                    year="numeric"
+                                                    month="numeric"
+                                                    day="numeric"
+                                                />
                                             </div>
                                         </div>
                                         {categoryName && (
