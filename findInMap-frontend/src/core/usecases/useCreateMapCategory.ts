@@ -1,3 +1,5 @@
+import { useIntl } from "react-intl";
+
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type CategoryDto } from "../dtos/CategoryDto";
 import { useRequestWrapper } from "./utils/useRequestWrapper";
@@ -19,10 +21,12 @@ interface UseCreateMapCategory {
 
 export const useCreateMapCategory = (): UseCreateMapCategory => {
     const apiClient = useApiClient();
+    const intl = useIntl();
 
     const { fetch, loading, error } = useRequestWrapper(
         (groupId: string, mapId: string, data: CreateCategoryDto) =>
             apiClient.createMapCategory(groupId, mapId, data),
+        intl.formatMessage({ id: "errors.createMapCategory" }),
     );
 
     const createCategory = async (

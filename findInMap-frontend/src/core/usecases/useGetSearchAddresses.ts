@@ -1,6 +1,7 @@
 import debounce from "lodash-es/debounce";
 import mem from "mem";
 import { useCallback, useMemo, useState } from "react";
+import { useIntl } from "react-intl";
 
 import type ApiClient from "../api/ApiClient";
 import { useApiClient } from "../contexts/ApiClientContext";
@@ -28,10 +29,12 @@ const memoizedFetchAddresses = mem(fetchAddressesRequest, {
 
 export default function useGetGooglePlaces(): UseGetGooglePlaces {
     const apiClient = useApiClient();
+    const intl = useIntl();
     const [results, setResults] = useState<AddressDto[]>([]);
 
-    const { fetch, loading } = useRequestWrapper((searchQuery: string) =>
-        memoizedFetchAddresses(apiClient, searchQuery),
+    const { fetch, loading } = useRequestWrapper(
+        (searchQuery: string) => memoizedFetchAddresses(apiClient, searchQuery),
+        intl.formatMessage({ id: "errors.getSearchAddresses" }),
     );
 
     const fetchAddresses = useCallback(async (searchQuery: string) => {

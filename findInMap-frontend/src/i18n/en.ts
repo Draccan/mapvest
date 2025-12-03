@@ -1,6 +1,22 @@
 import flattenObject from "../utils/flattenObject";
 
 export default flattenObject({
+    errors: {
+        createMapCategory: "Error creating category. Please try again later.",
+        createMapPoint: "Error creating map point. Please try again later.",
+        deleteMapPoints: "Error deleting map points. Please try again later.",
+        getMapPoints: "Error loading map points. Please try again later.",
+        getMapCategories: "Error loading categories. Please try again later.",
+        createUser: "Error creating user account. Please try again later.",
+        getCurrentUser:
+            "Error loading user information. Please try again later.",
+        getSearchAddresses:
+            "Error searching addresses. Please try again later.",
+        getGroupMaps: "Error loading maps. Please try again later.",
+        getUserGroups: "Error loading groups. Please try again later.",
+        calculateOptimizedRoute:
+            "Error calculating optimized route. Please try again later.",
+    },
     components: {
         AreaAnalysis: {
             title: "Area Analysis",

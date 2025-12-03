@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIntl } from "react-intl";
 
 import { useApiClient } from "../contexts/ApiClientContext";
 import type { MapPointDto } from "../dtos/MapPointDto";
@@ -20,12 +21,14 @@ interface useCalculateOptimizedRouteResult {
 
 export function useCalculateOptimizedRoute(): useCalculateOptimizedRouteResult {
     const apiClient = useApiClient();
+    const intl = useIntl();
     const [data, setData] = useState<RouteDto | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
     const { fetch, loading, error } = useRequestWrapper(
         (mapPoints: MapPointDto[]) =>
             apiClient.calculateOptimizedRoute(mapPoints),
+        intl.formatMessage({ id: "errors.calculateOptimizedRoute" }),
     );
 
     const calculateOptimizedRoute = async (

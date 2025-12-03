@@ -1,4 +1,5 @@
 import React from "react";
+import { Toaster } from "react-hot-toast";
 import { IntlProvider } from "react-intl";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
                             : i18nMessages.en
                     }
                 >
+                    <Toaster position="top-right" />
                     <ApiClientProvider>
                         <UserProvider>
                             <Router>

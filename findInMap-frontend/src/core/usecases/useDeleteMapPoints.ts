@@ -1,3 +1,5 @@
+import { useIntl } from "react-intl";
+
 import { useApiClient } from "../contexts/ApiClientContext";
 import { useRequestWrapper } from "./utils/useRequestWrapper";
 
@@ -13,10 +15,12 @@ interface UseDeleteMapPoint {
 
 export const useDeleteMapPoints = (): UseDeleteMapPoint => {
     const apiClient = useApiClient();
+    const intl = useIntl();
 
     const { fetch, loading, error } = useRequestWrapper(
         (groupId: string, mapId: string, pointIds: string[]) =>
             apiClient.deleteMapPoints(groupId, mapId, pointIds),
+        intl.formatMessage({ id: "errors.deleteMapPoints" }),
     );
 
     const deleteMapPoints = async (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIntl } from "react-intl";
 
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type MapPointDto } from "../dtos/MapPointDto";
@@ -14,12 +15,14 @@ interface UseGetMapPoints {
 
 export const useGetMapPoints = (): UseGetMapPoints => {
     const apiClient = useApiClient();
+    const intl = useIntl();
     const [data, setData] = useState<MapPointDto[] | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
     const { fetch, loading, error } = useRequestWrapper(
         (groupId: string, mapId: string) =>
             apiClient.getMapPointsByMap(groupId, mapId),
+        intl.formatMessage({ id: "errors.getMapPoints" }),
     );
 
     const fetchMapPoints = async (groupId: string, mapId: string) => {

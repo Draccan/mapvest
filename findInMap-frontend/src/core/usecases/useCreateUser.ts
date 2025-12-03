@@ -1,3 +1,5 @@
+import { useIntl } from "react-intl";
+
 import { useApiClient } from "../contexts/ApiClientContext";
 import type CreateUserDto from "../dtos/CreateUserDto";
 import type UserDto from "../dtos/UserDto";
@@ -13,9 +15,11 @@ interface UseCreateUser {
 
 export const useCreateUser = (): UseCreateUser => {
     const apiClient = useApiClient();
+    const intl = useIntl();
 
     const { fetch, loading, error } = useRequestWrapper(
         (userData: CreateUserDto) => apiClient.createUser(userData),
+        intl.formatMessage({ id: "errors.createUser" }),
     );
 
     const createUser = async (

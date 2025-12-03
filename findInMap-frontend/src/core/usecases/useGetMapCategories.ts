@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIntl } from "react-intl";
 
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type CategoryDto } from "../dtos/CategoryDto";
@@ -14,12 +15,14 @@ interface UseGetMapCategories {
 
 export const useGetMapCategories = (): UseGetMapCategories => {
     const apiClient = useApiClient();
+    const intl = useIntl();
     const [data, setData] = useState<CategoryDto[] | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
     const { fetch, loading, error } = useRequestWrapper(
         (groupId: string, mapId: string) =>
             apiClient.getMapCategories(groupId, mapId),
+        intl.formatMessage({ id: "errors.getMapCategories" }),
     );
 
     const fetchMapCategories = async (groupId: string, mapId: string) => {

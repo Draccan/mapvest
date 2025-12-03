@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import toast from "react-hot-toast";
 
 import { UnauthorizedError } from "../../api/errors/UnauthorizedError";
 
@@ -10,6 +11,7 @@ interface UseRequestWrapper<T> {
 
 export function useRequestWrapper<T, Args extends any[]>(
     apiRequest: (...args: Args) => Promise<T>,
+    errorMessage?: string,
 ): UseRequestWrapper<T> {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
@@ -24,13 +26,19 @@ export function useRequestWrapper<T, Args extends any[]>(
                 if (err instanceof UnauthorizedError) {
                     throw err;
                 }
-                const errorMessage =
+                const serverErrorMessage =
                     err instanceof Error
                         ? err.message
                         : typeof err === "string"
                           ? err
                           : "An unexpected error occurred";
-                setError(errorMessage);
+                setError(serverErrorMessage);
+
+                // Show toast notification with custom error message if provided
+                if (errorMessage) {
+                    toast.error(errorMessage, { duration: 7000 });
+                }
+
                 return null;
             } finally {
                 setLoading(false);

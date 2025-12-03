@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIntl } from "react-intl";
 
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type GroupDto } from "../dtos/GroupDto";
@@ -14,11 +15,13 @@ interface UseGetUserGroups {
 
 export const useGetUserGroups = (): UseGetUserGroups => {
     const apiClient = useApiClient();
+    const intl = useIntl();
     const [data, setData] = useState<GroupDto[] | null>(null);
     const [hasFetched, setHasFetched] = useState(false);
 
-    const { fetch, loading, error } = useRequestWrapper(() =>
-        apiClient.getUserGroups(),
+    const { fetch, loading, error } = useRequestWrapper(
+        () => apiClient.getUserGroups(),
+        intl.formatMessage({ id: "errors.getUserGroups" }),
     );
 
     const fetchUserGroups = async () => {

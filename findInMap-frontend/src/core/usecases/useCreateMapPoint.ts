@@ -1,3 +1,5 @@
+import { useIntl } from "react-intl";
+
 import { useApiClient } from "../contexts/ApiClientContext";
 import { type CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
@@ -15,10 +17,12 @@ interface UseCreateMapPoint {
 
 export const useCreateMapPoint = (): UseCreateMapPoint => {
     const apiClient = useApiClient();
+    const intl = useIntl();
 
     const { fetch, loading, error } = useRequestWrapper(
         (groupId: string, mapId: string, data: CreateMapPointDto) =>
             apiClient.createMapPointInMap(groupId, mapId, data),
+        intl.formatMessage({ id: "errors.createMapPoint" }),
     );
 
     const createMapPoint = async (

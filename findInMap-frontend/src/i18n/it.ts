@@ -1,6 +1,30 @@
 import flattenObject from "../utils/flattenObject";
 
 export default flattenObject({
+    errors: {
+        createMapCategory:
+            "Errore durante la creazione della categoria. Si prega di riprovare più tardi.",
+        createMapPoint:
+            "Errore durante la creazione del punto sulla mappa. Si prega di riprovare più tardi.",
+        deleteMapPoints:
+            "Errore durante l'eliminazione dei punti sulla mappa. Si prega di riprovare più tardi.",
+        getMapPoints:
+            "Errore durante il caricamento dei punti sulla mappa. Si prega di riprovare più tardi.",
+        getMapCategories:
+            "Errore durante il caricamento delle categorie. Si prega di riprovare più tardi.",
+        createUser:
+            "Errore durante la creazione dell'account utente. Si prega di riprovare più tardi.",
+        getCurrentUser:
+            "Errore durante il caricamento delle informazioni utente. Si prega di riprovare più tardi.",
+        getSearchAddresses:
+            "Errore durante la ricerca degli indirizzi. Si prega di riprovare più tardi.",
+        getGroupMaps:
+            "Errore durante il caricamento delle mappe. Si prega di riprovare più tardi.",
+        getUserGroups:
+            "Errore durante il caricamento dei gruppi. Si prega di riprovare più tardi.",
+        calculateOptimizedRoute:
+            "Errore durante il calcolo del percorso ottimizzato. Si prega di riprovare più tardi.",
+    },
     components: {
         AreaAnalysis: {
             title: "Analisi Area",

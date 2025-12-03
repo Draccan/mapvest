@@ -1,3 +1,5 @@
+import { useIntl } from "react-intl";
+
 import { useApiClient } from "../contexts/ApiClientContext";
 import { useUser } from "../contexts/UserContext";
 import type UserDto from "../dtos/UserDto";
@@ -11,10 +13,12 @@ interface UseGetCurrentUser {
 
 export const useGetCurrentUser = (): UseGetCurrentUser => {
     const apiClient = useApiClient();
+    const intl = useIntl();
     const { setUser } = useUser();
 
-    const { fetch, loading, error } = useRequestWrapper(() =>
-        apiClient.getCurrentUser(),
+    const { fetch, loading, error } = useRequestWrapper(
+        () => apiClient.getCurrentUser(),
+        intl.formatMessage({ id: "errors.getCurrentUser" }),
     );
 
     const getCurrentUser = async (): Promise<UserDto | null> => {
