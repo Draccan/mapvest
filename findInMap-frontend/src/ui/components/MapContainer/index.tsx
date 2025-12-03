@@ -187,7 +187,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
 
                 return (
                     <CircleMarker
-                        key={point.id}
+                        key={`${point.id}-${point.categoryId || "no-category"}`}
                         center={[point.lat, point.long]}
                         radius={8}
                         color={markerColor}
