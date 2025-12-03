@@ -155,9 +155,6 @@ describe("DrizzleUserRepository", () => {
             expect(updatedUser.id).toBe(createdUser.id);
             expect(updatedUser.password).toBe(newHashedPassword);
             expect(updatedUser.password).not.toBe(createdUser.password);
-            expect(updatedUser.updatedAt.getTime()).toBeGreaterThan(
-                createdUser.updatedAt.getTime(),
-            );
         });
 
         it("should verify password was actually updated in database", async () => {

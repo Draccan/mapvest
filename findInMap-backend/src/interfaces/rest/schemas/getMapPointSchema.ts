@@ -13,7 +13,8 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
             },
             date: {
                 type: "string",
-                description: "Date in DD/MM/YYYY format",
+                description: "Date in YYYY-MM-DD format",
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$",
             },
             createdAt: {
                 type: "string",

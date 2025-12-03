@@ -2,7 +2,7 @@ import {
     pgTable,
     uuid,
     varchar,
-    text,
+    date,
     timestamp,
     pgEnum,
     customType,
@@ -70,7 +70,7 @@ export const mapPoints = pgTable("map_points", {
     categoryId: uuid("category_id").references(() => mapCategories.id),
     location: geometry("location").notNull(),
     description: varchar("description"),
-    date: text("date").notNull(),
+    date: date("date").notNull(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 })
         .defaultNow()

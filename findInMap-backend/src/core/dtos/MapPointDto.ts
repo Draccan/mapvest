@@ -5,6 +5,7 @@ export interface MapPointDto {
     long: number;
     lat: number;
     description?: string;
+    // YYYY-MM-DD format
     date: string;
     categoryId?: string;
     createdAt: Date;

@@ -29,6 +29,20 @@
       "when": 1763991768620,
       "tag": "0003_silly_sheva_callister",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1764777675587,
+      "tag": "0004_convert-map-points-dates",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1764777716635,
+      "tag": "0005_long_hitman",
+      "breakpoints": true
     }
   ]
 }

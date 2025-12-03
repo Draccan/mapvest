@@ -46,7 +46,7 @@ describe("Create Map Point Route", () => {
             long: 45.4642,
             lat: 9.19,
             description: "THEFT",
-            date: "01/01/2023",
+            date: "2025-12-03",
         };
 
         const response = await request(app)
@@ -66,7 +66,7 @@ describe("Create Map Point Route", () => {
             long: 45.4642,
             lat: 9.19,
             description: "THEFT",
-            date: "01/01/2023",
+            date: "2025-12-03",
         };
 
         const response = await request(app)

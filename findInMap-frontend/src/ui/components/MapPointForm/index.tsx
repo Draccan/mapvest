@@ -12,13 +12,6 @@ import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapPointForm");
 
-const convertStandardDateToItDate = (yyyymmdd: string): string => {
-    const match = yyyymmdd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (!match) return "";
-    const [, year, month, day] = match;
-    return `${day}/${month}/${year}`;
-};
-
 const getTodayYyyymmdd = (): string => {
     return new Date().toISOString().split("T")[0];
 };
@@ -67,15 +60,12 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
 
         if (newErrors.length === 0 && selectedCoordinates) {
             try {
-                // Convert date from YYYY-MM-DD to DD/MM/YYYY for the API
-                const dateDdMmYyyy = convertStandardDateToItDate(dateValue);
-
                 await onSave({
                     long: selectedCoordinates.long,
                     lat: selectedCoordinates.lat,
                     description:
                         description.trim() === "" ? undefined : description,
-                    date: dateDdMmYyyy,
+                    date: dateValue,
                     categoryId: categoryId || undefined,
                 });
 

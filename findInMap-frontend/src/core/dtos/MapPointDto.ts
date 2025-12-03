@@ -3,6 +3,7 @@ export interface MapPointDto {
     long: number;
     lat: number;
     description?: string;
+    // date in YYYY-MM-DD format
     date: string;
     // timestamp in ISO format
     createdAt: string;
