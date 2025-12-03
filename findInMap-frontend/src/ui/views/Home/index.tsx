@@ -163,7 +163,6 @@ export const Home: React.FC = () => {
         );
         if (result) {
             await fetchMapPoints(firstGroup.id, firstMap.id);
-            setSelectedCoordinates(null);
         }
     };
 
@@ -222,8 +221,6 @@ export const Home: React.FC = () => {
 
     const mapPoints = mapPointsData || [];
     const categories = categoriesData || [];
-    const isLoading =
-        loadingGroups || loadingMaps || loadingPoints || loadingCategories;
 
     return (
         <div className="v-home">
@@ -285,9 +282,7 @@ export const Home: React.FC = () => {
                             </Button>
                         </div>
                         <div className="v-home-map">
-                            {isLoading ||
-                            !hasFetched ||
-                            !hasFetchedCategories ? (
+                            {!hasFetched || !hasFetchedCategories ? (
                                 <Skeleton />
                             ) : (
                                 <MapContainer
