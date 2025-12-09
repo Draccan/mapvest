@@ -330,6 +330,11 @@ export const handlers = [
         await delay(1000);
         return HttpResponse.json();
     }),
+    http.post("http://localhost:3001/users/resetPassword", async () => {
+        await delay(1000);
+
+        return HttpResponse.json(undefined, { status: 200 });
+    }),
     http.get("http://localhost:3001/users/me", async ({ request }) => {
         await delay(1000);
         const authHeader = request.headers.get("Authorization");

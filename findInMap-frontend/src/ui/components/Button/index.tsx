@@ -4,7 +4,7 @@ import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import { LoadingSpinner } from "../LoadingSpinner";
 import "./style.css";
 
-export type ButtonKind = "primary" | "danger";
+export type ButtonKind = "primary" | "danger" | "secondary";
 
 export interface ButtonProps {
     kind?: ButtonKind;

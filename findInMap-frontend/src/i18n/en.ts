@@ -17,6 +17,8 @@ export default flattenObject({
         getUserGroups: "Error loading groups. Please try again later.",
         calculateOptimizedRoute:
             "Error calculating optimized route. Please try again later.",
+        resetPassword:
+            "Error sending password reset link. Please try again later.",
     },
     components: {
         AreaAnalysis: {
@@ -108,6 +110,15 @@ export default flattenObject({
             loading: "Logging in...",
             noAccount: "Don't have an account?",
             registerHere: "Register here",
+            forgotPassword: "Forgot password?",
+            resetPasswordTitle: "Reset Password",
+            resetPasswordDescription:
+                "Enter your email address and we'll send you a link to reset your password.",
+            sendResetLink: "Send Reset Link",
+            sending: "Sending...",
+            cancel: "Cancel",
+            resetPasswordSuccess:
+                "Password reset link sent! Please check your email.",
         },
         NotFound: {
             title: "Oops! You're lost!",

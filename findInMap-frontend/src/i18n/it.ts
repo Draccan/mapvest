@@ -26,6 +26,8 @@ export default flattenObject({
             "Errore durante il caricamento dei gruppi. Si prega di riprovare più tardi.",
         calculateOptimizedRoute:
             "Errore durante il calcolo del percorso ottimizzato. Si prega di riprovare più tardi.",
+        resetPassword:
+            "Errore durante l'invio del link di reset password. Si prega di riprovare più tardi.",
     },
     components: {
         AreaAnalysis: {
@@ -120,6 +122,15 @@ export default flattenObject({
             loading: "Accesso in corso...",
             noAccount: "Non hai un account?",
             registerHere: "Registrati qui",
+            forgotPassword: "Password dimenticata?",
+            resetPasswordTitle: "Recupera Password",
+            resetPasswordDescription:
+                "Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password.",
+            sendResetLink: "Invia Link",
+            sending: "Invio in corso...",
+            cancel: "Annulla",
+            resetPasswordSuccess:
+                "Link di recupero inviato! Controlla la tua email.",
         },
         NotFound: {
             title: "Oops! Ti sei perso!",

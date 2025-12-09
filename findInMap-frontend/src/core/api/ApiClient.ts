@@ -190,6 +190,25 @@ export default class ApiClient {
         return response.json();
     }
 
+    async resetPassword(email: string): Promise<void> {
+        const response = await fetch(`${API_URL}/users/resetPassword`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+                errorData.error ||
+                    errorData.message ||
+                    "Failed to reset password",
+            );
+        }
+    }
+
     async updateUserPassword(
         userId: string,
         data: UpdateUserDto,
