@@ -16,5 +16,9 @@ export default interface UserRepository {
         token: string,
         expiresAt: Date,
     ): Promise<PasswordResetTokenEntity>;
+    findPasswordResetTokenData(
+        token: string,
+    ): Promise<PasswordResetTokenEntity | null>;
+    deletePasswordResetToken(token: string): Promise<void>;
     deletePasswordResetTokensByUserId(userId: string): Promise<void>;
 }

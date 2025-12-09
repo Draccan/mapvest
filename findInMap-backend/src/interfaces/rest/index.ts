@@ -27,6 +27,7 @@ import ResetPassword from "../../core/usecases/ResetPassword";
 import SearchAddresses from "../../core/usecases/SearchAddresses";
 import UpdateMapPoint from "../../core/usecases/UpdateMapPoint";
 import UpdateUser from "../../core/usecases/UpdateUser";
+import UpdateUserPassword from "../../core/usecases/UpdateUserPassword";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
@@ -48,6 +49,7 @@ import RefreshTokenRoute from "./routes/RefreshTokenRoute";
 import ResetPasswordRoute from "./routes/ResetPasswordRoute";
 import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 import UpdateMapPointRoute from "./routes/UpdateMapPointRoute";
+import UpdateUserPasswordRoute from "./routes/UpdateUserPasswordRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
 
 export default class RestInterface {
@@ -79,6 +81,7 @@ export default class RestInterface {
             updateMapPoint: UpdateMapPoint;
             updateUser: UpdateUser;
             resetPassword: ResetPassword;
+            updateUserPassword: UpdateUserPassword;
         },
         private jwtService: JwtService,
     ) {
@@ -100,6 +103,7 @@ export default class RestInterface {
             CreateMapCategoryRoute(usecases.createMapCategory),
             GetMapCategoriesRoute(usecases.getMapCategories),
             UpdateMapPointRoute(usecases.updateMapPoint),
+            UpdateUserPasswordRoute(usecases.updateUserPassword),
             UpdateUserRoute(usecases.updateUser),
             ResetPasswordRoute(usecases.resetPassword),
         ];

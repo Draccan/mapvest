@@ -22,6 +22,7 @@ import ResetPassword from "../../src/core/usecases/ResetPassword";
 import SearchAddresses from "../../src/core/usecases/SearchAddresses";
 import UpdateMapPoint from "../../src/core/usecases/UpdateMapPoint";
 import UpdateUser from "../../src/core/usecases/UpdateUser";
+import UpdateUserPassword from "../../src/core/usecases/UpdateUserPassword";
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
 import { DrizzleUserRepository } from "../../src/dependency-implementations/DrizzleUserRepository";
@@ -121,6 +122,7 @@ export function createTestApp() {
         mockEmailService,
         "http://localhost:5173",
     );
+    const updateUserPassword = new UpdateUserPassword(userRepository);
 
     const restInterface = new RestInterface(
         "http://localhost:3002",
@@ -147,6 +149,7 @@ export function createTestApp() {
             updateMapPoint,
             updateUser,
             resetPassword,
+            updateUserPassword,
         },
         jwtService,
     );

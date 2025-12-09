@@ -18,6 +18,7 @@ import ResetPassword from "../core/usecases/ResetPassword";
 import SearchAddresses from "../core/usecases/SearchAddresses";
 import UpdateMapPoint from "../core/usecases/UpdateMapPoint";
 import UpdateUser from "../core/usecases/UpdateUser";
+import UpdateUserPassword from "../core/usecases/UpdateUserPassword";
 import { client } from "../db";
 import { DrizzleGroupRepository } from "../dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../dependency-implementations/DrizzleMapRepository";
@@ -73,6 +74,7 @@ const resetPassword = new ResetPassword(
     emailService,
     config.frontendUrl,
 );
+const updateUserPassword = new UpdateUserPassword(userRepository);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -99,6 +101,7 @@ const restInterface = new RestInterface(
         updateMapPoint,
         updateUser,
         resetPassword,
+        updateUserPassword,
     },
     jwtService,
 );

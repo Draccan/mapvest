@@ -12,6 +12,8 @@ const mockUserRepository: jest.Mocked<UserRepository> = {
     updatePassword: jest.fn(),
     createPasswordResetToken: jest.fn(),
     deletePasswordResetTokensByUserId: jest.fn(),
+    findPasswordResetTokenData: jest.fn(),
+    deletePasswordResetToken: jest.fn(),
 };
 
 describe("UpdateUser", () => {

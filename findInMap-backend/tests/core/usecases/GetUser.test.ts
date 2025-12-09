@@ -15,6 +15,8 @@ describe("GetUser", () => {
             updatePassword: jest.fn(),
             createPasswordResetToken: jest.fn(),
             deletePasswordResetTokensByUserId: jest.fn(),
+            findPasswordResetTokenData: jest.fn(),
+            deletePasswordResetToken: jest.fn(),
         };
 
         getUser = new GetUser(mockUserRepository);

@@ -4,6 +4,7 @@ import { error as openapiValidatorErrors } from "express-openapi-validator";
 import IncorrectPasswordError from "../../core/errors/IncorrectPasswordError";
 import InvalidCredentialsError from "../../core/errors/InvalidCredentialsError";
 import InvalidPasswordError from "../../core/errors/InvalidPasswordError";
+import InvalidResetTokenError from "../../core/errors/InvalidResetTokenError";
 import ItemNotFoundError from "../../core/errors/ItemNotFoundError";
 import NotAllowedActionError from "../../core/errors/NotAllowedActionError";
 import UserEmailAlreadyRegisteredError from "../../core/errors/UserEmailAlreadyRegisteredError";
@@ -28,7 +29,10 @@ export default function errorHandler(
         res.status(400).json({
             error: error.message,
         });
-    } else if (error instanceof InvalidCredentialsError) {
+    } else if (
+        error instanceof InvalidCredentialsError ||
+        error instanceof InvalidResetTokenError
+    ) {
         res.status(401).json({
             error: error.message,
         });

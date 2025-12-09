@@ -9,6 +9,7 @@ const PublicRoutes = [
     "/users",
     "/users/login",
     "/users/resetPassword",
+    "/users/password",
     "/favicon.ico",
 ];
 

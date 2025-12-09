@@ -79,6 +79,25 @@ export class DrizzleUserRepository implements UserRepository {
         return makePasswordResetTokenEntity(passwordResetTokenData);
     }
 
+    async findPasswordResetTokenData(
+        token: string,
+    ): Promise<PasswordResetTokenEntity | null> {
+        const [passwordResetToken] = await db
+            .select()
+            .from(passwordResetTokens)
+            .where(eq(passwordResetTokens.token, token));
+
+        return passwordResetToken
+            ? makePasswordResetTokenEntity(passwordResetToken)
+            : null;
+    }
+
+    async deletePasswordResetToken(token: string): Promise<void> {
+        await db
+            .delete(passwordResetTokens)
+            .where(eq(passwordResetTokens.token, token));
+    }
+
     async deletePasswordResetTokensByUserId(userId: string): Promise<void> {
         await db
             .delete(passwordResetTokens)
