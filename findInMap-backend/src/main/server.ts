@@ -1,3 +1,4 @@
+import EmailService from "../core/services/EmailService";
 import LoggerService from "../core/services/LoggerService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
@@ -13,6 +14,7 @@ import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
 import RefreshToken from "../core/usecases/RefreshToken";
+import ResetPassword from "../core/usecases/ResetPassword";
 import SearchAddresses from "../core/usecases/SearchAddresses";
 import UpdateMapPoint from "../core/usecases/UpdateMapPoint";
 import UpdateUser from "../core/usecases/UpdateUser";
@@ -36,6 +38,14 @@ const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 // 15 seconds
 const tokenBlacklistService = new TokenBlacklistService(config.jwtSecret);
 const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
+const emailService = new EmailService(
+    config.smtpHost,
+    config.smtpPort,
+    config.smtpUser,
+    config.smtpPassword,
+    config.smtpFromEmail,
+    config.smtpFromName,
+);
 
 // Usecases
 const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
@@ -58,6 +68,11 @@ const getMapCategories = new GetMapCategories(groupRepository, mapRepository);
 const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
 const updateUser = new UpdateUser(userRepository);
 const getUser = new GetUser(userRepository);
+const resetPassword = new ResetPassword(
+    userRepository,
+    emailService,
+    config.frontendUrl,
+);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -83,6 +98,7 @@ const restInterface = new RestInterface(
         getMapCategories,
         updateMapPoint,
         updateUser,
+        resetPassword,
     },
     jwtService,
 );

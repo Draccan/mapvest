@@ -8,6 +8,7 @@ const PublicRoutes = [
     "/swagger/*",
     "/users",
     "/users/login",
+    "/users/resetPassword",
     "/favicon.ico",
 ];
 

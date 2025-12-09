@@ -1,5 +1,8 @@
 import AddressesManagerRepository from "../../src/core/dependencies/AddressesManagerRepository";
 import AddressEntity from "../../src/core/entities/AddressEntity";
+import EmailService, {
+    EmailOptions,
+} from "../../src/core/services/EmailService";
 import JwtService from "../../src/core/services/JwtService";
 import TokenBlacklistService from "../../src/core/services/TokenBlacklistService";
 import CreateGroupMap from "../../src/core/usecases/CreateGroupMap";
@@ -15,6 +18,7 @@ import GetUserGroups from "../../src/core/usecases/GetUserGroups";
 import LoginUser from "../../src/core/usecases/LoginUser";
 import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
+import ResetPassword from "../../src/core/usecases/ResetPassword";
 import SearchAddresses from "../../src/core/usecases/SearchAddresses";
 import UpdateMapPoint from "../../src/core/usecases/UpdateMapPoint";
 import UpdateUser from "../../src/core/usecases/UpdateUser";
@@ -38,11 +42,47 @@ class MockGoogleRepository implements AddressesManagerRepository {
     }
 }
 
+class MockEmailService extends EmailService {
+    public sentEmails: EmailOptions[] = [];
+
+    constructor() {
+        super(
+            "mock-smtp.test",
+            587,
+            "mock@test.com",
+            "mock-password",
+            "mock@test.com",
+            "Mock Service",
+        );
+    }
+
+    async sendEmail(options: EmailOptions): Promise<void> {
+        this.sentEmails.push(options);
+    }
+
+    async sendPasswordResetEmail(
+        to: string,
+        resetToken: string,
+        frontendUrl: string,
+    ): Promise<void> {
+        this.sentEmails.push({
+            to,
+            subject: "Reset Password - MapVest",
+            html: `Reset link: ${frontendUrl}/reset-password?token=${resetToken}`,
+        });
+    }
+
+    clearSentEmails(): void {
+        this.sentEmails = [];
+    }
+}
+
 const tokenBlacklistService = new TokenBlacklistService("test-jwt-secret");
 const jwtService: JwtService = new JwtService(
     "test-jwt-secret",
     tokenBlacklistService,
 );
+const mockEmailService = new MockEmailService();
 
 export function createTestApp() {
     const groupRepository = new DrizzleGroupRepository();
@@ -76,6 +116,11 @@ export function createTestApp() {
     const searchAddresses = new SearchAddresses(googleRepository);
     const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
     const updateUser = new UpdateUser(userRepository);
+    const resetPassword = new ResetPassword(
+        userRepository,
+        mockEmailService,
+        "http://localhost:5173",
+    );
 
     const restInterface = new RestInterface(
         "http://localhost:3002",
@@ -101,11 +146,16 @@ export function createTestApp() {
             searchAddresses,
             updateMapPoint,
             updateUser,
+            resetPassword,
         },
         jwtService,
     );
 
     return restInterface;
+}
+
+export function getMockEmailService() {
+    return mockEmailService;
 }
 
 export function cleanupTestApp() {

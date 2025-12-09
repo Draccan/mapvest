@@ -2,10 +2,12 @@ import { eq } from "drizzle-orm";
 
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import UserRepository from "../../core/dependencies/UserRepository";
+import { PasswordResetTokenEntity } from "../../core/entities/PasswordResetTokenEntity";
 import UserEntity from "../../core/entities/UserEntity";
 import CreateUserDto from "../../core/dtos/CreateUserDto";
 import { db } from "../../db";
-import { users } from "../../db/schema";
+import { users, passwordResetTokens } from "../../db/schema";
+import makePasswordResetTokenEntity from "./converters/makePasswordResetTokenEntity";
 import { makeUserEntity } from "./converters/makeUserEntity";
 
 export class DrizzleUserRepository implements UserRepository {
@@ -58,5 +60,28 @@ export class DrizzleUserRepository implements UserRepository {
             .returning();
 
         return makeUserEntity(updatedUser);
+    }
+
+    async createPasswordResetToken(
+        userId: string,
+        token: string,
+        expiresAt: Date,
+    ): Promise<PasswordResetTokenEntity> {
+        const [passwordResetTokenData] = await db
+            .insert(passwordResetTokens)
+            .values({
+                userId,
+                token,
+                expiresAt,
+            })
+            .returning();
+
+        return makePasswordResetTokenEntity(passwordResetTokenData);
+    }
+
+    async deletePasswordResetTokensByUserId(userId: string): Promise<void> {
+        await db
+            .delete(passwordResetTokens)
+            .where(eq(passwordResetTokens.userId, userId));
     }
 }

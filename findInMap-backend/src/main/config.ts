@@ -96,4 +96,33 @@ export default {
         required: true,
         nonProductionDefault: "",
     }),
+
+    // SMTP Email Configuration
+    smtpHost: env("SMTP_HOST", {
+        required: true,
+        nonProductionDefault: "smtp.aruba.it",
+    }),
+    smtpPort: env("SMTP_PORT", {
+        default: "587",
+        parse: (value) => parseInt(value, 10),
+    }),
+    smtpUser: env("SMTP_USER", {
+        required: true,
+        nonProductionDefault: "help@map-vest.com",
+    }),
+    smtpPassword: env("SMTP_PASSWORD", {
+        required: true,
+        nonProductionDefault: "your-smtp-password",
+    }),
+    smtpFromEmail: env("SMTP_FROM_EMAIL", {
+        required: true,
+        nonProductionDefault: "help@map-vest.com",
+    }),
+    smtpFromName: env("SMTP_FROM_NAME", {
+        default: "MapVest",
+    }),
+    frontendUrl: env("FRONTEND_URL", {
+        required: true,
+        nonProductionDefault: "http://localhost:5173",
+    }),
 };

@@ -13,6 +13,8 @@ describe("GetUser", () => {
             findByEmail: jest.fn(),
             create: jest.fn(),
             updatePassword: jest.fn(),
+            createPasswordResetToken: jest.fn(),
+            deletePasswordResetTokensByUserId: jest.fn(),
         };
 
         getUser = new GetUser(mockUserRepository);

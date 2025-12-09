@@ -23,6 +23,7 @@ import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
+import ResetPassword from "../../core/usecases/ResetPassword";
 import SearchAddresses from "../../core/usecases/SearchAddresses";
 import UpdateMapPoint from "../../core/usecases/UpdateMapPoint";
 import UpdateUser from "../../core/usecases/UpdateUser";
@@ -44,6 +45,7 @@ import InfoRoute from "./routes/InfoRoute";
 import LoginUserRoute from "./routes/LoginUserRoute";
 import LogoutUserRoute from "./routes/LogoutUserRoute";
 import RefreshTokenRoute from "./routes/RefreshTokenRoute";
+import ResetPasswordRoute from "./routes/ResetPasswordRoute";
 import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 import UpdateMapPointRoute from "./routes/UpdateMapPointRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
@@ -76,6 +78,7 @@ export default class RestInterface {
             getMapCategories: GetMapCategories;
             updateMapPoint: UpdateMapPoint;
             updateUser: UpdateUser;
+            resetPassword: ResetPassword;
         },
         private jwtService: JwtService,
     ) {
@@ -98,6 +101,7 @@ export default class RestInterface {
             GetMapCategoriesRoute(usecases.getMapCategories),
             UpdateMapPointRoute(usecases.updateMapPoint),
             UpdateUserRoute(usecases.updateUser),
+            ResetPasswordRoute(usecases.resetPassword),
         ];
 
         // OpenAPI Spec

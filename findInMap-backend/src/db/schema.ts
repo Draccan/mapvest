@@ -99,6 +99,16 @@ export const mapCategories = pgTable("map_categories", {
         .$onUpdate(() => new Date()),
 });
 
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    token: varchar("token", { length: 255 }).notNull().unique(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Group = typeof groups.$inferSelect;
@@ -111,3 +121,5 @@ export type Map = typeof maps.$inferSelect;
 export type NewMap = typeof maps.$inferInsert;
 export type MapCategory = typeof mapCategories.$inferSelect;
 export type NewMapCategory = typeof mapCategories.$inferInsert;
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
+export type NewPasswordResetToken = typeof passwordResetTokens.$inferInsert;
