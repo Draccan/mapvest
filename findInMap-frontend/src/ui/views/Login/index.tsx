@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import type LoginUserDto from "../../../core/dtos/LoginUserDto";
 import { useLoginUser } from "../../../core/usecases/useLoginUser";
@@ -16,6 +17,7 @@ const fm = getFormattedMessageWithScope("views.Login");
 
 export const Login: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { login, loading, error } = useLoginUser();
     const {
         resetPassword,
@@ -55,6 +57,13 @@ export const Login: React.FC = () => {
             setResetEmail("");
         }
     }, [resetLoading, resetError, previousResetLoading]);
+
+    useEffect(() => {
+        if (location.state?.passwordResetSuccess) {
+            toast.success(fm("passwordResetSuccessToast"), { duration: 5000 });
+            location.state = {};
+        }
+    }, [location, navigate]);
 
     const handleResetPasswordSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

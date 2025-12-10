@@ -123,6 +123,6 @@ export default {
     }),
     frontendUrl: env("FRONTEND_URL", {
         required: true,
-        nonProductionDefault: "http://localhost:5173",
+        nonProductionDefault: "http://localhost:3000",
     }),
 };

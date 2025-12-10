@@ -19,6 +19,7 @@ export default flattenObject({
             "Error calculating optimized route. Please try again later.",
         resetPassword:
             "Error sending password reset link. Please try again later.",
+        updateUserPassword: "Error updating password. Please try again later.",
     },
     components: {
         AreaAnalysis: {
@@ -119,6 +120,8 @@ export default flattenObject({
             cancel: "Cancel",
             resetPasswordSuccess:
                 "Password reset link sent! Please check your email.",
+            passwordResetSuccessToast:
+                "Password successfully reset! You can now login with your new password.",
         },
         NotFound: {
             title: "Oops! You're lost!",
@@ -139,6 +142,15 @@ export default flattenObject({
             registering: "Registering...",
             alreadyHaveAccount: "Already have an account?",
             loginHere: "Login here",
+        },
+        ResetPassword: {
+            title: "Reset Your Password",
+            description: "Enter your new password below.",
+            passwordLabel: "New Password:",
+            confirmPasswordLabel: "Confirm New Password:",
+            resetPassword: "Reset Password",
+            resetting: "Resetting...",
+            passwordsDoNotMatch: "Passwords do not match",
         },
     },
 });

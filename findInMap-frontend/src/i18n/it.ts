@@ -28,6 +28,8 @@ export default flattenObject({
             "Errore durante il calcolo del percorso ottimizzato. Si prega di riprovare più tardi.",
         resetPassword:
             "Errore durante l'invio del link di reset password. Si prega di riprovare più tardi.",
+        updateUserPassword:
+            "Errore durante l'aggiornamento della password. Si prega di riprovare più tardi.",
     },
     components: {
         AreaAnalysis: {
@@ -131,6 +133,8 @@ export default flattenObject({
             cancel: "Annulla",
             resetPasswordSuccess:
                 "Link di recupero inviato! Controlla la tua email.",
+            passwordResetSuccessToast:
+                "Password reimpostata con successo! Ora puoi accedere con la tua nuova password.",
         },
         NotFound: {
             title: "Oops! Ti sei perso!",
@@ -151,6 +155,15 @@ export default flattenObject({
             registering: "Registrazione in corso...",
             alreadyHaveAccount: "Hai già un account?",
             loginHere: "Accedi qui",
+        },
+        ResetPassword: {
+            title: "Reimposta la Tua Password",
+            description: "Inserisci la tua nuova password qui sotto.",
+            passwordLabel: "Nuova Password:",
+            confirmPasswordLabel: "Conferma Nuova Password:",
+            resetPassword: "Reimposta Password",
+            resetting: "Reimpostazione in corso...",
+            passwordsDoNotMatch: "Le password non corrispondono",
         },
     },
 });

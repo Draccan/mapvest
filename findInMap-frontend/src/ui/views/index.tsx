@@ -13,6 +13,7 @@ import { Home } from "./Home";
 import { Login } from "./Login";
 import NotFound from "./NotFound";
 import { Register } from "./Register";
+import { ResetPassword } from "./ResetPassword";
 import { User } from "./User";
 import "./style.css";
 
@@ -44,6 +45,10 @@ const App: React.FC = () => {
                                         <Route
                                             path={routes.register()}
                                             element={<Register />}
+                                        />
+                                        <Route
+                                            path={routes.resetPassword()}
+                                            element={<ResetPassword />}
                                         />
                                         <Route
                                             path={routes.home()}

@@ -120,7 +120,7 @@ export function createTestApp() {
     const resetPassword = new ResetPassword(
         userRepository,
         mockEmailService,
-        "http://localhost:5173",
+        "http://localhost:3000",
     );
     const updateUserPassword = new UpdateUserPassword(userRepository);
 
