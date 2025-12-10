@@ -26,6 +26,11 @@ export default class EmailService {
                 user: this.smtpUser,
                 pass: this.smtpPassword,
             },
+            connectionTimeout: 60000,
+            greetingTimeout: 30000,
+            socketTimeout: 60000,
+            logger: true,
+            debug: process.env.NODE_ENV !== "production",
         });
     }
 
