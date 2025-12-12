@@ -162,3 +162,14 @@
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px var(--color-primary-alpha);
 }
+
+.c-area-analysis-limit-message {
+    padding: 1rem;
+    background-color: var(--color-warning-background);
+    border: 2px solid var(--color-warning);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: center;
+}

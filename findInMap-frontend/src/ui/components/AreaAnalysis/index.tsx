@@ -2,6 +2,7 @@ import { Navigation } from "lucide-react";
 import React from "react";
 import { useIntl } from "react-intl";
 
+import { MAX_TRIP_CALCULATION_MAP_POINTS } from "../../../config";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
@@ -45,8 +46,13 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
+    const hasSelectedTooManyPointsForTrip =
+        pointsInArea.length > MAX_TRIP_CALCULATION_MAP_POINTS;
     const canCalculateOptimizedRoute =
-        startPoint && endPoint && pointsInArea.length >= 2;
+        startPoint &&
+        endPoint &&
+        pointsInArea.length >= 2 &&
+        !hasSelectedTooManyPointsForTrip;
     const showRoutePlanning = pointsInArea.length > 1;
 
     return (
@@ -77,39 +83,55 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
             {showRoutePlanning && (
                 <div className="c-area-analysis-section">
                     <h3>{fm("routePlanning")}</h3>
-                    <div className="c-area-analysis-route-selection">
-                        <div className="c-area-analysis-route-item">
-                            <label>{fm("startPoint")}:</label>
-                            <select
-                                value={startPoint?.id || ""}
-                                onChange={selectStartPoint}
-                                className="c-area-analysis-select"
-                            >
-                                <option value="">{fm("selectPoint")}</option>
-                                {pointsInArea.map((point) => (
-                                    <option key={point.id} value={point.id}>
-                                        {point.description || "/"} -{" "}
-                                        {point.date}
-                                    </option>
-                                ))}
-                            </select>
+                    {hasSelectedTooManyPointsForTrip ? (
+                        <div className="c-area-analysis-limit-message">
+                            {fm({
+                                id: "tooManyPointsForRoute",
+                                values: {
+                                    current: pointsInArea.length,
+                                    max: MAX_TRIP_CALCULATION_MAP_POINTS,
+                                },
+                            })}
                         </div>
-                        <div className="c-area-analysis-route-item">
-                            <label>{fm("endPoint")}:</label>
-                            <select
-                                value={endPoint?.id || ""}
-                                onChange={selectEndPoint}
-                                className="c-area-analysis-select"
-                            >
-                                <option value="">{fm("selectPoint")}</option>
-                                {pointsInArea.map((point) => (
-                                    <option key={point.id} value={point.id}>
-                                        {point.description} - {point.date}
+                    ) : (
+                        <div className="c-area-analysis-route-selection">
+                            <div className="c-area-analysis-route-item">
+                                <label>{fm("startPoint")}:</label>
+                                <select
+                                    value={startPoint?.id || ""}
+                                    onChange={selectStartPoint}
+                                    className="c-area-analysis-select"
+                                >
+                                    <option value="">
+                                        {fm("selectPoint")}
                                     </option>
-                                ))}
-                            </select>
+                                    {pointsInArea.map((point) => (
+                                        <option key={point.id} value={point.id}>
+                                            {point.description || "/"} -{" "}
+                                            {point.date}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="c-area-analysis-route-item">
+                                <label>{fm("endPoint")}:</label>
+                                <select
+                                    value={endPoint?.id || ""}
+                                    onChange={selectEndPoint}
+                                    className="c-area-analysis-select"
+                                >
+                                    <option value="">
+                                        {fm("selectPoint")}
+                                    </option>
+                                    {pointsInArea.map((point) => (
+                                        <option key={point.id} value={point.id}>
+                                            {point.description} - {point.date}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             )}
 

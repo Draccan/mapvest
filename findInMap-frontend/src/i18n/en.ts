@@ -35,6 +35,8 @@ export default flattenObject({
             endPoint: "End Point",
             selectPoint: "Select a point",
             calculateOptimizedRoute: "Calculate Optimized Route",
+            tooManyPointsForRoute:
+                "You have selected {current} points. To calculate a route, please select no more than {max} points.",
         },
         MapContainer: {
             description: "Description",
