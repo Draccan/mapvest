@@ -27,6 +27,7 @@ import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
+import { RouteDetailsModal } from "../../components/RouteDetailsModal";
 import { Skeleton } from "../../components/Skeleton";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import "./style.css";
@@ -46,6 +47,9 @@ export const Home: React.FC = () => {
     const [startPoint, setStartPoint] = useState<MapPointDto | null>(null);
     const [endPoint, setEndPoint] = useState<MapPointDto | null>(null);
     const [pointToEdit, setPointToEdit] = useState<MapPointDto | null>(null);
+    const [isRouteDetailsModalOpen, setIsRouteDetailsModalOpen] =
+        useState(false);
+    const [routePoints, setRoutePoints] = useState<MapPointDto[]>([]);
 
     const {
         data: groupsData,
@@ -214,6 +218,7 @@ export const Home: React.FC = () => {
             setSelectedCoordinates(null);
             setStartPoint(null);
             setEndPoint(null);
+            setRoutePoints([]);
             resetOptimizedRoute();
         }
     };
@@ -226,6 +231,8 @@ export const Home: React.FC = () => {
         const destinations = pointsInArea.filter(
             (point) => point.id !== startPoint.id && point.id !== endPoint.id,
         );
+        const mapPoints = [startPoint, ...destinations, endPoint];
+        setRoutePoints(mapPoints);
         calculateOptimizedRoute(startPoint, destinations, endPoint);
     };
 
@@ -341,6 +348,10 @@ export const Home: React.FC = () => {
                                 onEndPointSelect={setEndPoint}
                                 onOptimizeRoute={handleOptimizeRoute}
                                 isOptimizingRoute={isOptimizingRoute}
+                                optimizedRoute={optimizedRoute}
+                                onShowRouteDetails={() =>
+                                    setIsRouteDetailsModalOpen(true)
+                                }
                             />
                         ) : (
                             <MapPointForm
@@ -357,6 +368,15 @@ export const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {optimizedRoute && (
+                <RouteDetailsModal
+                    isOpen={isRouteDetailsModalOpen}
+                    onClose={() => setIsRouteDetailsModalOpen(false)}
+                    route={optimizedRoute}
+                    points={routePoints}
+                    categories={categoriesData || []}
+                />
+            )}
         </div>
     );
 };

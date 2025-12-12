@@ -44,7 +44,6 @@
     color: var(--color-text-secondary);
     font-family: "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono", monospace;
     font-size: 0.9rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
 }
 
@@ -65,7 +64,6 @@
     font-size: 0.95rem;
     background-color: var(--color-background-primary);
     color: var(--color-text-primary);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
 }
 

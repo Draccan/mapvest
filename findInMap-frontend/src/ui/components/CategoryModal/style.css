@@ -46,7 +46,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s;
 }
 
 .c-categoryModal-close:hover {
@@ -65,7 +64,6 @@
     border: 2px solid var(--color-border);
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c-categoryModal-color-picker:focus {
@@ -92,7 +90,6 @@
     background-color: var(--color-background-primary);
     color: var(--color-text-primary);
     font-size: 0.9rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c-categoryModal-description-input:focus {

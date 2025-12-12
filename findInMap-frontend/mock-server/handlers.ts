@@ -14,6 +14,21 @@ let mockCategories: CategoryDto[] = [
         description: "Supplier",
         color: "#33FF57",
     },
+    {
+        id: "cat-3",
+        description: "Test1",
+        color: "#3381ffff",
+    },
+    {
+        id: "cat-4",
+        description: "Test2",
+        color: "#c61f8eff",
+    },
+    {
+        id: "cat-5",
+        description: "Test3",
+        color: "#dec109ff",
+    },
 ];
 
 let mockMapPoints: MapPointDto[] = [
@@ -23,7 +38,7 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.504533,
         description: "Theft",
         date: "2025-12-03",
-        createdAt: new Date("2024-01-01").toISOString(),
+        createdAt: "2024-01-01T00:00:00.000Z",
         categoryId: "cat-1",
     },
     {
@@ -32,7 +47,7 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.4818,
         description: "Aggression",
         date: "2025-12-03",
-        createdAt: new Date("2024-01-02").toISOString(),
+        createdAt: "2024-01-02T00:00:00.000Z",
         categoryId: "cat-2",
     },
     {
@@ -41,8 +56,60 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.4768,
         description: "Robbery",
         date: "2025-12-03",
-        createdAt: new Date("2024-01-03").toISOString(),
+        createdAt: "2024-01-03T00:00:00.000Z",
         categoryId: "cat-1",
+    },
+    {
+        long: 13.222334677911636,
+        lat: 43.70079289941443,
+        description: "CASA",
+        date: "2025-12-12",
+        categoryId: "cat-4",
+        id: "17655519690860.46076842714780886",
+        createdAt: "2025-12-12T15:06:09.086Z",
+    },
+    {
+        long: 13.234259796213152,
+        lat: 43.703454771901995,
+        description: "Suoceri",
+        date: "2025-12-12",
+        categoryId: "cat-1",
+        id: "17655519890350.13249345562877424",
+        createdAt: "2025-12-12T15:06:29.035Z",
+    },
+    {
+        long: 13.226666708360677,
+        lat: 43.70768342063004,
+        description: "COOP",
+        date: "2025-12-12",
+        categoryId: "cat-5",
+        id: "17655520207000.012316982830971157",
+        createdAt: "2025-12-12T15:07:00.700Z",
+    },
+    {
+        long: 13.223489929054502,
+        lat: 43.7104598618084,
+        description: "Chiesa",
+        date: "2025-12-12",
+        categoryId: "cat-2",
+        id: "17655521522210.7673582913078386",
+        createdAt: "2025-12-12T15:09:12.221Z",
+    },
+    {
+        long: 13.21753531539515,
+        lat: 43.7164388556422,
+        description: "Puccio",
+        date: "2025-12-12",
+        categoryId: "cat-5",
+        id: "17655521667260.035725332075425276",
+        createdAt: "2025-12-12T15:09:26.726Z",
+    },
+    {
+        long: 13.205027155413816,
+        lat: 43.705210544425896,
+        date: "2025-12-12",
+        id: "17655524938480.12541603171843807",
+        createdAt: "2025-12-12T15:14:53.848Z",
     },
 ];
 

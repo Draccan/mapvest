@@ -1,0 +1,104 @@
+.c-route-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.c-route-details-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--color-background-secondary);
+    border-radius: 12px;
+    border: 2px solid var(--color-border);
+}
+
+.c-route-details-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+}
+
+.c-route-details-summary-label {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.c-route-details-summary-value {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.c-route-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.c-route-details-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--color-background-secondary);
+    border-radius: 12px;
+    border: 2px solid var(--color-border);
+}
+
+.c-route-details-item:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.c-route-details-item-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--color-primary);
+    color: var(--color-background-primary);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.c-route-details-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.c-route-details-item-description {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+}
+
+.c-route-details-item-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.c-route-details-item-date {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.c-route-details-item-category {
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 2px solid;
+    background-color: var(--color-background-primary);
+}

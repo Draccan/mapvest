@@ -48,6 +48,17 @@
     box-shadow: 0 8px 24px var(--color-shadow);
 }
 
+.c-area-analysis-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.c-area-analysis-section-header h3 {
+    margin: 0;
+}
+
 .c-area-analysis-stat-item {
     display: flex;
     justify-content: space-between;

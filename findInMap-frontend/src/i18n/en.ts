@@ -37,6 +37,14 @@ export default flattenObject({
             calculateOptimizedRoute: "Calculate Optimized Route",
             tooManyPointsForRoute:
                 "You have selected {current} points. To calculate a route, please select no more than {max} points.",
+            viewRouteDetails: "View Route Details",
+        },
+        RouteDetailsModal: {
+            title: "Route Details",
+            totalDistance: "Total Distance",
+            totalDuration: "Total Duration",
+            totalStops: "Total Stops",
+            noDescription: "No description",
         },
         MapContainer: {
             description: "Description",

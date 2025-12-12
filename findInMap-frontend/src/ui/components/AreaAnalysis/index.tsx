@@ -1,9 +1,10 @@
-import { Navigation } from "lucide-react";
+import { Navigation, List } from "lucide-react";
 import React from "react";
 import { useIntl } from "react-intl";
 
 import { MAX_TRIP_CALCULATION_MAP_POINTS } from "../../../config";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
+import { type RouteDto } from "../../../core/dtos/RouteDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
 import "./style.css";
@@ -18,6 +19,8 @@ interface AreaAnalysisProps {
     onEndPointSelect: (point: MapPointDto) => void;
     onOptimizeRoute: () => void;
     isOptimizingRoute: boolean;
+    optimizedRoute: RouteDto | null;
+    onShowRouteDetails: () => void;
 }
 
 export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
@@ -28,6 +31,8 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
     onEndPointSelect,
     onOptimizeRoute,
     isOptimizingRoute,
+    optimizedRoute,
+    onShowRouteDetails,
 }) => {
     const intl = useIntl();
 
@@ -82,7 +87,24 @@ export const AreaAnalysis: React.FC<AreaAnalysisProps> = ({
 
             {showRoutePlanning && (
                 <div className="c-area-analysis-section">
-                    <h3>{fm("routePlanning")}</h3>
+                    <div className="c-area-analysis-section-header">
+                        <h3>{fm("routePlanning")}</h3>
+                        {optimizedRoute && (
+                            <Button
+                                kind="secondary"
+                                size="icon"
+                                onClick={onShowRouteDetails}
+                                title={intl.formatMessage({
+                                    id: "components.AreaAnalysis.viewRouteDetails",
+                                })}
+                                aria-label={intl.formatMessage({
+                                    id: "components.AreaAnalysis.viewRouteDetails",
+                                })}
+                            >
+                                <List size={20} />
+                            </Button>
+                        )}
+                    </div>
                     {hasSelectedTooManyPointsForTrip ? (
                         <div className="c-area-analysis-limit-message">
                             {fm({

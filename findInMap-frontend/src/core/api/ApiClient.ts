@@ -352,7 +352,7 @@ export default class ApiClient {
             .map((point) => `${point.long},${point.lat}`)
             .join(";");
 
-        const url = `https://router.project-osrm.org/trip/v1/driving/${coordinates}?source=first&destination=last&roundtrip=false&geometries=geojson`;
+        const url = `https://router.project-osrm.org/trip/v1/driving/${coordinates}?source=first&destination=last&roundtrip=false&geometries=geojson&steps=false`;
 
         const response = await fetch(url);
 
@@ -376,12 +376,11 @@ export default class ApiClient {
         );
 
         // Docs: waypoint_index has the order of waypoints in the optimized
-        // route. Instead, trips_index is the index of the waypoint in the input
-        // list.
-        const waypoints = data.waypoints.map((wp: any) => ({
+        // route.
+        const waypoints = data.waypoints.map((wp: any, index: number) => ({
             location: [wp.location[1], wp.location[0]] as [number, number],
             waypointIndex: wp.waypoint_index,
-            originalIndex: wp.trips_index,
+            originalIndex: index,
         }));
 
         return {

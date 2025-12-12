@@ -123,7 +123,6 @@
     border: none !important;
     border-radius: 8px !important;
     font-weight: 600 !important;
-    transition: all 0.3s ease !important;
 }
 
 .v-home-map-section .leaflet-control-zoom a:hover {
@@ -213,11 +212,6 @@
         min-width: auto;
         padding: 1rem;
     }
-}
-
-.v-home-map-section,
-.v-home-form-section {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .v-home-map-section:hover,

@@ -6,7 +6,6 @@
     border-radius: 18px;
     cursor: pointer;
     padding: 2px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     z-index: 1000;
@@ -30,7 +29,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 4px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c-themeToggle-slider::before {
@@ -41,7 +39,6 @@
     background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
     border-radius: 50%;
     left: 2px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
 }
 
@@ -56,7 +53,6 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c-themeToggle-sun {

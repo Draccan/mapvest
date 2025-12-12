@@ -15,7 +15,6 @@
     color: var(--color-text-primary);
     font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: left;
 }
 
@@ -55,7 +54,6 @@
 
 .c-select-icon {
     color: var(--color-text-secondary);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
 }
 
@@ -100,7 +98,6 @@
     color: var(--color-text-primary);
     font-size: 0.95rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
     text-align: left;
 }
 
