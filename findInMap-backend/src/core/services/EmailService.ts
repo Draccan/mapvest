@@ -1,4 +1,5 @@
-import nodemailer, { Transporter } from "nodemailer";
+import { Resend } from "resend";
+
 import LoggerService from "./LoggerService";
 
 export interface EmailOptions {
@@ -8,36 +9,20 @@ export interface EmailOptions {
 }
 
 export default class EmailService {
-    private transporter: Transporter;
+    private resend: Resend;
 
     constructor(
-        private smtpHost: string,
-        private smtpPort: number,
-        private smtpUser: string,
-        private smtpPassword: string,
+        private resendApiKey: string,
         private fromEmail: string,
         private fromName: string,
     ) {
-        this.transporter = nodemailer.createTransport({
-            host: this.smtpHost,
-            port: this.smtpPort,
-            secure: this.smtpPort === 465,
-            auth: {
-                user: this.smtpUser,
-                pass: this.smtpPassword,
-            },
-            connectionTimeout: 60000,
-            greetingTimeout: 30000,
-            socketTimeout: 60000,
-            logger: true,
-            debug: process.env.NODE_ENV !== "production",
-        });
+        this.resend = new Resend(this.resendApiKey);
     }
 
     async sendEmail(options: EmailOptions): Promise<void> {
         try {
-            await this.transporter.sendMail({
-                from: `"${this.fromName}" <${this.fromEmail}>`,
+            await this.resend.emails.send({
+                from: `${this.fromName} <${this.fromEmail}>`,
                 to: options.to,
                 subject: options.subject,
                 html: options.html,

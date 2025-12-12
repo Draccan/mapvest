@@ -97,28 +97,16 @@ export default {
         nonProductionDefault: "",
     }),
 
-    // SMTP Email Configuration
-    smtpHost: env("SMTP_HOST", {
+    // Resend Email Configuration
+    resendApiKey: env("RESEND_API_KEY", {
         required: true,
-        nonProductionDefault: "smtp.aruba.it",
+        nonProductionDefault: "RESEND_API_KEY",
     }),
-    smtpPort: env("SMTP_PORT", {
-        default: "587",
-        parse: (value) => parseInt(value, 10),
-    }),
-    smtpUser: env("SMTP_USER", {
+    resendFromEmail: env("RESEND_FROM_EMAIL", {
         required: true,
         nonProductionDefault: "help@map-vest.com",
     }),
-    smtpPassword: env("SMTP_PASSWORD", {
-        required: true,
-        nonProductionDefault: "your-smtp-password",
-    }),
-    smtpFromEmail: env("SMTP_FROM_EMAIL", {
-        required: true,
-        nonProductionDefault: "help@map-vest.com",
-    }),
-    smtpFromName: env("SMTP_FROM_NAME", {
+    resendFromName: env("RESEND_FROM_NAME", {
         default: "MapVest",
     }),
     frontendUrl: env("FRONTEND_URL", {

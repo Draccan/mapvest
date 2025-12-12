@@ -40,12 +40,9 @@ const googleRepository = new GoogleRepository(config.googleMapsApiKey);
 const tokenBlacklistService = new TokenBlacklistService(config.jwtSecret);
 const jwtService = new JwtService(config.jwtSecret, tokenBlacklistService);
 const emailService = new EmailService(
-    config.smtpHost,
-    config.smtpPort,
-    config.smtpUser,
-    config.smtpPassword,
-    config.smtpFromEmail,
-    config.smtpFromName,
+    config.resendApiKey,
+    config.resendFromEmail,
+    config.resendFromName,
 );
 
 // Usecases

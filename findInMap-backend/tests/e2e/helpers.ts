@@ -47,14 +47,7 @@ class MockEmailService extends EmailService {
     public sentEmails: EmailOptions[] = [];
 
     constructor() {
-        super(
-            "mock-smtp.test",
-            587,
-            "mock@test.com",
-            "mock-password",
-            "mock@test.com",
-            "Mock Service",
-        );
+        super("mock-resend-api-key", "mock@test.com", "Mock Service");
     }
 
     async sendEmail(options: EmailOptions): Promise<void> {
