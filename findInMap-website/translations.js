@@ -6,7 +6,7 @@ const rotatingWords = {
         "magazzini",
         "punti di ritiro",
         "negozi",
-        "depositi",
+        "filiali",
     ],
     en: [
         "customers",
@@ -14,6 +14,6 @@ const rotatingWords = {
         "warehouses",
         "pickup points",
         "stores",
-        "depots",
+        "branches",
     ],
 };
