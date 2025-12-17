@@ -14,6 +14,11 @@ export default function getUpdateMapPointSchema(): OpenAPIV3.SchemaObject {
                 description: "Date in YYYY-MM-DD format",
                 pattern: "^\\d{4}-\\d{2}-\\d{2}$",
             },
+            dueDate: {
+                type: "string",
+                description: "Due date in YYYY-MM-DD format (optional)",
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$",
+            },
             categoryId: {
                 type: "string",
                 description: "ID of the category associated with the map point",

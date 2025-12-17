@@ -1,4 +1,4 @@
-.c-mapPoint-form {
+.c-map-point-form {
     background: transparent;
     padding: 0;
     border-radius: 0;
@@ -12,7 +12,7 @@
         sans-serif;
 }
 
-.c-mapPoint-form h2 {
+.c-map-point-form h2 {
     margin: 0 0 1.5rem 0;
     color: var(--color-text-primary);
     font-size: 1.5rem;
@@ -22,11 +22,11 @@
     padding: 0;
 }
 
-.c-form-group {
+.c-map-point-form-group {
     margin-bottom: 1.5rem;
 }
 
-.c-form-group label {
+.c-map-point-form-group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
@@ -35,7 +35,7 @@
     letter-spacing: 0.025em;
 }
 
-.c-coordinate-input {
+.c-map-point-form-coordinate-input {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid var(--color-border);
@@ -47,7 +47,7 @@
     box-sizing: border-box;
 }
 
-.c-coordinate-input:focus {
+.c-map-point-form-coordinate-input:focus {
     outline: none;
     border-color: var(--color-primary);
     background-color: var(--color-background-primary);
@@ -55,8 +55,8 @@
     transform: translateY(-1px);
 }
 
-.c-description-input,
-.c-date-input {
+.c-map-point-form-description-input,
+.c-map-point-form-date-input {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid var(--color-border);
@@ -67,21 +67,21 @@
     box-sizing: border-box;
 }
 
-.c-description-input:focus,
-.c-date-input:focus {
+.c-map-point-form-description-input:focus,
+.c-map-point-form-date-input:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     transform: translateY(-1px);
 }
 
-.c-category-field {
+.c-map-point-form-category-field {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-.c-category-color-dot {
+.c-map-point-form-category-color-dot {
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -90,22 +90,22 @@
 }
 
 /* Make calendar icon more visible in dark mode */
-.c-date-input::-webkit-calendar-picker-indicator {
+.c-map-point-form-date-input::-webkit-calendar-picker-indicator {
     filter: invert(0.8);
     cursor: pointer;
 }
 
 @media (prefers-color-scheme: light) {
-    .c-date-input::-webkit-calendar-picker-indicator {
+    .c-map-point-form-date-input::-webkit-calendar-picker-indicator {
         filter: none;
     }
 }
 
-.c-errors {
+.c-map-point-form-errors {
     margin-bottom: 1.5rem;
 }
 
-.c-error {
+.c-map-point-form-error {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -124,12 +124,12 @@
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
-.c-error svg {
+.c-map-point-form-error svg {
     color: var(--color-danger);
     flex-shrink: 0;
 }
 
-.c-instructions {
+.c-map-point-form-instructions {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -145,15 +145,20 @@
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
 }
 
-.c-instructions svg {
+.c-map-point-form-instructions svg {
     color: var(--color-success);
     flex-shrink: 0;
 }
 
-.c-instructions p {
+.c-map-point-form-instructions p {
     margin: 0;
     color: var(--color-text-primary);
     font-size: 0.9rem;
     font-weight: 500;
     line-height: 1.5;
+}
+
+.c-map-point-form-add-field-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
 }

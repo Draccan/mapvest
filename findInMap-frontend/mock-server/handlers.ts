@@ -38,6 +38,7 @@ let mockMapPoints: MapPointDto[] = [
         long: 12.504533,
         description: "Theft",
         date: "2025-12-03",
+        dueDate: "2025-12-19",
         createdAt: "2024-01-01T00:00:00.000Z",
         categoryId: "cat-1",
     },

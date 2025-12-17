@@ -1,5 +1,5 @@
 import { MapPin, AlertCircle, Plus } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 
 import type { CategoryDto } from "../../../core/dtos/CategoryDto";
@@ -10,12 +10,19 @@ import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWith
 import { Button } from "../Button";
 import { CategoryModal } from "../CategoryModal";
 import { Select } from "../Select";
+import { SelectionPopover } from "../SelectionPopover";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.MapPointForm");
 
 const getTodayYyyymmdd = (): string => {
     return new Date().toISOString().split("T")[0];
+};
+
+const getTomorrowYyyymmdd = (): string => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
 };
 
 interface MapPointFormProps {
@@ -45,18 +52,28 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     const intl = useIntl();
     const [description, setDescription] = useState<string>("");
     const [dateValue, setDateValue] = useState(getTodayYyyymmdd());
+    const [dueDateValue, setDueDateValue] = useState<string | undefined>(
+        undefined,
+    );
+    const [showDueDate, setShowDueDate] = useState(false);
     const [categoryId, setCategoryId] = useState<string>("");
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [isAddFieldPopoverOpen, setIsAddFieldPopoverOpen] = useState(false);
     const [errors, setErrors] = useState<string[]>([]);
+    const addFieldButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (pointToEdit) {
             setDescription(pointToEdit.description || "");
             setDateValue(pointToEdit.date);
+            setDueDateValue(pointToEdit.dueDate);
+            setShowDueDate(!!pointToEdit.dueDate);
             setCategoryId(pointToEdit.categoryId || "");
         } else {
             setDescription("");
             setDateValue(getTodayYyyymmdd());
+            setDueDateValue(undefined);
+            setShowDueDate(false);
             setCategoryId("");
         }
     }, [pointToEdit]);
@@ -83,6 +100,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         description:
                             description.trim() === "" ? undefined : description,
                         date: dateValue,
+                        dueDate: dueDateValue || undefined,
                         categoryId: categoryId || undefined,
                     });
                 } else if (selectedCoordinates) {
@@ -92,12 +110,15 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         description:
                             description.trim() === "" ? undefined : description,
                         date: dateValue,
+                        dueDate: dueDateValue || undefined,
                         categoryId: categoryId || undefined,
                     });
                 }
 
                 setDescription("");
                 setDateValue(getTodayYyyymmdd());
+                setDueDateValue(undefined);
+                setShowDueDate(false);
                 setCategoryId("");
             } catch (error) {
                 setErrors(["Errore durante il salvataggio"]);
@@ -113,32 +134,32 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     const isEditMode = !!pointToEdit;
 
     return (
-        <div className="c-mapPoint-form">
+        <div className="c-map-point-form">
             <h2>{fm("addMapPoint")}</h2>
             <form onSubmit={handleSubmit}>
-                <div className="c-form-group">
+                <div className="c-map-point-form-group">
                     <label htmlFor="description">{fm("description")}:</label>
                     <input
                         type="text"
                         id="description"
                         value={description}
-                        className="c-description-input"
+                        className="c-map-point-form-description-input"
                         onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
-                <div className="c-form-group">
+                <div className="c-map-point-form-group">
                     <label htmlFor="date">{fm("date")}:</label>
                     <input
                         type="date"
                         id="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="c-date-input"
+                        className="c-map-point-form-date-input"
                     />
                 </div>
-                <div className="c-form-group">
+                <div className="c-map-point-form-group">
                     <label htmlFor="category">{fm("category")}:</label>
-                    <div className="c-category-field">
+                    <div className="c-map-point-form-category-field">
                         <Select
                             id="category"
                             value={categoryId}
@@ -147,7 +168,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                                 label: cat.description,
                                 prefixComponent: (
                                     <div
-                                        className="c-category-color-dot"
+                                        className="c-map-point-form-category-color-dot"
                                         style={{
                                             backgroundColor: cat.color,
                                         }}
@@ -180,10 +201,54 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         </Button>
                     </div>
                 </div>
+                {showDueDate && (
+                    <div className="c-map-point-form-group">
+                        <label htmlFor="dueDate">{fm("dueDate")}:</label>
+                        <input
+                            type="date"
+                            id="dueDate"
+                            value={dueDateValue || ""}
+                            min={getTomorrowYyyymmdd()}
+                            onChange={(e) => setDueDateValue(e.target.value)}
+                            className="c-map-point-form-date-input"
+                        />
+                    </div>
+                )}
+                <div className="c-map-point-form-add-field-wrapper">
+                    <Button
+                        ref={addFieldButtonRef}
+                        type="button"
+                        onClick={() =>
+                            setIsAddFieldPopoverOpen(!isAddFieldPopoverOpen)
+                        }
+                        kind="secondary"
+                        size="small"
+                        className="c-map-point-form-add-field-button"
+                        fullWidth={false}
+                    >
+                        <Plus size={16} />
+                        <span>{fm("addOtherFields")}</span>
+                    </Button>
+                    <SelectionPopover
+                        isOpen={isAddFieldPopoverOpen}
+                        onClose={() => setIsAddFieldPopoverOpen(false)}
+                        anchorElement={addFieldButtonRef.current}
+                        options={[
+                            {
+                                id: "dueDate",
+                                label: intl.formatMessage({
+                                    id: "components.MapPointForm.dueDate",
+                                }),
+                                disabled: showDueDate,
+                                onSelect: () => setShowDueDate(true),
+                            },
+                        ]}
+                    />
+                </div>
                 {errors.length > 0 && (
-                    <div className="c-errors">
+                    <div className="c-map-point-form-errors">
                         {errors.map((error, index) => (
-                            <div key={index} className="c-error">
+                            <div key={index} className="c-map-point-form-error">
                                 <AlertCircle size={16} />
                                 <span>{error}</span>
                             </div>
@@ -208,7 +273,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 </Button>
             </form>
             {!isEditMode && (
-                <div className="c-instructions">
+                <div className="c-map-point-form-instructions">
                     <MapPin size={18} />
                     <p>{fm("clickOnMapInstructions")}</p>
                 </div>

@@ -16,6 +16,11 @@ export default function getMapPointSchema(): OpenAPIV3.SchemaObject {
                 description: "Date in YYYY-MM-DD format",
                 pattern: "^\\d{4}-\\d{2}-\\d{2}$",
             },
+            dueDate: {
+                type: "string",
+                description: "Due date in YYYY-MM-DD format (optional)",
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$",
+            },
             createdAt: {
                 type: "string",
                 format: "date-time",

@@ -96,6 +96,22 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         const category = categories.find((cat) => cat.id === point.categoryId);
         return category?.description || null;
     };
+
+    const isDueSoon = (point: MapPointDto): boolean => {
+        if (!point.dueDate) return false;
+
+        const dueDate = new Date(point.dueDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        dueDate.setHours(0, 0, 0, 0);
+
+        const diffTime = dueDate.getTime() - today.getTime();
+        // 1000 * 60 * 60 * 24 => milliseconds in a day
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        return diffDays <= 2;
+    };
+
     const intl = useIntl();
     const deletePointLabel = intl.formatMessage({
         id: "components.MapContainer.deletePoint",
@@ -184,15 +200,18 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 const isSpecialPoint = isStartOrEndPoint(point);
                 const markerColor = getMarkerColor(point);
                 const categoryName = getCategoryName(point);
+                const shouldBlink = isDueSoon(point);
 
                 return (
                     <CircleMarker
-                        key={`${point.id}-${point.categoryId || "no-category"}`}
+                        key={`${point.id}-${point.categoryId || "no-category"}-${point.dueDate || "no-due"}`}
                         center={[point.lat, point.long]}
                         radius={8}
                         color={markerColor}
                         fillColor={markerColor}
                         fillOpacity={isSpecialPoint ? 0.3 : 1}
+                        weight={shouldBlink ? 4 : 2}
+                        className={shouldBlink ? "c-map-container-blink" : ""}
                         eventHandlers={{
                             click: (e) => {
                                 e.originalEvent.stopPropagation();
@@ -225,6 +244,23 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                                     day="numeric"
                                                 />
                                             </div>
+                                            {point.dueDate && (
+                                                <div>
+                                                    <strong>
+                                                        {fm("dueDate")}:
+                                                    </strong>{" "}
+                                                    <FormattedDate
+                                                        value={
+                                                            new Date(
+                                                                point.dueDate,
+                                                            )
+                                                        }
+                                                        year="numeric"
+                                                        month="numeric"
+                                                        day="numeric"
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                         {categoryName && (
                                             <div className="c-map-container-popup-right">

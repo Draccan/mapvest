@@ -805,5 +805,48 @@ describe("DrizzleMapRepository", () => {
 
             expect(updatedPoint!.category_id).toBe(category2.id);
         });
+
+        it("should create and update map point with dueDate", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const point = await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Theft",
+                    date: "2024-01-01",
+                    dueDate: "2024-01-15",
+                },
+                map.id,
+            );
+
+            expect(point.due_date).toBe("2024-01-15");
+
+            const updatedPoint = await repository.updateMapPoint(
+                point.id,
+                map.id,
+                {
+                    description: "Updated Theft",
+                    date: "2024-01-01",
+                    dueDate: "2024-01-20",
+                },
+            );
+
+            expect(updatedPoint!.due_date).toBe("2024-01-20");
+        });
     });
 });

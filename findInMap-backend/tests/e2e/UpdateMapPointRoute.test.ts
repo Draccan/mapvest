@@ -145,4 +145,22 @@ describe("Update Map Point Route", () => {
         expect(response.body.categoryId).toBe(categoryId);
         expect(response.body.description).toBe(updateData.description);
     });
+
+    it("PUT /:groupId/maps/:mapId/points/:pointId should update with dueDate", async () => {
+        const updateData = {
+            description: "Updated with Due Date",
+            date: "2025-12-20",
+            dueDate: "2025-12-31",
+        };
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}/points/${pointId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send(updateData)
+            .expect(200);
+
+        expect(response.body.dueDate).toBe(updateData.dueDate);
+        expect(response.body.description).toBe(updateData.description);
+        expect(response.body.date).toBe(updateData.date);
+    });
 });

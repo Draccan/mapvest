@@ -73,3 +73,19 @@
     display: flex;
     gap: 8px;
 }
+
+@keyframes blinkMarker {
+    0%,
+    100% {
+        stroke-width: 4;
+        stroke-opacity: 1;
+    }
+    50% {
+        stroke-width: 8;
+        stroke-opacity: 0.5;
+    }
+}
+
+.c-map-container-blink {
+    animation: blinkMarker 1.2s ease-in-out infinite;
+}

@@ -49,6 +49,7 @@ export default flattenObject({
         MapContainer: {
             description: "Description",
             date: "Date",
+            dueDate: "Due Date",
             coordinates: "Coordinates",
             selectedPoint: "Selected Point",
             deletePoint: "Delete Point",
@@ -61,6 +62,9 @@ export default flattenObject({
             addMapPoint: "Add Map Point",
             description: "Description",
             date: "Date",
+            dueDate: "Due Date",
+            addDueDate: "Add Due Date",
+            addOtherFields: "Add Other Fields",
             category: "Category",
             selectCategory: "Select a category",
             addNewCategory: "Add New Category",

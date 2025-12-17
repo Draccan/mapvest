@@ -27,6 +27,7 @@ export class DrizzleMapRepository implements MapRepository {
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
                 date: mapPoints.date,
+                dueDate: mapPoints.dueDate,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             })
@@ -59,6 +60,7 @@ export class DrizzleMapRepository implements MapRepository {
                 location: sql`ST_GeomFromText(${`POINT(${data.long} ${data.lat})`}, 4326)`,
                 description: data.description,
                 date: data.date,
+                dueDate: data.dueDate,
                 categoryId: data.categoryId,
                 mapId: mapId,
             })
@@ -70,6 +72,7 @@ export class DrizzleMapRepository implements MapRepository {
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
                 date: mapPoints.date,
+                dueDate: mapPoints.dueDate,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             });
@@ -102,6 +105,7 @@ export class DrizzleMapRepository implements MapRepository {
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
                 date: mapPoints.date,
+                dueDate: mapPoints.dueDate,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             })
@@ -162,6 +166,7 @@ export class DrizzleMapRepository implements MapRepository {
             .set({
                 description: data.description,
                 date: data.date,
+                dueDate: data.dueDate,
                 categoryId: data.categoryId,
             })
             .where(and(eq(mapPoints.id, pointId), eq(mapPoints.mapId, mapId)))
@@ -173,6 +178,7 @@ export class DrizzleMapRepository implements MapRepository {
                 lat: sql<number>`ST_Y(${mapPoints.location})`,
                 description: mapPoints.description,
                 date: mapPoints.date,
+                dueDate: mapPoints.dueDate,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             });

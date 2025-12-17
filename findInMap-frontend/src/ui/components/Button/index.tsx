@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
 import { setMultipleClassNames } from "../../utils/setMultipleClassNames";
 import { LoadingSpinner } from "../LoadingSpinner";
@@ -20,55 +20,63 @@ export interface ButtonProps {
     "aria-label"?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({
-    kind = "primary",
-    size = "large",
-    type = "button",
-    disabled = false,
-    loading = false,
-    onClick,
-    children,
-    className = "",
-    fullWidth = true,
-    title,
-    "aria-label": ariaLabel,
-}) => {
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (!disabled && !loading && onClick) {
-            onClick(e);
-        }
-    };
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    (
+        {
+            kind = "primary",
+            size = "large",
+            type = "button",
+            disabled = false,
+            loading = false,
+            onClick,
+            children,
+            className = "",
+            fullWidth = true,
+            title,
+            "aria-label": ariaLabel,
+        },
+        ref,
+    ) => {
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (!disabled && !loading && onClick) {
+                onClick(e);
+            }
+        };
 
-    const classNames = setMultipleClassNames(
-        "c-button",
-        `c-button-${kind}`,
-        `c-button-${size}`,
-        fullWidth && "c-button-full-width",
-        loading && "c-button-loading",
-        className,
-    );
+        const classNames = setMultipleClassNames(
+            "c-button",
+            `c-button-${kind}`,
+            `c-button-${size}`,
+            fullWidth && "c-button-full-width",
+            loading && "c-button-loading",
+            className,
+        );
 
-    return (
-        <button
-            type={type}
-            disabled={disabled || loading}
-            onClick={handleClick}
-            className={classNames}
-            title={title}
-            aria-label={ariaLabel}
-        >
-            {loading ? (
-                size === "icon" ? (
-                    <LoadingSpinner />
-                ) : (
-                    <span className="c-button-loading-content">
+        return (
+            <button
+                ref={ref}
+                type={type}
+                disabled={disabled || loading}
+                onClick={handleClick}
+                className={classNames}
+                title={title}
+                aria-label={ariaLabel}
+            >
+                {loading ? (
+                    size === "icon" ? (
                         <LoadingSpinner />
-                        {children}
-                    </span>
-                )
-            ) : (
-                children
-            )}
-        </button>
-    );
-};
+                    ) : (
+                        <span className="c-button-loading-content">
+                            <LoadingSpinner />
+                            {children}
+                        </span>
+                    )
+                ) : (
+                    children
+                )}
+            </button>
+        );
+    },
+);
+
+Button.displayName = "Button";
