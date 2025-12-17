@@ -1,0 +1,1 @@
+ALTER TABLE "map_points" ADD COLUMN "due_date" date;

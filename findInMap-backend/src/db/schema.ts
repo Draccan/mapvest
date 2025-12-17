@@ -71,6 +71,7 @@ export const mapPoints = pgTable("map_points", {
     location: geometry("location").notNull(),
     description: varchar("description"),
     date: date("date").notNull(),
+    dueDate: date("due_date"),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 })
         .defaultNow()
