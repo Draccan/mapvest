@@ -1,9 +1,10 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import mem from "mem";
 
 import { UserGroupRole } from "../../core/commons/enums";
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import GroupRepository from "../../core/dependencies/GroupRepository";
+import UpdateGroupDto from "../../core/dtos/UpdateGroupDto";
 import DetailedGroupEntity from "../../core/entities/DetailedGroupEntity";
 import GroupEntity from "../../core/entities/GroupEntity";
 import { db } from "../../db";
@@ -65,5 +66,39 @@ export class DrizzleGroupRepository implements GroupRepository {
             groupId: groupId,
             role: role,
         });
+    }
+
+    async updateGroup(
+        groupId: string,
+        userId: string,
+        data: UpdateGroupDto,
+    ): Promise<GroupEntity | null> {
+        const userGroups = await db
+            .select()
+            .from(usersGroups)
+            .where(
+                and(
+                    eq(usersGroups.groupId, groupId),
+                    eq(usersGroups.userId, userId),
+                ),
+            );
+
+        if (userGroups.length === 0) {
+            return null;
+        }
+
+        const [updatedGroup] = await db
+            .update(groups)
+            .set({
+                name: data.name,
+            })
+            .where(eq(groups.id, groupId))
+            .returning();
+
+        if (!updatedGroup) {
+            return null;
+        }
+
+        return makeGroupEntity(updatedGroup);
     }
 }

@@ -1,6 +1,7 @@
 import { UserGroupRole } from "../commons/enums";
 import DetailedGroupEntity from "../entities/DetailedGroupEntity";
 import GroupEntity from "../entities/GroupEntity";
+import UpdateGroupDto from "../dtos/UpdateGroupDto";
 import DbOrTransaction from "./DatabaseTransaction";
 
 export default interface GroupRepository {
@@ -17,4 +18,9 @@ export default interface GroupRepository {
         role: UserGroupRole,
         dbInstance?: DbOrTransaction,
     ): Promise<void>;
+    updateGroup(
+        groupId: string,
+        userId: string,
+        data: UpdateGroupDto,
+    ): Promise<GroupEntity | null>;
 }

@@ -20,6 +20,7 @@ import LogoutUser from "../../src/core/usecases/LogoutUser";
 import RefreshToken from "../../src/core/usecases/RefreshToken";
 import ResetPassword from "../../src/core/usecases/ResetPassword";
 import SearchAddresses from "../../src/core/usecases/SearchAddresses";
+import UpdateGroup from "../../src/core/usecases/UpdateGroup";
 import UpdateMap from "../../src/core/usecases/UpdateMap";
 import UpdateMapPoint from "../../src/core/usecases/UpdateMapPoint";
 import UpdateUser from "../../src/core/usecases/UpdateUser";
@@ -110,6 +111,7 @@ export function createTestApp() {
     const refreshToken = new RefreshToken(jwtService);
     const searchAddresses = new SearchAddresses(googleRepository);
     const updateMap = new UpdateMap(mapRepository, groupRepository);
+    const updateGroup = new UpdateGroup(groupRepository);
     const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
     const updateUser = new UpdateUser(userRepository);
     const resetPassword = new ResetPassword(
@@ -142,6 +144,7 @@ export function createTestApp() {
             refreshToken,
             searchAddresses,
             updateMap,
+            updateGroup,
             updateMapPoint,
             updateUser,
             resetPassword,

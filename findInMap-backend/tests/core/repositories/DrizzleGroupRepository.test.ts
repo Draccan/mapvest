@@ -337,4 +337,76 @@ describe("DrizzleGroupRepository", () => {
             expect(user2yGroups[0].group.name).toBe("User 2 Group");
         });
     });
+
+    describe("updateGroup", () => {
+        it("should update a group name successfully", async () => {
+            const user = await userRepository.create({
+                name: "John",
+                surname: "Doe",
+                email: "john.doe@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Original Name",
+                user.id,
+            );
+
+            const updatedGroup = await groupRepository.updateGroup(
+                group.id,
+                user.id,
+                { name: "Updated Name" },
+            );
+
+            expect(updatedGroup).not.toBeNull();
+            expect(updatedGroup!.id).toBe(group.id);
+            expect(updatedGroup!.name).toBe("Updated Name");
+        });
+
+        it("should return null when updating a non-existent group", async () => {
+            const user = await userRepository.create({
+                name: "John",
+                surname: "Doe",
+                email: "john.doe@example.com",
+                password: "password123",
+            });
+
+            const updatedGroup = await groupRepository.updateGroup(
+                "00000000-0000-0000-0000-000000000000",
+                user.id,
+                { name: "New Name" },
+            );
+
+            expect(updatedGroup).toBeNull();
+        });
+
+        it("should return null when user does not have access to the group", async () => {
+            const user1 = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const user2 = await userRepository.create({
+                name: "User",
+                surname: "Two",
+                email: "user2@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "User 1 Group",
+                user1.id,
+            );
+
+            const updatedGroup = await groupRepository.updateGroup(
+                group.id,
+                user2.id,
+                { name: "Hacked Name" },
+            );
+
+            expect(updatedGroup).toBeNull();
+        });
+    });
 });

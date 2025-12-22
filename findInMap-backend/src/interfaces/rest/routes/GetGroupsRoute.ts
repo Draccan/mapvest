@@ -1,7 +1,7 @@
 import GroupDto from "../../../core/dtos/GroupDto";
 import GetUserGroups from "../../../core/usecases/GetUserGroups";
 import Route from "../Route";
-import getGroupSchema from "../schemas/getGroupSchema";
+import getDetailedGroupSchema from "../schemas/getDetailedGroupSchema";
 import { auhtorizationParam } from "./common/authorizationParam";
 
 export default (
@@ -22,7 +22,7 @@ export default (
                     "application/json": {
                         schema: {
                             type: "array",
-                            items: getGroupSchema(),
+                            items: getDetailedGroupSchema(),
                         },
                     },
                 },

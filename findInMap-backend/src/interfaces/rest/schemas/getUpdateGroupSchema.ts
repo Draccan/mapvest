@@ -1,18 +1,15 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-export default function getGroupSchema(): OpenAPIV3.SchemaObject {
+export default function getUpdateGroupSchema(): OpenAPIV3.SchemaObject {
     return {
         type: "object",
         properties: {
-            id: {
-                type: "string",
-                format: "uuid",
-            },
             name: {
                 type: "string",
+                minLength: 1,
             },
         },
-        required: ["id", "name"],
+        required: ["name"],
         additionalProperties: false,
     };
 }
