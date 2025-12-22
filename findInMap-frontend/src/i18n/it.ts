@@ -32,6 +32,12 @@ export default flattenObject({
             "Errore durante l'aggiornamento della password. Si prega di riprovare più tardi.",
     },
     components: {
+        NavigationBar: {
+            home: "Home",
+            dashboard: "Dashboard",
+            user: "Profilo",
+            logout: "Esci",
+        },
         AreaAnalysis: {
             title: "Analisi Area",
             summary: "Riepilogo",
@@ -48,6 +54,25 @@ export default flattenObject({
             tooManyPointsForRoute:
                 "Hai selezionato {current} punti. Per calcolare un percorso, seleziona al massimo {max} punti.",
             viewRouteDetails: "Vedi Dettagli Percorso",
+        },
+        CategoryChart: {
+            pointsByCategory: "Punti per Categoria",
+            noData: "Nessun dato disponibile",
+            noCategory: "Senza Categoria",
+        },
+        DashboardHeatmap: {
+            heatmap: "Mappa di Densità Geografica",
+            noData: "Nessun dato disponibile",
+        },
+        KpiCards: {
+            totalPoints: "Punti Totali",
+            pendingPoints: "Non in ritardo",
+            overduePoints: "In Ritardo",
+            noDeadlinePoints: "Senza Scadenza",
+        },
+        TimelineChart: {
+            pointsByDueDate: "Punti per Data di Scadenza",
+            overdue: "In Ritardo",
         },
         RouteDetailsModal: {
             title: "Dettagli Percorso",
@@ -107,6 +132,7 @@ export default flattenObject({
     views: {
         Home: {
             user: "Profilo",
+            dashboard: "Dashboard",
             logout: "Esci",
             title: "La mia Mappa",
             enterAnalysisMode: "Analizza Area",
@@ -125,6 +151,7 @@ export default flattenObject({
             updatePassword: "Aggiorna Password",
             updating: "Aggiornamento...",
             backToMap: "Torna alla Mappa",
+            backToDashboard: "Torna alla Dashboard",
             passwordUpdatedSuccess: "Password aggiornata con successo",
             passwordsDoNotMatch: "Le password non corrispondono",
             incorrectCurrentPassword: "La password attuale non è corretta",
@@ -178,6 +205,17 @@ export default flattenObject({
             resetPassword: "Reimposta Password",
             resetting: "Reimpostazione in corso...",
             passwordsDoNotMatch: "Le password non corrispondono",
+        },
+        Dashboard: {
+            title: "Dashboard",
+            home: "Home",
+            dashboard: "Dashboard",
+            user: "Profilo",
+            logout: "Esci",
+            backToHome: "Torna alla Home",
+            noMap: "Nessuna mappa disponibile",
+            noData: "Nessun dato disponibile",
+            total: "Totale",
         },
     },
 });

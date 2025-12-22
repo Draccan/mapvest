@@ -21,6 +21,7 @@
 
 .c-link-nav {
     color: var(--color-text-secondary);
+    width: 100%;
 }
 
 .c-link-nav::before {

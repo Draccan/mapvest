@@ -32,7 +32,9 @@
     "react-hot-toast": "^2.6.0",
     "react-intl": "^7.1.11",
     "react-leaflet": "^5.0.0",
+    "react-leaflet-heatmap-layer-v3": "3.0.3-beta-1",
     "react-router-dom": "^7.9.1",
+    "recharts": "^3.6.0",
     "serve": "^14.2.5"
   },
   "devDependencies": {

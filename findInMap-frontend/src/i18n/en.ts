@@ -22,6 +22,12 @@ export default flattenObject({
         updateUserPassword: "Error updating password. Please try again later.",
     },
     components: {
+        NavigationBar: {
+            home: "Home",
+            dashboard: "Dashboard",
+            user: "Profile",
+            logout: "Logout",
+        },
         AreaAnalysis: {
             title: "Area Analysis",
             summary: "Summary",
@@ -38,6 +44,25 @@ export default flattenObject({
             tooManyPointsForRoute:
                 "You have selected {current} points. To calculate a route, please select no more than {max} points.",
             viewRouteDetails: "View Route Details",
+        },
+        CategoryChart: {
+            pointsByCategory: "Points by Category",
+            noData: "No data available",
+            noCategory: "No Category",
+        },
+        DashboardHeatmap: {
+            heatmap: "Geographic Density Heatmap",
+            noData: "No data available",
+        },
+        KpiCards: {
+            totalPoints: "Total Points",
+            pendingPoints: "Not Overdue",
+            overduePoints: "Overdue",
+            noDeadlinePoints: "No Deadline",
+        },
+        TimelineChart: {
+            pointsByDueDate: "Points by Due Date",
+            overdue: "Overdue",
         },
         RouteDetailsModal: {
             title: "Route Details",
@@ -96,6 +121,7 @@ export default flattenObject({
     views: {
         Home: {
             user: "Profile",
+            dashboard: "Dashboard",
             logout: "Logout",
             enterAnalysisMode: "Analyze Area",
             exitAnalysisMode: "Exit Analysis Mode",
@@ -113,6 +139,7 @@ export default flattenObject({
             updatePassword: "Update Password",
             updating: "Updating...",
             backToMap: "Back to Map",
+            backToDashboard: "Back to Dashboard",
             passwordUpdatedSuccess: "Password updated successfully",
             passwordsDoNotMatch: "Passwords do not match",
             incorrectCurrentPassword: "Current password is incorrect",
@@ -165,6 +192,17 @@ export default flattenObject({
             resetPassword: "Reset Password",
             resetting: "Resetting...",
             passwordsDoNotMatch: "Passwords do not match",
+        },
+        Dashboard: {
+            title: "Dashboard",
+            home: "Home",
+            dashboard: "Dashboard",
+            user: "Profile",
+            logout: "Logout",
+            backToHome: "Back to Home",
+            noMap: "No map available",
+            noData: "No data available",
+            total: "Total",
         },
     },
 });

@@ -1,0 +1,22 @@
+.c-dashboard-heatmap {
+    background: var(--color-background-primary);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px var(--color-shadow);
+}
+
+.c-dashboard-heatmap h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.c-dashboard-heatmap-no-data {
+    color: var(--color-text-secondary);
+    text-align: center;
+    padding: 3rem;
+    font-style: italic;
+}

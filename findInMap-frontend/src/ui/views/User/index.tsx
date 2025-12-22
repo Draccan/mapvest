@@ -179,6 +179,7 @@ export const User: React.FC = () => {
 
                 <div className="v-user-back-link">
                     <Link to={routes.home()}>{fm("backToMap")}</Link>
+                    <Link to={routes.dashboard()}>{fm("backToDashboard")}</Link>
                 </div>
             </div>
         </div>

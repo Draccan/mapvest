@@ -14,25 +14,19 @@ import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
 import { useGetMapCategories } from "../../../core/usecases/useGetMapCategories";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
-import { useLogoutUser } from "../../../core/usecases/useLogoutUser";
 import { useUpdateMapPoint } from "../../../core/usecases/useUpdateMapPoint";
-import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import getPointsInBounds from "../../../utils/getPointsInBounds";
-import LogoSvg from "../../assets/logo.svg";
 import usePrevious from "../../commons/hooks/usePrevious";
-import routes from "../../commons/routes";
 import { AddressSearch } from "../../components/AddressSearch";
 import { AreaAnalysis } from "../../components/AreaAnalysis";
 import { Button } from "../../components/Button";
-import { Link } from "../../components/Link";
+import { Header } from "../../components/Header";
 import { MapContainer } from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
 import { RouteDetailsModal } from "../../components/RouteDetailsModal";
 import { Skeleton } from "../../components/Skeleton";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import "./style.css";
-
-const fm = getFormattedMessageWithScope("views.Home");
 
 export const Home: React.FC = () => {
     const intl = useIntl();
@@ -86,7 +80,6 @@ export const Home: React.FC = () => {
         useCreateMapCategory();
     const previousCreatingCategory = usePrevious(creatingCategory);
     const { deleteMapPoints } = useDeleteMapPoints();
-    const { loading: loadingLogout, logout } = useLogoutUser();
     const {
         calculateOptimizedRoute,
         reset: resetOptimizedRoute,
@@ -262,29 +255,7 @@ export const Home: React.FC = () => {
         <div className="v-home">
             <ThemeToggle className="v-home-ThemeToggle" />
             <div className="v-home-container">
-                <header className="v-home-header">
-                    <div className="v-home-logo">
-                        <img src={LogoSvg} alt="MapVest" />
-                    </div>
-                    <nav className="v-home-navigation">
-                        <Link
-                            to={routes.user()}
-                            kind="nav"
-                            className="v-home-user-nav-link"
-                        >
-                            {fm("user")}
-                        </Link>
-                        <Button
-                            onClick={logout}
-                            type="button"
-                            kind="danger"
-                            size="small"
-                            loading={loadingLogout}
-                        >
-                            {fm("logout")}
-                        </Button>
-                    </nav>
-                </header>
+                <Header />
                 <div className="v-home-content">
                     <div className="v-home-map-section">
                         <div className="v-home-search-wrapper">

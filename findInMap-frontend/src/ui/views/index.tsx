@@ -9,6 +9,7 @@ import { UserProvider } from "../../core/contexts/UserContext";
 import i18nMessages from "../../i18n";
 import routes from "../commons/routes";
 import { RoutesWrapper } from "../components/RoutesWrapper";
+import { Dashboard } from "./Dashboard";
 import { Home } from "./Home";
 import { Login } from "./Login";
 import NotFound from "./NotFound";
@@ -53,6 +54,10 @@ const App: React.FC = () => {
                                         <Route
                                             path={routes.home()}
                                             element={<Home />}
+                                        />
+                                        <Route
+                                            path={routes.dashboard()}
+                                            element={<Dashboard />}
                                         />
                                         <Route
                                             path={routes.user()}

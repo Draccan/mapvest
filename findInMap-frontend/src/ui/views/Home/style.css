@@ -36,16 +36,6 @@
     width: auto;
 }
 
-.v-home-navigation {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-.v-home-about-nav-link {
-    min-width: 130px;
-}
-
 .v-home-content {
     display: flex;
     gap: 2rem;
