@@ -166,7 +166,7 @@ export class DrizzleMapRepository implements MapRepository {
             .set({
                 description: data.description,
                 date: data.date,
-                dueDate: data.dueDate,
+                dueDate: data.dueDate ?? null,
                 categoryId: data.categoryId,
             })
             .where(and(eq(mapPoints.id, pointId), eq(mapPoints.mapId, mapId)))
