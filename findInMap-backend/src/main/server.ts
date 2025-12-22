@@ -16,6 +16,7 @@ import LogoutUser from "../core/usecases/LogoutUser";
 import RefreshToken from "../core/usecases/RefreshToken";
 import ResetPassword from "../core/usecases/ResetPassword";
 import SearchAddresses from "../core/usecases/SearchAddresses";
+import UpdateMap from "../core/usecases/UpdateMap";
 import UpdateMapPoint from "../core/usecases/UpdateMapPoint";
 import UpdateUser from "../core/usecases/UpdateUser";
 import UpdateUserPassword from "../core/usecases/UpdateUserPassword";
@@ -64,6 +65,7 @@ const searchAddresses = new SearchAddresses(googleRepository);
 const createMapCategory = new CreateMapCategory(groupRepository, mapRepository);
 const getMapCategories = new GetMapCategories(groupRepository, mapRepository);
 const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
+const updateMap = new UpdateMap(mapRepository, groupRepository);
 const updateUser = new UpdateUser(userRepository);
 const getUser = new GetUser(userRepository);
 const resetPassword = new ResetPassword(
@@ -96,6 +98,7 @@ const restInterface = new RestInterface(
         createMapCategory,
         getMapCategories,
         updateMapPoint,
+        updateMap,
         updateUser,
         resetPassword,
         updateUserPassword,

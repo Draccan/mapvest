@@ -1,6 +1,7 @@
 import CreateMapDto from "../dtos/CreateMapDto";
 import { CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import { UpdateMapPointDto } from "../dtos/UpdateMapPointDto";
+import UpdateMapDto from "../dtos/UpdateMapDto";
 import CreateCategoryDto from "../dtos/CreateCategoryDto";
 import MapEntity from "../entities/MapEntity";
 import { MapPointEntity } from "../entities/MapPointEntity";
@@ -32,4 +33,9 @@ export default interface MapRepository {
         mapId: string,
         data: UpdateMapPointDto,
     ): Promise<MapPointEntity | null>;
+    updateMap(
+        mapId: string,
+        groupId: string,
+        data: UpdateMapDto,
+    ): Promise<MapEntity | null>;
 }

@@ -849,4 +849,87 @@ describe("DrizzleMapRepository", () => {
             expect(updatedPoint!.due_date).toBe("2024-01-20");
         });
     });
+
+    describe("updateMap", () => {
+        it("should update a map name", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Original Map Name",
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {
+                name: "Updated Map Name",
+            });
+
+            expect(updatedMap).toBeDefined();
+            expect(updatedMap!.id).toBe(map.id);
+            expect(updatedMap!.name).toBe("Updated Map Name");
+            expect(updatedMap!.groupId).toBe(group.id);
+        });
+
+        it("should return null when updating a non-existent map", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const updatedMap = await repository.updateMap(
+                "00000000-0000-0000-0000-000000000000",
+                group.id,
+                { name: "New Name" },
+            );
+
+            expect(updatedMap).toBeNull();
+        });
+
+        it("should not update a map if groupId does not match", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group1 = await groupRepository.createGroup(
+                "Test Group 1",
+                user.id,
+            );
+
+            const group2 = await groupRepository.createGroup(
+                "Test Group 2",
+                user.id,
+            );
+
+            const map = await repository.createMap(group1.id, {
+                name: "Original Map Name",
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group2.id, {
+                name: "Updated Map Name",
+            });
+
+            expect(updatedMap).toBeNull();
+
+            const maps = await repository.findMapByGroupId(group1.id);
+            expect(maps[0].name).toBe("Original Map Name");
+        });
+    });
 });

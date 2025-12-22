@@ -7,6 +7,7 @@ import CreateCategoryDto from "../../core/dtos/CreateCategoryDto";
 import CreateMapDto from "../../core/dtos/CreateMapDto";
 import { CreateMapPointDto } from "../../core/dtos/CreateMapPointDto";
 import { UpdateMapPointDto } from "../../core/dtos/UpdateMapPointDto";
+import UpdateMapDto from "../../core/dtos/UpdateMapDto";
 import { MapCategoryEntity } from "../../core/entities/MapCategoryEntity";
 import MapEntity from "../../core/entities/MapEntity";
 import { MapPointEntity } from "../../core/entities/MapPointEntity";
@@ -188,5 +189,25 @@ export class DrizzleMapRepository implements MapRepository {
         }
 
         return makeMapPointEntity(updatedMapPoint);
+    }
+
+    async updateMap(
+        mapId: string,
+        groupId: string,
+        data: UpdateMapDto,
+    ): Promise<MapEntity | null> {
+        const [updatedMap] = await db
+            .update(maps)
+            .set({
+                name: data.name,
+            })
+            .where(and(eq(maps.id, mapId), eq(maps.groupId, groupId)))
+            .returning();
+
+        if (!updatedMap) {
+            return null;
+        }
+
+        return makeMapEntity(updatedMap);
     }
 }

@@ -25,6 +25,7 @@ import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
 import ResetPassword from "../../core/usecases/ResetPassword";
 import SearchAddresses from "../../core/usecases/SearchAddresses";
+import UpdateMap from "../../core/usecases/UpdateMap";
 import UpdateMapPoint from "../../core/usecases/UpdateMapPoint";
 import UpdateUser from "../../core/usecases/UpdateUser";
 import UpdateUserPassword from "../../core/usecases/UpdateUserPassword";
@@ -48,6 +49,7 @@ import LogoutUserRoute from "./routes/LogoutUserRoute";
 import RefreshTokenRoute from "./routes/RefreshTokenRoute";
 import ResetPasswordRoute from "./routes/ResetPasswordRoute";
 import SearchAddressesRoute from "./routes/SearchAddressesRoute";
+import UpdateMapRoute from "./routes/UpdateMapRoute";
 import UpdateMapPointRoute from "./routes/UpdateMapPointRoute";
 import UpdateUserPasswordRoute from "./routes/UpdateUserPasswordRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
@@ -79,6 +81,7 @@ export default class RestInterface {
             createMapCategory: CreateMapCategory;
             getMapCategories: GetMapCategories;
             updateMapPoint: UpdateMapPoint;
+            updateMap: UpdateMap;
             updateUser: UpdateUser;
             resetPassword: ResetPassword;
             updateUserPassword: UpdateUserPassword;
@@ -103,6 +106,7 @@ export default class RestInterface {
             CreateMapCategoryRoute(usecases.createMapCategory),
             GetMapCategoriesRoute(usecases.getMapCategories),
             UpdateMapPointRoute(usecases.updateMapPoint),
+            UpdateMapRoute(usecases.updateMap),
             UpdateUserPasswordRoute(usecases.updateUserPassword),
             UpdateUserRoute(usecases.updateUser),
             ResetPasswordRoute(usecases.resetPassword),
