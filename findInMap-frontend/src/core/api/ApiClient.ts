@@ -11,6 +11,8 @@ import type { MapDto } from "../dtos/MapDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
 import type { RouteDto } from "../dtos/RouteDto";
 import type TokenResponseDto from "../dtos/TokenResponseDto";
+import type { UpdateGroupDto } from "../dtos/UpdateGroupDto";
+import type { UpdateMapDto } from "../dtos/UpdateMapDto";
 import type UpdateUserDto from "../dtos/UpdateUserDto";
 import type UserDto from "../dtos/UserDto";
 import { UnauthorizedError } from "./errors/UnauthorizedError";
@@ -437,6 +439,45 @@ export default class ApiClient {
     ): Promise<MapPointDto> {
         const response = await this.fetchWithInterceptors(
             `${API_URL}/${groupId}/maps/${mapId}/points/${pointId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(data),
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async updateGroup(
+        groupId: string,
+        data: UpdateGroupDto,
+    ): Promise<GroupDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/groups/${groupId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(data),
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async updateMap(
+        groupId: string,
+        mapId: string,
+        data: UpdateMapDto,
+    ): Promise<MapDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}`,
             {
                 method: "PUT",
                 body: JSON.stringify(data),

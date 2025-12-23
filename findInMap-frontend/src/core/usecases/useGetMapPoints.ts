@@ -11,6 +11,7 @@ interface UseGetMapPoints {
     data: MapPointDto[] | null;
     fetch: (groupId: string, mapId: string) => Promise<void>;
     hasFetched: boolean;
+    reset: () => void;
 }
 
 export const useGetMapPoints = (): UseGetMapPoints => {
@@ -36,11 +37,17 @@ export const useGetMapPoints = (): UseGetMapPoints => {
         }
     };
 
+    const reset = () => {
+        setData(null);
+        setHasFetched(false);
+    };
+
     return {
         loading,
         error,
         data,
         fetch: fetchMapPoints,
         hasFetched,
+        reset,
     };
 };

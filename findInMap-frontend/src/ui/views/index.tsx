@@ -8,6 +8,7 @@ import { ThemeProvider } from "../../core/contexts/ThemeContext";
 import { UserProvider } from "../../core/contexts/UserContext";
 import i18nMessages from "../../i18n";
 import routes from "../commons/routes";
+import { LoggedRouteWrapper } from "../components/LoggedRouteWrapper";
 import { RoutesWrapper } from "../components/RoutesWrapper";
 import { Dashboard } from "./Dashboard";
 import { Home } from "./Home";
@@ -53,15 +54,27 @@ const App: React.FC = () => {
                                         />
                                         <Route
                                             path={routes.home()}
-                                            element={<Home />}
+                                            element={
+                                                <LoggedRouteWrapper>
+                                                    <Home />
+                                                </LoggedRouteWrapper>
+                                            }
                                         />
                                         <Route
                                             path={routes.dashboard()}
-                                            element={<Dashboard />}
+                                            element={
+                                                <LoggedRouteWrapper>
+                                                    <Dashboard />
+                                                </LoggedRouteWrapper>
+                                            }
                                         />
                                         <Route
                                             path={routes.user()}
-                                            element={<User />}
+                                            element={
+                                                <LoggedRouteWrapper>
+                                                    <User />
+                                                </LoggedRouteWrapper>
+                                            }
                                         />
                                         <Route
                                             path={routes.notFound()}

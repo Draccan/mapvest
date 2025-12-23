@@ -2,6 +2,7 @@ import { ScanSearch, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 
+import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
 import type { CategoryDto } from "../../../core/dtos/CategoryDto";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
 import { type MapPointDto } from "../../../core/dtos/MapPointDto";
@@ -10,10 +11,8 @@ import { useCalculateOptimizedRoute } from "../../../core/usecases/useCalculateO
 import { useCreateMapCategory } from "../../../core/usecases/useCreateMapCategory";
 import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useDeleteMapPoints } from "../../../core/usecases/useDeleteMapPoints";
-import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
 import { useGetMapCategories } from "../../../core/usecases/useGetMapCategories";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
-import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
 import { useUpdateMapPoint } from "../../../core/usecases/useUpdateMapPoint";
 import getPointsInBounds from "../../../utils/getPointsInBounds";
 import usePrevious from "../../commons/hooks/usePrevious";
@@ -30,6 +29,7 @@ import "./style.css";
 
 export const Home: React.FC = () => {
     const intl = useIntl();
+    const { selectedGroup, selectedMap } = useGroupsMaps();
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
         long: number;
         lat: number;
@@ -45,19 +45,7 @@ export const Home: React.FC = () => {
         useState(false);
     const [routePoints, setRoutePoints] = useState<MapPointDto[]>([]);
 
-    const {
-        data: groupsData,
-        fetch: fetchGroups,
-        loading: loadingGroups,
-        error: groupsError,
-    } = useGetUserGroups();
-
-    const {
-        data: mapsData,
-        fetch: fetchMaps,
-        loading: loadingMaps,
-        error: mapsError,
-    } = useGetGroupMaps();
+    const previousSelectedMapId = usePrevious(selectedMap?.id);
 
     const {
         data: mapPointsData,
@@ -65,6 +53,7 @@ export const Home: React.FC = () => {
         loading: loadingPoints,
         error: mapPointsError,
         hasFetched,
+        reset: resetMapPoints,
     } = useGetMapPoints();
 
     const {
@@ -88,40 +77,18 @@ export const Home: React.FC = () => {
     } = useCalculateOptimizedRoute();
 
     useEffect(() => {
-        if (!loadingGroups && !groupsData && !groupsError) {
-            fetchGroups();
-        }
-    }, [fetchGroups, loadingGroups, groupsData, groupsError]);
-
-    useEffect(() => {
         if (
-            groupsData &&
-            groupsData.length > 0 &&
-            !mapsData &&
-            !mapsError &&
-            !loadingMaps
-        ) {
-            const firstGroup = groupsData[0];
-            fetchMaps(firstGroup.id);
-        }
-    }, [groupsData, mapsData, mapsError, loadingMaps, fetchMaps]);
-
-    useEffect(() => {
-        if (
-            mapsData &&
-            mapsData.length > 0 &&
-            groupsData &&
-            groupsData.length > 0 &&
+            selectedGroup &&
+            selectedMap &&
             !loadingPoints &&
             !mapPointsData &&
             !mapPointsError
         ) {
-            const firstMap = mapsData[0];
-            fetchMapPoints(groupsData[0]!.id, firstMap.id);
+            fetchMapPoints(selectedGroup.id, selectedMap.id);
         }
     }, [
-        mapsData,
-        groupsData,
+        selectedGroup,
+        selectedMap,
         loadingPoints,
         mapPointsData,
         mapPointsError,
@@ -130,24 +97,50 @@ export const Home: React.FC = () => {
 
     useEffect(() => {
         if (
-            mapsData &&
-            mapsData.length > 0 &&
-            groupsData &&
-            groupsData.length > 0 &&
+            selectedGroup &&
+            selectedMap &&
             !loadingCategories &&
             (!categoriesData || (previousCreatingCategory && !creatingCategory))
         ) {
-            const firstMap = mapsData[0];
-            fetchCategories(groupsData[0]!.id, firstMap.id);
+            fetchCategories(selectedGroup.id, selectedMap.id);
         }
     }, [
-        mapsData,
-        groupsData,
+        selectedGroup,
+        selectedMap,
         loadingCategories,
         categoriesData,
         creatingCategory,
         previousCreatingCategory,
         fetchCategories,
+    ]);
+
+    useEffect(() => {
+        if (
+            selectedGroup &&
+            selectedMap &&
+            previousSelectedMapId &&
+            previousSelectedMapId !== selectedMap.id
+        ) {
+            resetMapPoints();
+
+            setSelectedCoordinates(null);
+            setPointToEdit(null);
+            setPointsInArea([]);
+            setStartPoint(null);
+            setEndPoint(null);
+            setRoutePoints([]);
+            resetOptimizedRoute();
+
+            fetchMapPoints(selectedGroup.id, selectedMap.id);
+            fetchCategories(selectedGroup.id, selectedMap.id);
+        }
+    }, [
+        selectedGroup,
+        selectedMap,
+        previousSelectedMapId,
+        fetchMapPoints,
+        fetchCategories,
+        resetOptimizedRoute,
     ]);
 
     const handleMapPointSelection = (lng: number, lat: number) => {
@@ -156,15 +149,13 @@ export const Home: React.FC = () => {
     };
 
     const handleSavePoint = async (pointData: CreateMapPointDto) => {
-        const firstGroup = groupsData![0]!;
-        const firstMap = mapsData![0]!;
         const result = await createMapPoint(
-            firstGroup.id,
-            firstMap.id,
+            selectedGroup!.id,
+            selectedMap!.id,
             pointData,
         );
         if (result) {
-            await fetchMapPoints(firstGroup.id, firstMap.id);
+            await fetchMapPoints(selectedGroup!.id, selectedMap!.id);
             setSelectedCoordinates(null);
         }
     };
@@ -177,28 +168,26 @@ export const Home: React.FC = () => {
     const handleUpdatePoint = async (pointData: UpdateMapPointDto) => {
         if (!pointToEdit) return;
 
-        const firstGroup = groupsData![0]!;
-        const firstMap = mapsData![0]!;
         const result = await updateMapPoint(
-            firstGroup.id,
-            firstMap.id,
+            selectedGroup!.id,
+            selectedMap!.id,
             pointToEdit.id,
             pointData,
         );
         if (result) {
-            await fetchMapPoints(firstGroup.id, firstMap.id);
+            await fetchMapPoints(selectedGroup!.id, selectedMap!.id);
             setPointToEdit(null);
             setSelectedCoordinates(null);
         }
     };
 
     const handleDeletePoint = async (pointId: string) => {
-        const firstGroup = groupsData![0]!;
-        const firstMap = mapsData![0]!;
         setDeletingPointId(pointId);
         try {
-            await deleteMapPoints(firstGroup.id, firstMap.id, [pointId]);
-            await fetchMapPoints(firstGroup.id, firstMap.id);
+            await deleteMapPoints(selectedGroup!.id, selectedMap!.id, [
+                pointId,
+            ]);
+            await fetchMapPoints(selectedGroup!.id, selectedMap!.id);
         } finally {
             setDeletingPointId(null);
         }
@@ -240,9 +229,7 @@ export const Home: React.FC = () => {
         description: string,
         color: string,
     ): Promise<CategoryDto | null> => {
-        const firstGroup = groupsData![0]!;
-        const firstMap = mapsData![0]!;
-        return createCategory(firstGroup.id, firstMap.id, {
+        return createCategory(selectedGroup!.id, selectedMap!.id, {
             description,
             color,
         });
@@ -305,6 +292,7 @@ export const Home: React.FC = () => {
                                     optimizedRoute={optimizedRoute}
                                     startPoint={startPoint}
                                     endPoint={endPoint}
+                                    mapId={selectedMap?.id}
                                 />
                             )}
                         </div>
@@ -334,6 +322,7 @@ export const Home: React.FC = () => {
                                 onCreateCategory={handleCreateCategory}
                                 loadingCategory={creatingCategory}
                                 pointToEdit={pointToEdit}
+                                mapId={selectedMap?.id}
                             />
                         )}
                     </div>

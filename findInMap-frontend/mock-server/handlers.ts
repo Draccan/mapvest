@@ -16,7 +16,7 @@ let mockCategories: CategoryDto[] = [
     },
 ];
 
-let mockMapPoints: MapPointDto[] = [
+let mockMapPointsMap1: MapPointDto[] = [
     {
         id: "9403dab5-aa23-4680-bf21-0b9d31867874",
         long: 13.740255476095486,
@@ -195,6 +195,37 @@ let mockMapPoints: MapPointDto[] = [
     },
 ];
 
+let mockMapPointsMap2: MapPointDto[] = [
+    {
+        id: "map2-point-1",
+        long: 11.255814,
+        lat: 43.769562,
+        description: "Firenze Centro",
+        date: "2025-12-20",
+        createdAt: "2025-12-20T10:00:00.000Z",
+    },
+    {
+        id: "map2-point-2",
+        long: 11.248785,
+        lat: 43.773472,
+        description: "Duomo di Firenze",
+        date: "2025-12-21",
+        categoryId: "74f9aa54-dd40-4f63-9d50-1c2387b2623d",
+        createdAt: "2025-12-21T14:30:00.000Z",
+    },
+];
+
+const getMapPoints = (mapId: string): MapPointDto[] => {
+    if (mapId === "map-1") return mockMapPointsMap1;
+    if (mapId === "map-2") return mockMapPointsMap2;
+    return [];
+};
+
+const setMapPoints = (mapId: string, points: MapPointDto[]) => {
+    if (mapId === "map-1") mockMapPointsMap1 = points;
+    else if (mapId === "map-2") mockMapPointsMap2 = points;
+};
+
 let mockUsers = [
     {
         id: "1",
@@ -218,6 +249,11 @@ let mockMaps = [
         id: "map-1",
         groupId: "group-1",
         name: "First Map",
+    },
+    {
+        id: "map-2",
+        groupId: "group-1",
+        name: "Second Map",
     },
 ];
 
@@ -275,14 +311,20 @@ export const handlers = [
             return HttpResponse.json(newMap, { status: 201 });
         },
     ),
-    http.get("http://localhost:3001/:groupId/maps/:mapId/points", async () => {
-        await delay(1000);
-        return HttpResponse.json(mockMapPoints);
-    }),
+    http.get(
+        "http://localhost:3001/:groupId/maps/:mapId/points",
+        async ({ params }) => {
+            await delay(1000);
+            const { mapId } = params;
+            const points = getMapPoints(mapId as string);
+            return HttpResponse.json(points);
+        },
+    ),
     http.post(
         "http://localhost:3001/:groupId/maps/:mapId/points",
-        async ({ request }) => {
+        async ({ params, request }) => {
             await delay(1000);
+            const { mapId } = params;
             const newPoint = (await request.json()) as Omit<
                 MapPointDto,
                 "id" | "createdAt"
@@ -294,15 +336,17 @@ export const handlers = [
                 createdAt: new Date().toISOString(),
             };
 
-            mockMapPoints.push(mapPoint);
+            const currentPoints = getMapPoints(mapId as string);
+            setMapPoints(mapId as string, [...currentPoints, mapPoint]);
 
             return HttpResponse.json(mapPoint, { status: 201 });
         },
     ),
     http.delete(
         "http://localhost:3001/:groupId/maps/:mapId/points",
-        async ({ request }) => {
+        async ({ params, request }) => {
             await delay(1000);
+            const { mapId } = params;
             const payload = (await request.json()) as { pointIds: string[] };
 
             if (!payload.pointIds || !Array.isArray(payload.pointIds)) {
@@ -319,18 +363,11 @@ export const handlers = [
                 );
             }
 
-            const deletedIds: string[] = [];
-
-            payload.pointIds.forEach((pointId) => {
-                const pointIndex = mockMapPoints.findIndex(
-                    (point) => point.id === pointId,
-                );
-
-                if (pointIndex !== -1) {
-                    mockMapPoints.splice(pointIndex, 1);
-                    deletedIds.push(pointId);
-                }
-            });
+            const currentPoints = getMapPoints(mapId as string);
+            const filteredPoints = currentPoints.filter(
+                (point) => !payload.pointIds.includes(point.id),
+            );
+            setMapPoints(mapId as string, filteredPoints);
 
             return HttpResponse.json(undefined, { status: 200 });
         },
@@ -339,7 +376,7 @@ export const handlers = [
         "http://localhost:3001/:groupId/maps/:mapId/points/:pointId",
         async ({ params, request }) => {
             await delay(1000);
-            const { pointId } = params;
+            const { mapId, pointId } = params;
             const updateData = (await request.json()) as {
                 description?: string;
                 date: string;
@@ -347,7 +384,8 @@ export const handlers = [
                 dueDate?: string;
             };
 
-            const pointIndex = mockMapPoints.findIndex(
+            const currentPoints = getMapPoints(mapId as string);
+            const pointIndex = currentPoints.findIndex(
                 (point) => point.id === pointId,
             );
 
@@ -358,13 +396,15 @@ export const handlers = [
                 );
             }
 
-            mockMapPoints[pointIndex] = {
-                ...mockMapPoints[pointIndex],
+            currentPoints[pointIndex] = {
+                ...currentPoints[pointIndex],
                 dueDate: updateData.dueDate,
                 ...updateData,
             };
 
-            return HttpResponse.json(mockMapPoints[pointIndex], {
+            setMapPoints(mapId as string, currentPoints);
+
+            return HttpResponse.json(currentPoints[pointIndex], {
                 status: 200,
             });
         },
@@ -582,6 +622,58 @@ export const handlers = [
             categoryIdCounter++;
 
             return HttpResponse.json(category, { status: 201 });
+        },
+    ),
+    http.put(
+        "http://localhost:3001/groups/:groupId",
+        async ({ params, request }) => {
+            await delay(1000);
+            const { groupId } = params;
+            const updateData = (await request.json()) as { name: string };
+
+            const groupIndex = mockGroups.findIndex(
+                (group) => group.id === groupId,
+            );
+
+            if (groupIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Group not found" },
+                    { status: 404 },
+                );
+            }
+
+            mockGroups[groupIndex] = {
+                ...mockGroups[groupIndex],
+                name: updateData.name,
+            };
+
+            return HttpResponse.json(mockGroups[groupIndex], { status: 200 });
+        },
+    ),
+    http.put(
+        "http://localhost:3001/:groupId/maps/:mapId",
+        async ({ params, request }) => {
+            await delay(1000);
+            const { groupId, mapId } = params;
+            const updateData = (await request.json()) as { name: string };
+
+            const mapIndex = mockMaps.findIndex(
+                (map) => map.id === mapId && map.groupId === groupId,
+            );
+
+            if (mapIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Map not found" },
+                    { status: 404 },
+                );
+            }
+
+            mockMaps[mapIndex] = {
+                ...mockMaps[mapIndex],
+                name: updateData.name,
+            };
+
+            return HttpResponse.json(mockMaps[mapIndex], { status: 200 });
         },
     ),
 ];

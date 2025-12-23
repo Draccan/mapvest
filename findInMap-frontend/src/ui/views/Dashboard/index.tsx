@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 
-import { useGetGroupMaps } from "../../../core/usecases/useGetGroupMaps";
+import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useGetMapCategories } from "../../../core/usecases/useGetMapCategories";
-import { useGetUserGroups } from "../../../core/usecases/useGetUserGroups";
+import usePrevious from "../../commons/hooks/usePrevious";
 import { Header } from "../../components/Header";
 import { Skeleton } from "../../components/Skeleton";
 import { ThemeToggle } from "../../components/ThemeToggle";
@@ -14,24 +14,14 @@ import { DashboardHeatmap } from "../../components/DashboardHeatmap";
 import "./style.css";
 
 export const Dashboard: React.FC = () => {
-    const {
-        data: groupsData,
-        fetch: fetchGroups,
-        loading: loadingGroups,
-        error: groupsError,
-    } = useGetUserGroups();
-
-    const {
-        data: mapsData,
-        fetch: fetchMaps,
-        loading: loadingMaps,
-        error: mapsError,
-    } = useGetGroupMaps();
+    const { selectedGroup, selectedMap } = useGroupsMaps();
+    const previousSelectedMapId = usePrevious(selectedMap?.id);
 
     const {
         data: mapPointsData,
         fetch: fetchMapPoints,
         loading: loadingPoints,
+        error: mapPointsError,
     } = useGetMapPoints();
 
     const {
@@ -41,59 +31,60 @@ export const Dashboard: React.FC = () => {
     } = useGetMapCategories();
 
     useEffect(() => {
-        if (!groupsData && !loadingGroups && !groupsError) {
-            fetchGroups();
-        }
-    }, [fetchGroups, loadingGroups, groupsData, groupsError]);
-
-    useEffect(() => {
         if (
-            groupsData &&
-            groupsData.length > 0 &&
-            !mapsData &&
-            !loadingMaps &&
-            !mapsError
-        ) {
-            fetchMaps(groupsData[0].id);
-        }
-    }, [groupsData, mapsData, loadingMaps, fetchMaps, mapsError]);
-
-    useEffect(() => {
-        if (
-            mapsData &&
-            mapsData.length > 0 &&
-            groupsData &&
-            groupsData.length > 0 &&
+            selectedGroup &&
+            selectedMap &&
             !loadingPoints &&
-            !mapPointsData
+            !mapPointsData &&
+            !mapPointsError
         ) {
-            const firstMap = mapsData[0];
-            fetchMapPoints(groupsData[0].id, firstMap.id);
+            fetchMapPoints(selectedGroup.id, selectedMap.id);
         }
-    }, [mapsData, groupsData, loadingPoints, mapPointsData, fetchMapPoints]);
+    }, [
+        selectedGroup,
+        selectedMap,
+        loadingPoints,
+        mapPointsData,
+        mapPointsError,
+        fetchMapPoints,
+    ]);
 
     useEffect(() => {
         if (
-            mapsData &&
-            mapsData.length > 0 &&
-            groupsData &&
-            groupsData.length > 0 &&
+            selectedGroup &&
+            selectedMap &&
             !loadingCategories &&
             !categoriesData
         ) {
-            const firstMap = mapsData[0];
-            fetchCategories(groupsData[0].id, firstMap.id);
+            fetchCategories(selectedGroup.id, selectedMap.id);
         }
     }, [
-        mapsData,
-        groupsData,
+        selectedGroup,
+        selectedMap,
         loadingCategories,
         categoriesData,
         fetchCategories,
     ]);
 
-    const isLoading =
-        loadingGroups || loadingMaps || loadingPoints || loadingCategories;
+    useEffect(() => {
+        if (
+            selectedGroup &&
+            selectedMap &&
+            previousSelectedMapId &&
+            previousSelectedMapId !== selectedMap.id
+        ) {
+            fetchMapPoints(selectedGroup.id, selectedMap.id);
+            fetchCategories(selectedGroup.id, selectedMap.id);
+        }
+    }, [
+        selectedGroup,
+        selectedMap,
+        previousSelectedMapId,
+        fetchMapPoints,
+        fetchCategories,
+    ]);
+
+    const isLoading = loadingPoints || loadingCategories;
 
     return (
         <div className="v-dashboard">

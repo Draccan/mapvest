@@ -36,6 +36,7 @@ interface MapContainerProps {
     optimizedRoute?: RouteDto | null;
     startPoint?: MapPointDto | null;
     endPoint?: MapPointDto | null;
+    mapId?: string | number;
 }
 
 const MapClickHandler: React.FC<{
@@ -51,7 +52,8 @@ const MapClickHandler: React.FC<{
 
 const MapController: React.FC<{
     selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
-}> = ({ selectedCoordinates }) => {
+    mapId?: string | number;
+}> = ({ selectedCoordinates, mapId }) => {
     const map = useMap();
 
     useEffect(() => {
@@ -63,6 +65,13 @@ const MapController: React.FC<{
             );
         }
     }, [selectedCoordinates, map]);
+
+    // Warning: Reset zoom when mapId changes
+    useEffect(() => {
+        if (mapId !== undefined) {
+            map.setView([41.9028, 12.4964], 3);
+        }
+    }, [mapId, map]);
 
     return null;
 };
@@ -82,6 +91,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     optimizedRoute,
     startPoint,
     endPoint,
+    mapId,
 }) => {
     const getMarkerColor = (point: MapPointDto): string => {
         if (!point.categoryId) return DEFAULT_MARKER_COLOR;
@@ -164,7 +174,10 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {!drawingEnabled && <MapClickHandler onMapClick={onMapClick} />}
-            <MapController selectedCoordinates={selectedCoordinates} />
+            <MapController
+                selectedCoordinates={selectedCoordinates}
+                mapId={mapId}
+            />
             <GeomanControl enabled={drawingEnabled} onAreaDrawn={onAreaDrawn} />
             {optimizedRoute && (
                 <PolylineWithArrows positions={optimezedRouteGeometry} />

@@ -30,8 +30,24 @@ export default flattenObject({
             "Errore durante l'invio del link di reset password. Si prega di riprovare più tardi.",
         updateUserPassword:
             "Errore durante l'aggiornamento della password. Si prega di riprovare più tardi.",
+        updateGroup:
+            "Errore durante l'aggiornamento del gruppo. Si prega di riprovare più tardi.",
+        updateMap:
+            "Errore durante l'aggiornamento della mappa. Si prega di riprovare più tardi.",
     },
     components: {
+        Breadcrumb: {
+            selectGroup: "Seleziona Gruppo",
+            selectMap: "Seleziona Mappa",
+            renameGroup: "Rinomina Gruppo",
+            renameMap: "Rinomina Mappa",
+            noMapSelected: "Nessuna mappa selezionata",
+            save: "Salva",
+            cancel: "Annulla",
+        },
+        LoggedRouteWrapper: {
+            loadingData: "Caricamento dati...",
+        },
         NavigationBar: {
             home: "Home",
             dashboard: "Dashboard",

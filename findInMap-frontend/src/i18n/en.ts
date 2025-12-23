@@ -20,8 +20,22 @@ export default flattenObject({
         resetPassword:
             "Error sending password reset link. Please try again later.",
         updateUserPassword: "Error updating password. Please try again later.",
+        updateGroup: "Error updating group. Please try again later.",
+        updateMap: "Error updating map. Please try again later.",
     },
     components: {
+        Breadcrumb: {
+            selectGroup: "Select Group",
+            selectMap: "Select Map",
+            renameGroup: "Rename Group",
+            renameMap: "Rename Map",
+            noMapSelected: "No map selected",
+            save: "Save",
+            cancel: "Cancel",
+        },
+        LoggedRouteWrapper: {
+            loadingData: "Loading data...",
+        },
         NavigationBar: {
             home: "Home",
             dashboard: "Dashboard",

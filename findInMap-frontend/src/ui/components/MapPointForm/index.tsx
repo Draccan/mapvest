@@ -37,6 +37,7 @@ interface MapPointFormProps {
     ) => Promise<CategoryDto | null>;
     loadingCategory: boolean;
     pointToEdit?: MapPointDto | null;
+    mapId?: string | number;
 }
 
 export const MapPointForm: React.FC<MapPointFormProps> = ({
@@ -48,6 +49,7 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     onCreateCategory,
     loadingCategory,
     pointToEdit,
+    mapId,
 }) => {
     const intl = useIntl();
     const [description, setDescription] = useState<string>("");
@@ -77,6 +79,17 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
             setCategoryId("");
         }
     }, [pointToEdit]);
+
+    useEffect(() => {
+        if (mapId !== undefined) {
+            setDescription("");
+            setDateValue(getTodayYyyymmdd());
+            setDueDateValue(undefined);
+            setShowDueDate(false);
+            setCategoryId("");
+            setErrors([]);
+        }
+    }, [mapId]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

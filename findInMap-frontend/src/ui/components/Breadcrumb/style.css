@@ -1,0 +1,213 @@
+.c-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.c-breadcrumb-item {
+    position: relative;
+}
+
+.c-breadcrumb-selector {
+    position: relative;
+}
+
+.c-breadcrumb-group-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--color-background-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.c-breadcrumb-edit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: all 0.15s ease;
+}
+
+.c-breadcrumb-edit-icon:hover {
+    background: var(--color-background-tertiary);
+    color: var(--color-text-primary);
+}
+
+.c-breadcrumb-trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: var(--color-background-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+}
+
+.c-breadcrumb-trigger:hover {
+    background: var(--color-background-tertiary);
+    border-color: var(--color-border);
+}
+
+.c-breadcrumb-name {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.c-breadcrumb-name-placeholder {
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.c-breadcrumb-chevron {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+}
+
+.c-breadcrumb-separator {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+}
+
+.c-breadcrumb-dropdown {
+    padding: 8px 0;
+    min-width: 220px;
+}
+
+.c-breadcrumb-dropdown-header {
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.5px;
+}
+
+.c-breadcrumb-dropdown-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.c-breadcrumb-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    transition: background 0.15s ease;
+}
+
+.c-breadcrumb-dropdown-item:hover {
+    background: var(--color-background-tertiary);
+}
+
+.c-breadcrumb-dropdown-item.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.c-breadcrumb-dropdown-actions {
+    border-top: 1px solid var(--color-border-light);
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+.c-breadcrumb-dropdown-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    transition: all 0.15s ease;
+}
+
+.c-breadcrumb-dropdown-action:hover {
+    background: var(--color-background-tertiary);
+    color: var(--color-text-primary);
+}
+
+.c-breadcrumb-edit-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.c-breadcrumb-input {
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    outline: none;
+    min-width: 120px;
+    max-width: 180px;
+}
+
+.c-breadcrumb-input:disabled {
+    opacity: 0.6;
+}
+
+.c-breadcrumb-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.c-breadcrumb-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.c-breadcrumb-action-btn-confirm {
+    background: var(--color-success);
+    color: white;
+}
+
+.c-breadcrumb-action-btn-confirm:hover:not(:disabled) {
+    background: var(--color-success-dark);
+}
+
+.c-breadcrumb-action-btn-cancel {
+    background: var(--color-background-tertiary);
+    color: var(--color-text-secondary);
+}
+
+.c-breadcrumb-action-btn-cancel:hover:not(:disabled) {
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+}
