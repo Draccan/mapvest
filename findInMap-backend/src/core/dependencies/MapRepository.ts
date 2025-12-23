@@ -38,4 +38,5 @@ export default interface MapRepository {
         groupId: string,
         data: UpdateMapDto,
     ): Promise<MapEntity | null>;
+    invalidateMapsCache(): void;
 }

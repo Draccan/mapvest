@@ -24,6 +24,7 @@ const mockMapRepository: jest.Mocked<MapRepository> = {
     findCategoriesByMapId: jest.fn(),
     updateMapPoint: jest.fn(),
     updateMap: jest.fn(),
+    invalidateMapsCache: jest.fn(),
 };
 
 describe("GetMapCategories", () => {

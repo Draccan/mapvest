@@ -24,6 +24,11 @@ export default class CreateGroupMap {
 
         const map = await this.mapRepository.createMap(groupId, data);
 
+        // Warning: we need to invalidate the cache after creating a new map,
+        // because we use the cache when we fetch the list of maps for a group
+        // to get points and categories and check authorizations.
+        this.mapRepository.invalidateMapsCache();
+
         return makeMapDto(map);
     }
 }

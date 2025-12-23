@@ -210,4 +210,8 @@ export class DrizzleMapRepository implements MapRepository {
 
         return makeMapEntity(updatedMap);
     }
+
+    invalidateMapsCache(): void {
+        mem.clear(this.memoizedFindMapByGroupId);
+    }
 }

@@ -19,6 +19,7 @@ const mockMapRepository: jest.Mocked<MapRepository> = {
     findCategoriesByMapId: jest.fn(),
     updateMapPoint: jest.fn(),
     updateMap: jest.fn(),
+    invalidateMapsCache: jest.fn(),
 };
 
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
@@ -89,6 +90,45 @@ describe("CreateGroupMap", () => {
             expect(mockMapRepository.createMap).toHaveBeenCalledWith(
                 groupId,
                 createMapDto,
+            );
+            expect(mockMapRepository.invalidateMapsCache).toHaveBeenCalled();
+        });
+
+        it("should invalidate maps cache after successful map creation", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const createMapDto: CreateMapDto = {
+                name: "New Map",
+            };
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            const mockCreatedMap: MapEntity = {
+                id: "map-456",
+                groupId: groupId,
+                name: "New Map",
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.createMap.mockResolvedValue(mockCreatedMap);
+
+            await createGroupMap.execute(groupId, userId, createMapDto);
+
+            expect(mockMapRepository.invalidateMapsCache).toHaveBeenCalledTimes(
+                1,
             );
         });
 
