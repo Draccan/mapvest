@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Edit2, Check, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Edit2, Check, X, Plus } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useIntl } from "react-intl";
 
@@ -18,19 +18,24 @@ export const Breadcrumb: React.FC = () => {
         selectMap,
         updateSelectedGroup,
         updateSelectedMap,
+        createNewMap,
         updatingGroup,
         updatingMap,
+        creatingMap,
     } = useGroupsMaps();
 
     const [isMapPopoverOpen, setIsMapPopoverOpen] = useState(false);
     const [isEditingGroup, setIsEditingGroup] = useState(false);
     const [isEditingMap, setIsEditingMap] = useState(false);
+    const [isCreatingMap, setIsCreatingMap] = useState(false);
     const [groupName, setGroupName] = useState("");
     const [mapName, setMapName] = useState("");
+    const [newMapName, setNewMapName] = useState("");
 
     const mapButtonRef = useRef<HTMLButtonElement>(null);
     const groupInputRef = useRef<HTMLInputElement>(null);
     const mapInputRef = useRef<HTMLInputElement>(null);
+    const newMapInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (isEditingGroup && groupInputRef.current) {
@@ -45,6 +50,12 @@ export const Breadcrumb: React.FC = () => {
             mapInputRef.current.select();
         }
     }, [isEditingMap]);
+
+    useEffect(() => {
+        if (isCreatingMap && newMapInputRef.current) {
+            newMapInputRef.current.focus();
+        }
+    }, [isCreatingMap]);
 
     const handleGroupEditClick = () => {
         if (selectedGroup) {
@@ -114,6 +125,33 @@ export const Breadcrumb: React.FC = () => {
         if (map) {
             selectMap(map);
             setIsMapPopoverOpen(false);
+        }
+    };
+
+    const handleCreateMapClick = () => {
+        setNewMapName("");
+        setIsCreatingMap(true);
+    };
+
+    const handleCreateMapSave = async () => {
+        if (newMapName.trim()) {
+            await createNewMap({ name: newMapName.trim() });
+            setIsCreatingMap(false);
+            setIsMapPopoverOpen(false);
+            setNewMapName("");
+        }
+    };
+
+    const handleCreateMapCancel = () => {
+        setIsCreatingMap(false);
+        setNewMapName("");
+    };
+
+    const handleCreateMapKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleCreateMapSave();
+        } else if (e.key === "Escape") {
+            handleCreateMapCancel();
         }
     };
 
@@ -226,7 +264,11 @@ export const Breadcrumb: React.FC = () => {
                         </button>
                         <Popover
                             isOpen={isMapPopoverOpen}
-                            onClose={() => setIsMapPopoverOpen(false)}
+                            onClose={() => {
+                                setIsMapPopoverOpen(false);
+                                setIsCreatingMap(false);
+                                setNewMapName("");
+                            }}
                             anchorElement={mapButtonRef.current}
                         >
                             <div className="c-breadcrumb-dropdown">
@@ -248,15 +290,64 @@ export const Breadcrumb: React.FC = () => {
                                         </button>
                                     ))}
                                 </div>
-                                <div className="c-breadcrumb-dropdown-actions">
-                                    <button
-                                        className="c-breadcrumb-dropdown-action"
-                                        onClick={handleMapEditClick}
-                                    >
-                                        <Edit2 size={14} />
-                                        {fm("renameMap")}
-                                    </button>
-                                </div>
+                                {isCreatingMap ? (
+                                    <div className="c-breadcrumb-dropdown-create">
+                                        <input
+                                            ref={newMapInputRef}
+                                            type="text"
+                                            value={newMapName}
+                                            onChange={(e) =>
+                                                setNewMapName(e.target.value)
+                                            }
+                                            onKeyDown={handleCreateMapKeyDown}
+                                            className="c-breadcrumb-dropdown-create-input"
+                                            placeholder={intl.formatMessage({
+                                                id: "components.Breadcrumb.newMapPlaceholder",
+                                            })}
+                                            disabled={creatingMap}
+                                        />
+                                        <button
+                                            onClick={handleCreateMapSave}
+                                            className="c-breadcrumb-action-btn c-breadcrumb-action-btn-confirm"
+                                            disabled={
+                                                creatingMap ||
+                                                !newMapName.trim()
+                                            }
+                                            title={intl.formatMessage({
+                                                id: "components.Breadcrumb.save",
+                                            })}
+                                        >
+                                            <Check size={14} />
+                                        </button>
+                                        <button
+                                            onClick={handleCreateMapCancel}
+                                            className="c-breadcrumb-action-btn c-breadcrumb-action-btn-cancel"
+                                            disabled={creatingMap}
+                                            title={intl.formatMessage({
+                                                id: "components.Breadcrumb.cancel",
+                                            })}
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="c-breadcrumb-dropdown-actions">
+                                        <button
+                                            className="c-breadcrumb-dropdown-action"
+                                            onClick={handleCreateMapClick}
+                                        >
+                                            <Plus size={14} />
+                                            {fm("addMap")}
+                                        </button>
+                                        <button
+                                            className="c-breadcrumb-dropdown-action"
+                                            onClick={handleMapEditClick}
+                                        >
+                                            <Edit2 size={14} />
+                                            {fm("renameMap")}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </Popover>
                     </div>

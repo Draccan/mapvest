@@ -259,7 +259,7 @@ let mockMaps = [
 
 let userIdCounter = 2;
 let groupIdCounter = 2;
-let mapIdCounter = 2;
+let mapIdCounter = mockMaps.length + 1;
 let categoryIdCounter = 4;
 
 export const handlers = [

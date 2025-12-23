@@ -34,6 +34,8 @@ export default flattenObject({
             "Errore durante l'aggiornamento del gruppo. Si prega di riprovare più tardi.",
         updateMap:
             "Errore durante l'aggiornamento della mappa. Si prega di riprovare più tardi.",
+        createMap:
+            "Errore durante la creazione della mappa. Si prega di riprovare più tardi.",
     },
     components: {
         Breadcrumb: {
@@ -41,6 +43,8 @@ export default flattenObject({
             selectMap: "Seleziona Mappa",
             renameGroup: "Rinomina Gruppo",
             renameMap: "Rinomina Mappa",
+            addMap: "Aggiungi Mappa",
+            newMapPlaceholder: "Inserisci nome mappa...",
             noMapSelected: "Nessuna mappa selezionata",
             save: "Salva",
             cancel: "Annulla",

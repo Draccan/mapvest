@@ -9,10 +9,12 @@ import React, {
 
 import type { GroupDto } from "../dtos/GroupDto";
 import type { MapDto } from "../dtos/MapDto";
+import type { CreateMapDto } from "../dtos/CreateMapDto";
 import type { UpdateGroupDto } from "../dtos/UpdateGroupDto";
 import type { UpdateMapDto } from "../dtos/UpdateMapDto";
 import { useGetUserGroups } from "../usecases/useGetUserGroups";
 import { useGetGroupMaps } from "../usecases/useGetGroupMaps";
+import { useCreateMap } from "../usecases/useCreateMap";
 import { useUpdateGroup } from "../usecases/useUpdateGroup";
 import { useUpdateMap } from "../usecases/useUpdateMap";
 
@@ -25,11 +27,13 @@ interface GroupsMapsContextType {
     loadingMaps: boolean;
     updatingGroup: boolean;
     updatingMap: boolean;
+    creatingMap: boolean;
     error: string | null;
     selectGroup: (group: GroupDto) => void;
     selectMap: (map: MapDto) => void;
     updateSelectedGroup: (data: UpdateGroupDto) => Promise<GroupDto | null>;
     updateSelectedMap: (data: UpdateMapDto) => Promise<MapDto | null>;
+    createNewMap: (data: CreateMapDto) => Promise<MapDto | null>;
     isInitialized: boolean;
 }
 
@@ -61,6 +65,7 @@ export const GroupsMapsProvider: React.FC<GroupsMapsProviderProps> = ({
 
     const { updateGroup, loading: updatingGroup } = useUpdateGroup();
     const { updateMap, loading: updatingMap } = useUpdateMap();
+    const { createMap, loading: creatingMap } = useCreateMap();
 
     const [selectedGroup, setSelectedGroup] = useState<GroupDto | null>(null);
     const [selectedMap, setSelectedMap] = useState<MapDto | null>(null);
@@ -153,6 +158,19 @@ export const GroupsMapsProvider: React.FC<GroupsMapsProviderProps> = ({
         [selectedGroup, selectedMap, updateMap, fetchMaps],
     );
 
+    const createNewMap = useCallback(
+        async (data: CreateMapDto): Promise<MapDto | null> => {
+            if (!selectedGroup) return null;
+            const result = await createMap(selectedGroup.id, data);
+            if (result) {
+                await fetchMaps(selectedGroup.id);
+                setSelectedMap(result);
+            }
+            return result;
+        },
+        [selectedGroup, createMap, fetchMaps],
+    );
+
     const error = groupsError || mapsError;
 
     return (
@@ -166,11 +184,13 @@ export const GroupsMapsProvider: React.FC<GroupsMapsProviderProps> = ({
                 loadingMaps,
                 updatingGroup,
                 updatingMap,
+                creatingMap,
                 error,
                 selectGroup,
                 selectMap,
                 updateSelectedGroup,
                 updateSelectedMap,
+                createNewMap,
                 isInitialized,
             }}
         >

@@ -2,6 +2,7 @@ import { API_URL } from "../../config";
 import TokenStorageService from "../../utils/TokenStorageService";
 import type AddressDto from "../dtos/AddressDto";
 import type { CategoryDto } from "../dtos/CategoryDto";
+import type { CreateMapDto } from "../dtos/CreateMapDto";
 import type { CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type CreateUserDto from "../dtos/CreateUserDto";
 import type { GroupDto } from "../dtos/GroupDto";
@@ -283,6 +284,22 @@ export default class ApiClient {
             `${API_URL}/${groupId}/maps`,
             {
                 method: "GET",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async createMap(groupId: string, data: CreateMapDto): Promise<MapDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps`,
+            {
+                method: "POST",
+                body: JSON.stringify(data),
             },
         );
 
