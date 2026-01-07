@@ -1,0 +1,27 @@
+.c-supportbox.c-button {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    min-height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px var(--color-shadow-strong);
+    z-index: 1000;
+}
+
+.c-supportbox.c-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px var(--color-shadow-strong);
+}
+
+.c-supportbox.c-button:active {
+    transform: scale(0.95);
+}
+
+.c-supportbox.c-button:focus {
+    box-shadow:
+        0 0 0 3px var(--color-primary-alpha),
+        0 4px 12px var(--color-shadow-strong);
+}

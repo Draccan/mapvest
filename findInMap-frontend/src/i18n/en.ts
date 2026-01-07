@@ -130,6 +130,12 @@ export default flattenObject({
         RoutesWrapper: {
             restoringSession: "Restoring session...",
         },
+        SupportBox: {
+            contactSupport: "Contact Support",
+            emailSubject: "Support Request - MapVest",
+            emailBody:
+                "Describe the problem, including the email address you used to log in...",
+        },
         ThemeToggle: {
             switchToDark: "Switch to dark mode",
             switchToLight: "Switch to light mode",

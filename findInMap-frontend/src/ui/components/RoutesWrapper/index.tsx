@@ -5,6 +5,7 @@ import { useGetCurrentUser } from "../../../core/usecases/useGetCurrentUser";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import TokenStorageService from "../../../utils/TokenStorageService";
 import { useGlobalErrorHandler } from "../../commons/hooks/useGlobalErrorHandler";
+import { SupportBox } from "../SupportBox";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.RoutesWrapper");
@@ -47,5 +48,10 @@ export const RoutesWrapper: React.FC<Props> = ({ children }) => {
         );
     }
 
-    return <div>{children}</div>;
+    return (
+        <div>
+            {children}
+            <SupportBox />
+        </div>
+    );
 };

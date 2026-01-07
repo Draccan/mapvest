@@ -144,6 +144,12 @@ export default flattenObject({
         RoutesWrapper: {
             restoringSession: "Ripristino della sessione in corso...",
         },
+        SupportBox: {
+            contactSupport: "Contatta il Supporto",
+            emailSubject: "Richiesta supporto - MapVest",
+            emailBody:
+                "Descrivi il problema indicando il tuo indirizzo email utilizzato per accedere...",
+        },
         ThemeToggle: {
             switchToDark: "Passa alla modalità scura",
             switchToLight: "Passa alla modalità chiara",
