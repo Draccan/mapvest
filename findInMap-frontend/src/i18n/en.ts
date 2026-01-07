@@ -42,6 +42,7 @@ export default flattenObject({
         NavigationBar: {
             home: "Home",
             dashboard: "Dashboard",
+            settings: "Settings",
             user: "Profile",
             logout: "Logout",
         },
@@ -226,6 +227,16 @@ export default flattenObject({
             noMap: "No map available",
             noData: "No data available",
             total: "Total",
+        },
+        Settings: {
+            title: "Settings",
+            group: "Group:",
+            table: {
+                name: "Name",
+                surname: "Surname",
+                email: "Email",
+                role: "Role",
+            },
         },
     },
 });

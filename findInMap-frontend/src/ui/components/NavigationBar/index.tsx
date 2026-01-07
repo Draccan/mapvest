@@ -25,6 +25,9 @@ export const NavigationBar: React.FC = () => {
                     {fm("dashboard")}
                 </Link>
             )}
+            <Link to={routes.settings()} kind="nav">
+                {fm("settings")}
+            </Link>
             <Link to={routes.user()} kind="nav">
                 {fm("user")}
             </Link>

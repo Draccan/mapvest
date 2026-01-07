@@ -17,6 +17,7 @@ import NotFound from "./NotFound";
 import { Register } from "./Register";
 import { ResetPassword } from "./ResetPassword";
 import { User } from "./User";
+import { Settings } from "./Settings";
 import "./style.css";
 
 const App: React.FC = () => {
@@ -65,6 +66,14 @@ const App: React.FC = () => {
                                             element={
                                                 <LoggedRouteWrapper>
                                                     <Dashboard />
+                                                </LoggedRouteWrapper>
+                                            }
+                                        />
+                                        <Route
+                                            path={routes.settings()}
+                                            element={
+                                                <LoggedRouteWrapper>
+                                                    <Settings />
                                                 </LoggedRouteWrapper>
                                             }
                                         />
