@@ -15,6 +15,7 @@ export default flattenObject({
             "Error searching addresses. Please try again later.",
         getGroupMaps: "Error loading maps. Please try again later.",
         getUserGroups: "Error loading groups. Please try again later.",
+        getGroupUsers: "Error loading group users. Please try again later.",
         calculateOptimizedRoute:
             "Error calculating optimized route. Please try again later.",
         resetPassword:
@@ -236,6 +237,7 @@ export default flattenObject({
                 surname: "Surname",
                 email: "Email",
                 role: "Role",
+                noUsers: "No users found",
             },
         },
     },

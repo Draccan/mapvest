@@ -24,6 +24,7 @@ const mockGroupRepository: jest.Mocked<GroupRepository> = {
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
     memoizedFindByUserId: jest.fn(),
+    findUsersByGroupId: jest.fn(),
     updateGroup: jest.fn(),
 };
 

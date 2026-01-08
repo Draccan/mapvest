@@ -16,6 +16,7 @@ import type { UpdateGroupDto } from "../dtos/UpdateGroupDto";
 import type { UpdateMapDto } from "../dtos/UpdateMapDto";
 import type UpdateUserDto from "../dtos/UpdateUserDto";
 import type UserDto from "../dtos/UserDto";
+import type UserGroupDto from "../dtos/UserGroupDto";
 import { UnauthorizedError } from "./errors/UnauthorizedError";
 
 export default class ApiClient {
@@ -271,6 +272,21 @@ export default class ApiClient {
         const response = await this.fetchWithInterceptors(`${API_URL}/groups`, {
             method: "GET",
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async getGroupUsers(groupId: string): Promise<UserGroupDto[]> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/groups/${groupId}/users`,
+            {
+                method: "GET",
+            },
+        );
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

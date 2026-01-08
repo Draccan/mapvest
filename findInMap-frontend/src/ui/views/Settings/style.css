@@ -98,6 +98,13 @@
     border-bottom: none;
 }
 
+.v-settings-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+
 @media (max-width: 768px) {
     .v-settings-container {
         padding: 1rem;

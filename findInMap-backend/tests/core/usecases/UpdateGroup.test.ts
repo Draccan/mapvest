@@ -5,6 +5,7 @@ import UpdateGroup from "../../../src/core/usecases/UpdateGroup";
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     memoizedFindByUserId: jest.fn(),
+    findUsersByGroupId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
     updateGroup: jest.fn(),

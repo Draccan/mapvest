@@ -11,6 +11,7 @@ import CreateMapPoint from "../../src/core/usecases/CreateMapPoint";
 import CreateUser from "../../src/core/usecases/CreateUser";
 import DeleteMapPoints from "../../src/core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../../src/core/usecases/GetGroupMaps";
+import GetGroupUsers from "../../src/core/usecases/GetGroupUsers";
 import GetMapCategories from "../../src/core/usecases/GetMapCategories";
 import GetMapPoints from "../../src/core/usecases/GetMapPoints";
 import GetUser from "../../src/core/usecases/GetUser";
@@ -99,6 +100,7 @@ export function createTestApp() {
     );
     const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
     const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
+    const getGroupUsers = new GetGroupUsers(groupRepository, userRepository);
     const getMapCategories = new GetMapCategories(
         groupRepository,
         mapRepository,
@@ -135,6 +137,7 @@ export function createTestApp() {
             createUser,
             deleteMapPoints,
             getGroupMaps,
+            getGroupUsers,
             getMapCategories,
             getMapPoints,
             getUser,

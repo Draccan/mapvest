@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import UserRepository from "../../core/dependencies/UserRepository";
@@ -44,6 +44,19 @@ export class DrizzleUserRepository implements UserRepository {
             .where(eq(users.id, userId));
 
         return user ? makeUserEntity(user) : null;
+    }
+
+    async findByIds(userIds: string[]): Promise<UserEntity[]> {
+        if (userIds.length === 0) {
+            return [];
+        }
+
+        const foundUsers = await db
+            .select()
+            .from(users)
+            .where(inArray(users.id, userIds));
+
+        return foundUsers.map((user) => makeUserEntity(user));
     }
 
     async updatePassword(

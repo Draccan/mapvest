@@ -12,6 +12,7 @@ const mockUserRepository: jest.Mocked<UserRepository> = {
     create: jest.fn(),
     findByEmail: jest.fn(),
     findById: jest.fn(),
+    findByIds: jest.fn(),
     updatePassword: jest.fn(),
     createPasswordResetToken: jest.fn(),
     deletePasswordResetTokensByUserId: jest.fn(),
@@ -24,6 +25,7 @@ const mockGroupRepository: jest.Mocked<GroupRepository> = {
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
     memoizedFindByUserId: jest.fn(),
+    findUsersByGroupId: jest.fn(),
     updateGroup: jest.fn(),
 };
 

@@ -10,6 +10,7 @@ export default interface UserRepository {
     ): Promise<UserEntity>;
     findByEmail(email: string): Promise<UserEntity | null>;
     findById(userId: string): Promise<UserEntity | null>;
+    findByIds(userIds: string[]): Promise<UserEntity[]>;
     updatePassword(userId: string, hashedPassword: string): Promise<UserEntity>;
     createPasswordResetToken(
         userId: string,

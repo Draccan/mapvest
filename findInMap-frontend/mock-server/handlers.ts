@@ -257,6 +257,25 @@ let mockMaps = [
     },
 ];
 
+let mockGroupUsers = [
+    {
+        id: "user-1",
+        name: "John",
+        surname: "Doe",
+        email: "john.doe@example.com",
+        userGroupRole: "owner",
+        groupId: "group-1",
+    },
+    {
+        id: "user-2",
+        name: "Jane",
+        surname: "Smith",
+        email: "jane.smith@example.com",
+        userGroupRole: "member",
+        groupId: "group-1",
+    },
+];
+
 let userIdCounter = 2;
 let groupIdCounter = 2;
 let mapIdCounter = mockMaps.length + 1;
@@ -287,6 +306,17 @@ export const handlers = [
         await delay(1000);
         return HttpResponse.json(mockGroups);
     }),
+    http.get(
+        "http://localhost:3001/groups/:groupId/users",
+        async ({ params }) => {
+            await delay(1000);
+            const { groupId } = params;
+            const groupUsers = mockGroupUsers.filter(
+                (user) => user.groupId === groupId,
+            );
+            return HttpResponse.json(groupUsers);
+        },
+    ),
     http.get("http://localhost:3001/:groupId/maps", async ({ params }) => {
         await delay(1000);
         const { groupId } = params;

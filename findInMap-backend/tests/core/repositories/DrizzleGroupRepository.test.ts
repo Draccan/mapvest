@@ -409,4 +409,186 @@ describe("DrizzleGroupRepository", () => {
             expect(updatedGroup).toBeNull();
         });
     });
+
+    describe("findUsersByGroupId", () => {
+        it("should return empty array when group has no users", async () => {
+            const user = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Empty Group",
+                user.id,
+            );
+
+            await db.delete(usersGroups);
+
+            const result = await groupRepository.findUsersByGroupId(group.id);
+
+            expect(Array.isArray(result)).toBe(true);
+            expect(result.length).toBe(0);
+        });
+
+        it("should return all users belonging to a group", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const admin = await userRepository.create({
+                name: "Admin",
+                surname: "User",
+                email: "admin@example.com",
+                password: "password123",
+            });
+
+            const contributor = await userRepository.create({
+                name: "Contributor",
+                surname: "User",
+                email: "contributor@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Multi-User Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                admin.id,
+                group.id,
+                UserGroupRole.Admin,
+            );
+
+            await groupRepository.addUserToGroup(
+                contributor.id,
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            const result = await groupRepository.findUsersByGroupId(group.id);
+
+            expect(result.length).toBe(3);
+            expect(result.map((r) => r.userId)).toContain(owner.id);
+            expect(result.map((r) => r.userId)).toContain(admin.id);
+            expect(result.map((r) => r.userId)).toContain(contributor.id);
+        });
+
+        it("should return users with correct role information", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const admin = await userRepository.create({
+                name: "Admin",
+                surname: "User",
+                email: "admin@example.com",
+                password: "password123",
+            });
+
+            const contributor = await userRepository.create({
+                name: "Contributor",
+                surname: "User",
+                email: "contributor@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Role Test Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                admin.id,
+                group.id,
+                UserGroupRole.Admin,
+            );
+
+            await groupRepository.addUserToGroup(
+                contributor.id,
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            const result = await groupRepository.findUsersByGroupId(group.id);
+
+            const ownerRelation = result.find((r) => r.userId === owner.id);
+            const adminRelation = result.find((r) => r.userId === admin.id);
+            const contributorRelation = result.find(
+                (r) => r.userId === contributor.id,
+            );
+
+            expect(ownerRelation?.role).toBe(UserGroupRole.Owner);
+            expect(adminRelation?.role).toBe(UserGroupRole.Admin);
+            expect(contributorRelation?.role).toBe(UserGroupRole.Contributor);
+        });
+
+        it("should only return users for the specified group", async () => {
+            const user1 = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const user2 = await userRepository.create({
+                name: "User",
+                surname: "Two",
+                email: "user2@example.com",
+                password: "password123",
+            });
+
+            const group1 = await groupRepository.createGroup(
+                "Group 1",
+                user1.id,
+            );
+
+            const group2 = await groupRepository.createGroup(
+                "Group 2",
+                user2.id,
+            );
+
+            const group1Users = await groupRepository.findUsersByGroupId(
+                group1.id,
+            );
+            const group2Users = await groupRepository.findUsersByGroupId(
+                group2.id,
+            );
+
+            expect(group1Users.length).toBe(1);
+            expect(group2Users.length).toBe(1);
+            expect(group1Users[0].userId).toBe(user1.id);
+            expect(group2Users[0].userId).toBe(user2.id);
+        });
+
+        it("should return correct structure with userId and role", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Structure Test Group",
+                owner.id,
+            );
+
+            const result = await groupRepository.findUsersByGroupId(group.id);
+
+            expect(result.length).toBe(1);
+            expect(result[0]).toHaveProperty("userId");
+            expect(result[0]).toHaveProperty("role");
+            expect(typeof result[0].userId).toBe("string");
+            expect(Object.values(UserGroupRole)).toContain(result[0].role);
+        });
+    });
 });

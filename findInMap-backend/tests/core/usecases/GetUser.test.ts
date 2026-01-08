@@ -10,6 +10,7 @@ describe("GetUser", () => {
     beforeEach(() => {
         mockUserRepository = {
             findById: jest.fn(),
+    findByIds: jest.fn(),
             findByEmail: jest.fn(),
             create: jest.fn(),
             updatePassword: jest.fn(),

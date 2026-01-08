@@ -24,6 +24,8 @@ export default flattenObject({
             "Errore durante il caricamento delle mappe. Si prega di riprovare più tardi.",
         getUserGroups:
             "Errore durante il caricamento dei gruppi. Si prega di riprovare più tardi.",
+        getGroupUsers:
+            "Errore durante il caricamento degli utenti del gruppo. Si prega di riprovare più tardi.",
         calculateOptimizedRoute:
             "Errore durante il calcolo del percorso ottimizzato. Si prega di riprovare più tardi.",
         resetPassword:
@@ -252,6 +254,7 @@ export default flattenObject({
                 surname: "Cognome",
                 email: "Email",
                 role: "Ruolo",
+                noUsers: "Nessun utente trovato",
             },
         },
     },

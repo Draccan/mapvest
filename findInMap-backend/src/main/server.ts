@@ -7,6 +7,8 @@ import CreateMapCategory from "../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
 import DeleteMapPoints from "../core/usecases/DeleteMapPoints";
+import GetGroupMaps from "../core/usecases/GetGroupMaps";
+import GetGroupUsers from "../core/usecases/GetGroupUsers";
 import GetMapCategories from "../core/usecases/GetMapCategories";
 import GetMapPoints from "../core/usecases/GetMapPoints";
 import GetUser from "../core/usecases/GetUser";
@@ -28,8 +30,6 @@ import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUser
 import GoogleRepository from "../dependency-implementations/GoogleRepository";
 import RestInterface from "../interfaces/rest";
 import config from "./config";
-
-import GetGroupMaps from "../core/usecases/GetGroupMaps";
 
 // Repositories
 const groupRepository = new DrizzleGroupRepository();
@@ -59,6 +59,7 @@ const createUser = new CreateUser(
 const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
 const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
 const getUserGroups = new GetUserGroups(groupRepository);
+const getGroupUsers = new GetGroupUsers(groupRepository, userRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
 const logoutUser = new LogoutUser(jwtService);
 const refreshToken = new RefreshToken(jwtService);
@@ -89,6 +90,8 @@ const restInterface = new RestInterface(
         createMapPoint,
         createUser,
         deleteMapPoints,
+        getGroupMaps,
+        getGroupUsers,
         getMapPoints,
         getUser,
         getUserGroups,
@@ -96,7 +99,6 @@ const restInterface = new RestInterface(
         logoutUser,
         refreshToken,
         searchAddresses,
-        getGroupMaps,
         createMapCategory,
         getMapCategories,
         updateMapPoint,

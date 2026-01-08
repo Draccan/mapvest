@@ -1,12 +1,14 @@
 import { UserGroupRole } from "../commons/enums";
 import DetailedGroupEntity from "../entities/DetailedGroupEntity";
 import GroupEntity from "../entities/GroupEntity";
+import { UserGroupRelation } from "../entities/UserGroupRelation";
 import UpdateGroupDto from "../dtos/UpdateGroupDto";
 import DbOrTransaction from "./DatabaseTransaction";
 
 export default interface GroupRepository {
     findByUserId(userId: string): Promise<DetailedGroupEntity[]>;
     memoizedFindByUserId(userId: string): Promise<DetailedGroupEntity[]>;
+    findUsersByGroupId(groupId: string): Promise<UserGroupRelation[]>;
     createGroup(
         groupName: string,
         userId: string,

@@ -7,6 +7,7 @@ import NotAllowedActionError from "../../../src/core/errors/NotAllowedActionErro
 const mockGroupRepository: jest.Mocked<GroupRepository> = {
     findByUserId: jest.fn(),
     memoizedFindByUserId: jest.fn(),
+    findUsersByGroupId: jest.fn(),
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
     updateGroup: jest.fn(),

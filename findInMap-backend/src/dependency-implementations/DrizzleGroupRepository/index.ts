@@ -7,10 +7,12 @@ import GroupRepository from "../../core/dependencies/GroupRepository";
 import UpdateGroupDto from "../../core/dtos/UpdateGroupDto";
 import DetailedGroupEntity from "../../core/entities/DetailedGroupEntity";
 import GroupEntity from "../../core/entities/GroupEntity";
+import { UserGroupRelation } from "../../core/entities/UserGroupRelation";
 import { db } from "../../db";
 import { groups, usersGroups } from "../../db/schema";
 import { makeDetailedGroupEntity } from "./converters/makeDetailedGroupEntity";
 import { makeGroupEntity } from "./converters/makeGroupEntity";
+import { makeUserGroupRelationEntity } from "./converters/makeUserGroupRelationEntity";
 
 export class DrizzleGroupRepository implements GroupRepository {
     async findByUserId(userId: string): Promise<DetailedGroupEntity[]> {
@@ -31,6 +33,20 @@ export class DrizzleGroupRepository implements GroupRepository {
     memoizedFindByUserId = mem(this.findByUserId, {
         maxAge: 1000 * 60,
     });
+
+    async findUsersByGroupId(groupId: string): Promise<UserGroupRelation[]> {
+        const results = await db
+            .select({
+                userId: usersGroups.userId,
+                role: usersGroups.role,
+                groupId: usersGroups.groupId,
+                createdAt: usersGroups.createdAt,
+            })
+            .from(usersGroups)
+            .where(eq(usersGroups.groupId, groupId));
+
+        return results.map((res) => makeUserGroupRelationEntity(res));
+    }
 
     async createGroup(
         groupName: string,

@@ -16,6 +16,7 @@ import CreateMapPoint from "../../core/usecases/CreateMapPoint";
 import CreateUser from "../../core/usecases/CreateUser";
 import DeleteMapPoints from "../../core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../../core/usecases/GetGroupMaps";
+import GetGroupUsers from "../../core/usecases/GetGroupUsers";
 import GetMapCategories from "../../core/usecases/GetMapCategories";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
 import GetUser from "../../core/usecases/GetUser";
@@ -39,6 +40,7 @@ import CreateMapPointRoute from "./routes/CreateMapPointRoute";
 import CreateUserRoute from "./routes/CreateUserRoute";
 import DeleteMapPointsRoute from "./routes/DeleteMapPointsRoute";
 import GetGroupsRoute from "./routes/GetGroupsRoute";
+import GetGroupUsersRoute from "./routes/GetGroupUsersRoute";
 import GetMapCategoriesRoute from "./routes/GetMapCategoriesRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import GetMapsRoute from "./routes/GetMapsRoute";
@@ -72,6 +74,8 @@ export default class RestInterface {
             createMapPoint: CreateMapPoint;
             createUser: CreateUser;
             deleteMapPoints: DeleteMapPoints;
+            getGroupMaps: GetGroupMaps;
+            getGroupUsers: GetGroupUsers;
             getMapPoints: GetMapPoints;
             getUser: GetUser;
             getUserGroups: GetUserGroups;
@@ -79,7 +83,6 @@ export default class RestInterface {
             logoutUser: LogoutUser;
             refreshToken: RefreshToken;
             searchAddresses: SearchAddresses;
-            getGroupMaps: GetGroupMaps;
             createMapCategory: CreateMapCategory;
             getMapCategories: GetMapCategories;
             updateMapPoint: UpdateMapPoint;
@@ -97,6 +100,7 @@ export default class RestInterface {
             CreateUserRoute(usecases.createUser),
             DeleteMapPointsRoute(usecases.deleteMapPoints),
             GetGroupsRoute(usecases.getUserGroups),
+            GetGroupUsersRoute(usecases.getGroupUsers),
             GetMapPointsRoute(usecases.getMapPoints),
             GetMapsRoute(usecases.getGroupMaps),
             GetUserRoute(usecases.getUser),
