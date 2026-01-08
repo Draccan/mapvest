@@ -49,7 +49,7 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${token}`)
             .send({
-                userIds: [createdUser1.id, createdUser2.id],
+                userEmails: [createdUser1.email, createdUser2.email],
             });
 
         expect(response.status).toBe(204);
@@ -119,7 +119,7 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${adminToken}`)
             .send({
-                userIds: [createdNewUser.id],
+                userEmails: [createdNewUser.email],
             });
 
         expect(response.status).toBe(204);
@@ -134,7 +134,7 @@ describe("POST /groups/:groupId/users", () => {
         const response = await request(app)
             .post("/groups/some-group-id/users")
             .send({
-                userIds: ["user1-id", "user2-id"],
+                userEmails: ["user1@example.com", "user2@example.com"],
             });
 
         expect(response.status).toBe(401);
@@ -192,7 +192,7 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${otherToken}`)
             .send({
-                userIds: [createdTargetUser.id],
+                userEmails: [createdTargetUser.email],
             });
 
         expect(response.status).toBe(403);
@@ -257,13 +257,13 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${contributorToken}`)
             .send({
-                userIds: [createdNewUser.id],
+                userEmails: [createdNewUser.email],
             });
 
         expect(response.status).toBe(403);
     });
 
-    it("should return 400 when userIds is missing", async () => {
+    it("should return 400 when userEmails is missing", async () => {
         const app = getTestApp();
         const groupRepository = new DrizzleGroupRepository();
 
@@ -294,7 +294,7 @@ describe("POST /groups/:groupId/users", () => {
         expect(response.status).toBe(400);
     });
 
-    it("should return 400 when userIds is empty array", async () => {
+    it("should return 400 when userEmails is empty array", async () => {
         const app = getTestApp();
         const groupRepository = new DrizzleGroupRepository();
 
@@ -321,13 +321,13 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${token}`)
             .send({
-                userIds: [],
+                userEmails: [],
             });
 
         expect(response.status).toBe(400);
     });
 
-    it("should return 400 when userIds is not an array", async () => {
+    it("should return 400 when userEmails is not an array", async () => {
         const app = getTestApp();
         const groupRepository = new DrizzleGroupRepository();
 
@@ -354,13 +354,13 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${token}`)
             .send({
-                userIds: "not-an-array",
+                userEmails: "not-an-array",
             });
 
         expect(response.status).toBe(400);
     });
 
-    it("should add single user when userIds contains one id", async () => {
+    it("should add single user when userEmails contains one email", async () => {
         const app = getTestApp();
         const groupRepository = new DrizzleGroupRepository();
         const userRepository = new DrizzleUserRepository();
@@ -399,7 +399,7 @@ describe("POST /groups/:groupId/users", () => {
             .post(`/groups/${group.id}/users`)
             .set("Authorization", `Bearer ${token}`)
             .send({
-                userIds: [createdNewUser.id],
+                userEmails: [createdNewUser.email],
             });
 
         expect(response.status).toBe(204);
@@ -407,5 +407,41 @@ describe("POST /groups/:groupId/users", () => {
         const groupUsers = await groupRepository.findUsersByGroupId(group.id);
         expect(groupUsers.length).toBe(2);
         expect(groupUsers.map((u) => u.userId)).toContain(createdNewUser.id);
+    });
+
+    it("should not add users when emails do not exist", async () => {
+        const app = getTestApp();
+        const groupRepository = new DrizzleGroupRepository();
+
+        const owner = {
+            name: "Owner",
+            surname: "User",
+            email: `owner-${Date.now()}${Math.random()}@example.com`,
+            password: "password123",
+        };
+
+        await request(app).post("/users").send(owner);
+
+        const loginResponse = await request(app).post("/users/login").send({
+            email: owner.email,
+            password: owner.password,
+        });
+
+        const token = loginResponse.body.token;
+        const ownerId = loginResponse.body.user.id;
+
+        const group = await groupRepository.createGroup("Test Group", ownerId);
+
+        const response = await request(app)
+            .post(`/groups/${group.id}/users`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                userEmails: ["nonexistent@example.com"],
+            });
+
+        expect(response.status).toBe(204);
+
+        const groupUsers = await groupRepository.findUsersByGroupId(group.id);
+        expect(groupUsers.length).toBe(1); // Only the owner
     });
 });

@@ -1,22 +1,13 @@
 import CreateUser from "../../../src/core/usecases/CreateUser";
-import UserRepository from "../../../src/core/dependencies/UserRepository";
 import GroupEntity from "../../../src/core/entities/GroupEntity";
 import MapEntity from "../../../src/core/entities/MapEntity";
 import UserEntity from "../../../src/core/entities/UserEntity";
 import UserEmailAlreadyRegisteredError from "../../../src/core/errors/UserEmailAlreadyRegisteredError";
-import { mockGroupRepository, mockMapRepository } from "../../helpers";
-
-const mockUserRepository: jest.Mocked<UserRepository> = {
-    create: jest.fn(),
-    findByEmail: jest.fn(),
-    findById: jest.fn(),
-    findByIds: jest.fn(),
-    updatePassword: jest.fn(),
-    createPasswordResetToken: jest.fn(),
-    deletePasswordResetTokensByUserId: jest.fn(),
-    deletePasswordResetToken: jest.fn(),
-    findPasswordResetTokenData: jest.fn(),
-};
+import {
+    mockGroupRepository,
+    mockMapRepository,
+    mockUserRepository,
+} from "../../helpers";
 
 jest.mock("../../../src/db", () => ({
     db: {

@@ -1,25 +1,13 @@
 import GetUser from "../../../src/core/usecases/GetUser";
-import UserRepository from "../../../src/core/dependencies/UserRepository";
 import UserEntity from "../../../src/core/entities/UserEntity";
 import UserNotFoundError from "../../../src/core/errors/UserNotFoundError";
+import { mockUserRepository } from "../../helpers";
 
 describe("GetUser", () => {
     let getUser: GetUser;
-    let mockUserRepository: jest.Mocked<UserRepository>;
 
     beforeEach(() => {
-        mockUserRepository = {
-            findById: jest.fn(),
-    findByIds: jest.fn(),
-            findByEmail: jest.fn(),
-            create: jest.fn(),
-            updatePassword: jest.fn(),
-            createPasswordResetToken: jest.fn(),
-            deletePasswordResetTokensByUserId: jest.fn(),
-            findPasswordResetTokenData: jest.fn(),
-            deletePasswordResetToken: jest.fn(),
-        };
-
+        jest.clearAllMocks();
         getUser = new GetUser(mockUserRepository);
     });
 

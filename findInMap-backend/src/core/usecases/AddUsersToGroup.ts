@@ -1,10 +1,14 @@
 import { UserGroupRole } from "../commons/enums";
 import GroupRepository from "../dependencies/GroupRepository";
+import UserRepository from "../dependencies/UserRepository";
 import AddUsersToGroupDto from "../dtos/AddUsersToGroupDto";
 import NotAllowedActionError from "../errors/NotAllowedActionError";
 
 export default class AddUsersToGroup {
-    constructor(private groupRepository: GroupRepository) {}
+    constructor(
+        private groupRepository: GroupRepository,
+        private userRepository: UserRepository,
+    ) {}
 
     async exec(
         userId: string,
@@ -27,10 +31,16 @@ export default class AddUsersToGroup {
             );
         }
 
-        await this.groupRepository.addUsersToGroup(
-            data.userIds,
-            groupId,
-            UserGroupRole.Contributor,
-        );
+        // Warning: users not found will simply not be added
+        const users = await this.userRepository.findByEmails(data.userEmails);
+        const userIds = users.map((user) => user.id);
+
+        if (userIds.length > 0) {
+            await this.groupRepository.addUsersToGroup(
+                userIds,
+                groupId,
+                UserGroupRole.Contributor,
+            );
+        }
     }
 }

@@ -1,6 +1,7 @@
 import AddressesManagerRepository from "../src/core/dependencies/AddressesManagerRepository";
 import GroupRepository from "../src/core/dependencies/GroupRepository";
 import MapRepository from "../src/core/dependencies/MapRepository";
+import UserRepository from "../src/core/dependencies/UserRepository";
 import AddressEntity from "../src/core/entities/AddressEntity";
 import EmailService, { EmailOptions } from "../src/core/services/EmailService";
 import JwtService from "../src/core/services/JwtService";
@@ -56,6 +57,20 @@ export const mockMapRepository: jest.Mocked<MapRepository> = {
     updateMap: jest.fn(),
     invalidateMapsCache: jest.fn(),
 };
+
+export const mockUserRepository: jest.Mocked<UserRepository> = {
+    create: jest.fn(),
+    findByEmail: jest.fn(),
+    findById: jest.fn(),
+    findByIds: jest.fn(),
+    findByEmails: jest.fn(),
+    updatePassword: jest.fn(),
+    createPasswordResetToken: jest.fn(),
+    deletePasswordResetTokensByUserId: jest.fn(),
+    deletePasswordResetToken: jest.fn(),
+    findPasswordResetTokenData: jest.fn(),
+};
+
 class MockGoogleRepository implements AddressesManagerRepository {
     async findByText(text: string): Promise<AddressEntity[]> {
         return [
@@ -139,7 +154,10 @@ export function createTestApp() {
     const searchAddresses = new SearchAddresses(googleRepository);
     const updateMap = new UpdateMap(mapRepository, groupRepository);
     const updateGroup = new UpdateGroup(groupRepository);
-    const addUsersToGroup = new AddUsersToGroup(groupRepository);
+    const addUsersToGroup = new AddUsersToGroup(
+        groupRepository,
+        userRepository,
+    );
     const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
     const updateUser = new UpdateUser(userRepository);
     const resetPassword = new ResetPassword(

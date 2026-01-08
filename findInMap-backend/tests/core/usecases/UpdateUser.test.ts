@@ -1,21 +1,9 @@
 import UpdateUser from "../../../src/core/usecases/UpdateUser";
-import UserRepository from "../../../src/core/dependencies/UserRepository";
 import UserEntity from "../../../src/core/entities/UserEntity";
 import IncorrectPasswordError from "../../../src/core/errors/IncorrectPasswordError";
 import InvalidPasswordError from "../../../src/core/errors/InvalidPasswordError";
 import { hashPassword } from "../../../src/core/utils/PasswordManager";
-
-const mockUserRepository: jest.Mocked<UserRepository> = {
-    create: jest.fn(),
-    findByEmail: jest.fn(),
-    findById: jest.fn(),
-    findByIds: jest.fn(),
-    updatePassword: jest.fn(),
-    createPasswordResetToken: jest.fn(),
-    deletePasswordResetTokensByUserId: jest.fn(),
-    findPasswordResetTokenData: jest.fn(),
-    deletePasswordResetToken: jest.fn(),
-};
+import { mockUserRepository } from "../../helpers";
 
 describe("UpdateUser", () => {
     let updateUserPassword: UpdateUser;

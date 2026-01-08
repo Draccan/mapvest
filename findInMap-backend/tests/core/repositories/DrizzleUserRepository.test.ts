@@ -273,6 +273,118 @@ describe("DrizzleUserRepository", () => {
         });
     });
 
+    describe("findByEmails", () => {
+        it("should return empty array when no emails provided", async () => {
+            const result = await repository.findByEmails([]);
+            expect(result).toEqual([]);
+        });
+
+        it("should return single user when one email is provided", async () => {
+            const createUserDto: CreateUserDto = {
+                name: "Single",
+                surname: "Email",
+                email: `single.email${Math.random()}@example.com`,
+                password: "password123",
+            };
+
+            const createdUser = await repository.create(createUserDto);
+
+            const result = await repository.findByEmails([createdUser.email]);
+
+            expect(result).toHaveLength(1);
+            expect(result[0].id).toBe(createdUser.id);
+            expect(result[0].email).toBe(createUserDto.email.toLowerCase());
+            expect(result[0].name).toBe(createUserDto.name);
+            expect(result[0].surname).toBe(createUserDto.surname);
+        });
+
+        it("should return multiple users when multiple emails are provided", async () => {
+            const user1Dto: CreateUserDto = {
+                name: "User",
+                surname: "One",
+                email: `user.email.one${Math.random()}@example.com`,
+                password: "password123",
+            };
+
+            const user2Dto: CreateUserDto = {
+                name: "User",
+                surname: "Two",
+                email: `user.email.two${Math.random()}@example.com`,
+                password: "password456",
+            };
+
+            const user3Dto: CreateUserDto = {
+                name: "User",
+                surname: "Three",
+                email: `user.email.three${Math.random()}@example.com`,
+                password: "password789",
+            };
+
+            const user1 = await repository.create(user1Dto);
+            const user2 = await repository.create(user2Dto);
+            const user3 = await repository.create(user3Dto);
+
+            const result = await repository.findByEmails([
+                user1.email,
+                user2.email,
+                user3.email,
+            ]);
+
+            expect(result).toHaveLength(3);
+            expect(result.map((u) => u.id)).toContain(user1.id);
+            expect(result.map((u) => u.id)).toContain(user2.id);
+            expect(result.map((u) => u.id)).toContain(user3.id);
+        });
+
+        it("should return only existing users when some emails do not exist", async () => {
+            const createUserDto: CreateUserDto = {
+                name: "Existing",
+                surname: "EmailUser",
+                email: `existing.emailuser${Math.random()}@example.com`,
+                password: "password123",
+            };
+
+            const existingUser = await repository.create(createUserDto);
+
+            const result = await repository.findByEmails([
+                existingUser.email,
+                "nonexistent1@example.com",
+                "nonexistent2@example.com",
+            ]);
+
+            expect(result).toHaveLength(1);
+            expect(result[0].id).toBe(existingUser.id);
+        });
+
+        it("should return empty array when no emails match existing users", async () => {
+            const result = await repository.findByEmails([
+                "nonexistent1@example.com",
+                "nonexistent2@example.com",
+            ]);
+
+            expect(result).toEqual([]);
+        });
+
+        it("should be case insensitive", async () => {
+            const createUserDto: CreateUserDto = {
+                name: "Case",
+                surname: "Insensitive",
+                email: `Case.Insensitive${Math.random()}@Example.COM`,
+                password: "password123",
+            };
+
+            const createdUser = await repository.create(createUserDto);
+
+            const result = await repository.findByEmails([
+                createUserDto.email.toUpperCase(),
+            ]);
+
+            expect(result).toHaveLength(1);
+            expect(result[0].id).toBe(createdUser.id);
+            expect(result[0].email).toBe(createUserDto.email.toLowerCase());
+        });
+    });
+
     describe("updatePassword", () => {
         it("should successfully update user password", async () => {
             const createUserDto: CreateUserDto = {

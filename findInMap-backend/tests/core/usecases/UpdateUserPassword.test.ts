@@ -1,19 +1,7 @@
 import UpdateUserPassword from "../../../src/core/usecases/UpdateUserPassword";
-import UserRepository from "../../../src/core/dependencies/UserRepository";
 import InvalidResetTokenError from "../../../src/core/errors/InvalidResetTokenError";
 import InvalidPasswordError from "../../../src/core/errors/InvalidPasswordError";
-
-const mockUserRepository: jest.Mocked<UserRepository> = {
-    create: jest.fn(),
-    findByEmail: jest.fn(),
-    findById: jest.fn(),
-    findByIds: jest.fn(),
-    updatePassword: jest.fn(),
-    createPasswordResetToken: jest.fn(),
-    deletePasswordResetTokensByUserId: jest.fn(),
-    findPasswordResetTokenData: jest.fn(),
-    deletePasswordResetToken: jest.fn(),
-};
+import { mockUserRepository } from "../../helpers";
 
 describe("UpdateUserPassword", () => {
     let updateUserPassword: UpdateUserPassword;

@@ -59,6 +59,21 @@ export class DrizzleUserRepository implements UserRepository {
         return foundUsers.map((user) => makeUserEntity(user));
     }
 
+    async findByEmails(emails: string[]): Promise<UserEntity[]> {
+        if (emails.length === 0) {
+            return [];
+        }
+
+        const lowercaseEmails = emails.map((email) => email.toLowerCase());
+
+        const foundUsers = await db
+            .select()
+            .from(users)
+            .where(inArray(users.email, lowercaseEmails));
+
+        return foundUsers.map((user) => makeUserEntity(user));
+    }
+
     async updatePassword(
         userId: string,
         hashedPassword: string,

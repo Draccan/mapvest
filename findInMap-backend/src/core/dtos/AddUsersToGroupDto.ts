@@ -1,3 +1,3 @@
 export default interface AddUsersToGroupDto {
-    userIds: string[];
+    userEmails: string[];
 }

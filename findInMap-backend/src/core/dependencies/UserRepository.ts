@@ -11,6 +11,7 @@ export default interface UserRepository {
     findByEmail(email: string): Promise<UserEntity | null>;
     findById(userId: string): Promise<UserEntity | null>;
     findByIds(userIds: string[]): Promise<UserEntity[]>;
+    findByEmails(emails: string[]): Promise<UserEntity[]>;
     updatePassword(userId: string, hashedPassword: string): Promise<UserEntity>;
     createPasswordResetToken(
         userId: string,
