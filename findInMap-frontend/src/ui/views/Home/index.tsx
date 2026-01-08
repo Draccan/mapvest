@@ -20,7 +20,10 @@ import { AddressSearch } from "../../components/AddressSearch";
 import { AreaAnalysis } from "../../components/AreaAnalysis";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
-import { MapContainer } from "../../components/MapContainer";
+import {
+    DEFAULT_MAP_CLICK_ZOOM,
+    MapContainer,
+} from "../../components/MapContainer";
 import { MapPointForm } from "../../components/MapPointForm";
 import { RouteDetailsModal } from "../../components/RouteDetailsModal";
 import { Skeleton } from "../../components/Skeleton";
@@ -144,7 +147,11 @@ export const Home: React.FC = () => {
     ]);
 
     const handleMapPointSelection = (lng: number, lat: number) => {
-        setSelectedCoordinates({ long: lng, lat: lat, zoom: 15 });
+        setSelectedCoordinates({
+            long: lng,
+            lat: lat,
+            zoom: DEFAULT_MAP_CLICK_ZOOM,
+        });
         setPointToEdit(null);
     };
 

@@ -11,20 +11,15 @@ const fm = getFormattedMessageWithScope("components.NavigationBar");
 
 export const NavigationBar: React.FC = () => {
     const { loading, logout } = useLogoutUser();
-    const currentPath = window.location.pathname;
-    const isOnDashboard = currentPath.includes(routes.dashboard());
 
     return (
         <nav className="c-navigation-bar">
-            {isOnDashboard ? (
-                <Link to={routes.home()} kind="nav">
-                    {fm("home")}
-                </Link>
-            ) : (
-                <Link to={routes.dashboard()} kind="nav">
-                    {fm("dashboard")}
-                </Link>
-            )}
+            <Link to={routes.home()} kind="nav">
+                {fm("home")}
+            </Link>
+            <Link to={routes.dashboard()} kind="nav">
+                {fm("dashboard")}
+            </Link>
             <Link to={routes.settings()} kind="nav">
                 {fm("settings")}
             </Link>

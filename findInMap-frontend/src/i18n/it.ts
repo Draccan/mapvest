@@ -115,6 +115,7 @@ export default flattenObject({
             startPoint: "Punto di Partenza",
             endPoint: "Punto di Arrivo",
             stop: "Tappa",
+            userLocation: "La Tua Posizione",
         },
         MapPointForm: {
             addMapPoint: "Aggiungi Punto Mappa",

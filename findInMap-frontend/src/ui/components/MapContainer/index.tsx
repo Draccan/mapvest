@@ -20,13 +20,16 @@ import { Button } from "../Button";
 import { GeomanControl } from "./GeomanControl";
 import { PolylineWithArrows } from "./PolylineWithArrows";
 import "./style.css";
+import { UserLocationMarker } from "./UserLocationMarker";
 
 const fm = getFormattedMessageWithScope("components.MapContainer");
+
+export const DEFAULT_MAP_CLICK_ZOOM = 15;
 
 interface MapContainerProps {
     mapPoints: MapPointDto[];
     categories: CategoryDto[];
-    onMapClick: (lat: number, lng: number) => void;
+    onMapClick: (lng: number, lat: number) => void;
     selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
     onDeletePoint: (pointId: string) => void;
     onEditPoint: (point: MapPointDto) => void;
@@ -57,8 +60,8 @@ const MapController: React.FC<{
     const map = useMap();
 
     useEffect(() => {
-        if (selectedCoordinates) {
-            const zoom = selectedCoordinates.zoom || 3;
+        if (selectedCoordinates && map.getZoom() < DEFAULT_MAP_CLICK_ZOOM) {
+            const zoom = selectedCoordinates.zoom || DEFAULT_MAP_CLICK_ZOOM;
             map.setView(
                 [selectedCoordinates.lat, selectedCoordinates.long],
                 zoom,
@@ -174,6 +177,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {!drawingEnabled && <MapClickHandler onMapClick={onMapClick} />}
+            <UserLocationMarker onClick={onMapClick} />
             <MapController
                 selectedCoordinates={selectedCoordinates}
                 mapId={mapId}
