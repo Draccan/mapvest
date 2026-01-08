@@ -2,6 +2,7 @@ import EmailService from "../core/services/EmailService";
 import LoggerService from "../core/services/LoggerService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
+import AddUsersToGroup from "../core/usecases/AddUsersToGroup";
 import CreateGroupMap from "../core/usecases/CreateGroupMap";
 import CreateMapCategory from "../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
@@ -69,6 +70,7 @@ const getMapCategories = new GetMapCategories(groupRepository, mapRepository);
 const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
 const updateMap = new UpdateMap(mapRepository, groupRepository);
 const updateGroup = new UpdateGroup(groupRepository);
+const addUsersToGroup = new AddUsersToGroup(groupRepository);
 const updateUser = new UpdateUser(userRepository);
 const getUser = new GetUser(userRepository);
 const resetPassword = new ResetPassword(
@@ -104,6 +106,7 @@ const restInterface = new RestInterface(
         updateMapPoint,
         updateMap,
         updateGroup,
+        addUsersToGroup,
         updateUser,
         resetPassword,
         updateUserPassword,

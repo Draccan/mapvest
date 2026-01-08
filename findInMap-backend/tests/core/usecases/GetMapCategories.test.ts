@@ -1,32 +1,7 @@
 import { UserGroupRole } from "../../../src/core/commons/enums";
-import GroupRepository from "../../../src/core/dependencies/GroupRepository";
-import MapRepository from "../../../src/core/dependencies/MapRepository";
 import GetMapCategories from "../../../src/core/usecases/GetMapCategories";
 import NotAllowedActionError from "../../../src/core/errors/NotAllowedActionError";
-
-const mockGroupRepository: jest.Mocked<GroupRepository> = {
-    findByUserId: jest.fn(),
-    memoizedFindByUserId: jest.fn(),
-    findUsersByGroupId: jest.fn(),
-    createGroup: jest.fn(),
-    addUserToGroup: jest.fn(),
-    updateGroup: jest.fn(),
-};
-
-const mockMapRepository: jest.Mocked<MapRepository> = {
-    findAllMapPoints: jest.fn(),
-    findMapByGroupId: jest.fn(),
-    createMapPoint: jest.fn(),
-    findMapPointById: jest.fn(),
-    deleteMapPoints: jest.fn(),
-    memoizedFindMapByGroupId: jest.fn(),
-    createMap: jest.fn(),
-    createCategory: jest.fn(),
-    findCategoriesByMapId: jest.fn(),
-    updateMapPoint: jest.fn(),
-    updateMap: jest.fn(),
-    invalidateMapsCache: jest.fn(),
-};
+import { mockGroupRepository, mockMapRepository } from "../../helpers";
 
 describe("GetMapCategories", () => {
     const usecase = new GetMapCategories(

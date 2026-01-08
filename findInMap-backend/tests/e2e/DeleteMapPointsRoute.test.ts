@@ -3,7 +3,7 @@ import request from "supertest";
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
 import { getTestApp } from "./setup";
-import { testMapPoint } from "./helpers";
+import { testMapPoint } from "../helpers";
 
 describe("Delete Map Points Route", () => {
     let app: any;

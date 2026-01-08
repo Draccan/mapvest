@@ -1,33 +1,8 @@
 import { UserGroupRole } from "../../../src/core/commons/enums";
-import GroupRepository from "../../../src/core/dependencies/GroupRepository";
-import MapRepository from "../../../src/core/dependencies/MapRepository";
 import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import CreateMapPoint from "../../../src/core/usecases/CreateMapPoint";
-
-const mockMapRepository: jest.Mocked<MapRepository> = {
-    deleteMapPoints: jest.fn(),
-    createMapPoint: jest.fn(),
-    findAllMapPoints: jest.fn(),
-    findMapPointById: jest.fn(),
-    findMapByGroupId: jest.fn(),
-    createMap: jest.fn(),
-    memoizedFindMapByGroupId: jest.fn(),
-    createCategory: jest.fn(),
-    findCategoriesByMapId: jest.fn(),
-    updateMapPoint: jest.fn(),
-    updateMap: jest.fn(),
-    invalidateMapsCache: jest.fn(),
-};
-
-const mockGroupRepository: jest.Mocked<GroupRepository> = {
-    findByUserId: jest.fn(),
-    createGroup: jest.fn(),
-    addUserToGroup: jest.fn(),
-    memoizedFindByUserId: jest.fn(),
-    findUsersByGroupId: jest.fn(),
-    updateGroup: jest.fn(),
-};
+import { mockGroupRepository, mockMapRepository } from "../../helpers";
 
 describe("CreateMapPoint", () => {
     let createMapPoint: CreateMapPoint;

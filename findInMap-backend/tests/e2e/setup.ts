@@ -1,4 +1,4 @@
-import { cleanupTestApp, createTestApp } from "./helpers";
+import { cleanupTestApp, createTestApp } from "../helpers";
 
 let server: any;
 let app: any;

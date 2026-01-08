@@ -84,6 +84,21 @@ export class DrizzleGroupRepository implements GroupRepository {
         });
     }
 
+    async addUsersToGroup(
+        userIds: string[],
+        groupId: string,
+        role: UserGroupRole,
+        dbInstance: DbOrTransaction = db,
+    ): Promise<void> {
+        const valuesToInsert = userIds.map((userId) => ({
+            userId: userId,
+            groupId: groupId,
+            role: role,
+        }));
+
+        await dbInstance.insert(usersGroups).values(valuesToInsert);
+    }
+
     async updateGroup(
         groupId: string,
         userId: string,

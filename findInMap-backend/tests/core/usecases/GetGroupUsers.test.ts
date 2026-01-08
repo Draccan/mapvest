@@ -1,20 +1,11 @@
 import { UserGroupRole } from "../../../src/core/commons/enums";
-import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import UserRepository from "../../../src/core/dependencies/UserRepository";
 import DetailedGroupEntity from "../../../src/core/entities/DetailedGroupEntity";
 import UserEntity from "../../../src/core/entities/UserEntity";
 import { UserGroupRelation } from "../../../src/core/entities/UserGroupRelation";
 import NotAllowedActionError from "../../../src/core/errors/NotAllowedActionError";
 import GetGroupUsers from "../../../src/core/usecases/GetGroupUsers";
-
-const mockGroupRepository: jest.Mocked<GroupRepository> = {
-    findByUserId: jest.fn(),
-    createGroup: jest.fn(),
-    addUserToGroup: jest.fn(),
-    memoizedFindByUserId: jest.fn(),
-    updateGroup: jest.fn(),
-    findUsersByGroupId: jest.fn(),
-};
+import { mockGroupRepository } from "../../helpers";
 
 const mockUserRepository: jest.Mocked<UserRepository> = {
     create: jest.fn(),

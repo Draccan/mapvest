@@ -20,6 +20,12 @@ export default interface GroupRepository {
         role: UserGroupRole,
         dbInstance?: DbOrTransaction,
     ): Promise<void>;
+    addUsersToGroup(
+        userIds: string[],
+        groupId: string,
+        role: UserGroupRole,
+        dbInstance?: DbOrTransaction,
+    ): Promise<void>;
     updateGroup(
         groupId: string,
         userId: string,

@@ -1,15 +1,6 @@
 import { UserGroupRole } from "../../../src/core/commons/enums";
-import GroupRepository from "../../../src/core/dependencies/GroupRepository";
 import UpdateGroup from "../../../src/core/usecases/UpdateGroup";
-
-const mockGroupRepository: jest.Mocked<GroupRepository> = {
-    findByUserId: jest.fn(),
-    memoizedFindByUserId: jest.fn(),
-    findUsersByGroupId: jest.fn(),
-    createGroup: jest.fn(),
-    addUserToGroup: jest.fn(),
-    updateGroup: jest.fn(),
-};
+import { mockGroupRepository } from "../../helpers";
 
 describe("UpdateGroup", () => {
     const usecase = new UpdateGroup(mockGroupRepository);

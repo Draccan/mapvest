@@ -1,7 +1,7 @@
 import request from "supertest";
 
 import { getTestApp } from "./setup";
-import { testUser } from "./helpers";
+import { testUser } from "../helpers";
 
 describe("Update User Password Route", () => {
     let app: any;

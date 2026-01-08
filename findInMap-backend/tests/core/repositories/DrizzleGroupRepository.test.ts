@@ -591,4 +591,179 @@ describe("DrizzleGroupRepository", () => {
             expect(Object.values(UserGroupRole)).toContain(result[0].role);
         });
     });
+
+    describe("addUsersToGroup", () => {
+        it("should add multiple users to a group in a single call", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user1 = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const user2 = await userRepository.create({
+                name: "User",
+                surname: "Two",
+                email: "user2@example.com",
+                password: "password123",
+            });
+
+            const user3 = await userRepository.create({
+                name: "User",
+                surname: "Three",
+                email: "user3@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Multi-User Group",
+                owner.id,
+            );
+
+            await groupRepository.addUsersToGroup(
+                [user1.id, user2.id, user3.id],
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            const user1Groups = await groupRepository.findByUserId(user1.id);
+            const user2Groups = await groupRepository.findByUserId(user2.id);
+            const user3Groups = await groupRepository.findByUserId(user3.id);
+
+            expect(user1Groups.length).toBe(1);
+            expect(user1Groups[0].group.id).toBe(group.id);
+            expect(user1Groups[0].role).toBe(UserGroupRole.Contributor);
+
+            expect(user2Groups.length).toBe(1);
+            expect(user2Groups[0].group.id).toBe(group.id);
+            expect(user2Groups[0].role).toBe(UserGroupRole.Contributor);
+
+            expect(user3Groups.length).toBe(1);
+            expect(user3Groups[0].group.id).toBe(group.id);
+            expect(user3Groups[0].role).toBe(UserGroupRole.Contributor);
+        });
+
+        it("should add users with admin role", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const admin1 = await userRepository.create({
+                name: "Admin",
+                surname: "One",
+                email: "admin1@example.com",
+                password: "password123",
+            });
+
+            const admin2 = await userRepository.create({
+                name: "Admin",
+                surname: "Two",
+                email: "admin2@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Admin Group",
+                owner.id,
+            );
+
+            await groupRepository.addUsersToGroup(
+                [admin1.id, admin2.id],
+                group.id,
+                UserGroupRole.Admin,
+            );
+
+            const admin1Groups = await groupRepository.findByUserId(admin1.id);
+            const admin2Groups = await groupRepository.findByUserId(admin2.id);
+
+            expect(admin1Groups[0].role).toBe(UserGroupRole.Admin);
+            expect(admin2Groups[0].role).toBe(UserGroupRole.Admin);
+        });
+
+        it("should handle adding single user through addUsersToGroup", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user = await userRepository.create({
+                name: "Single",
+                surname: "User",
+                email: "single@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Single Add Group",
+                owner.id,
+            );
+
+            await groupRepository.addUsersToGroup(
+                [user.id],
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            const userGroups = await groupRepository.findByUserId(user.id);
+
+            expect(userGroups.length).toBe(1);
+            expect(userGroups[0].group.id).toBe(group.id);
+            expect(userGroups[0].role).toBe(UserGroupRole.Contributor);
+        });
+
+        it("should verify all users are in the group through findUsersByGroupId", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user1 = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const user2 = await userRepository.create({
+                name: "User",
+                surname: "Two",
+                email: "user2@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Verify Group",
+                owner.id,
+            );
+
+            await groupRepository.addUsersToGroup(
+                [user1.id, user2.id],
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            const groupUsers = await groupRepository.findUsersByGroupId(
+                group.id,
+            );
+
+            expect(groupUsers.length).toBe(3);
+            expect(groupUsers.map((u) => u.userId)).toContain(owner.id);
+            expect(groupUsers.map((u) => u.userId)).toContain(user1.id);
+            expect(groupUsers.map((u) => u.userId)).toContain(user2.id);
+        });
+    });
 });

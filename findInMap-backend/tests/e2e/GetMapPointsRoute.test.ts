@@ -2,7 +2,7 @@ import request from "supertest";
 
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { getTestApp } from "./setup";
-import { testMapPoint } from "./helpers";
+import { testMapPoint } from "../helpers";
 
 describe("Get Map Points Route", () => {
     let app: any;

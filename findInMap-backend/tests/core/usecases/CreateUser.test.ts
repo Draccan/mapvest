@@ -1,12 +1,10 @@
 import CreateUser from "../../../src/core/usecases/CreateUser";
-import GroupRepository from "../../../src/core/dependencies/GroupRepository";
-import MapRepository from "../../../src/core/dependencies/MapRepository";
 import UserRepository from "../../../src/core/dependencies/UserRepository";
 import GroupEntity from "../../../src/core/entities/GroupEntity";
 import MapEntity from "../../../src/core/entities/MapEntity";
 import UserEntity from "../../../src/core/entities/UserEntity";
 import UserEmailAlreadyRegisteredError from "../../../src/core/errors/UserEmailAlreadyRegisteredError";
-import { UserGroupRole } from "../../../src/core/commons/enums";
+import { mockGroupRepository, mockMapRepository } from "../../helpers";
 
 const mockUserRepository: jest.Mocked<UserRepository> = {
     create: jest.fn(),
@@ -18,30 +16,6 @@ const mockUserRepository: jest.Mocked<UserRepository> = {
     deletePasswordResetTokensByUserId: jest.fn(),
     deletePasswordResetToken: jest.fn(),
     findPasswordResetTokenData: jest.fn(),
-};
-
-const mockGroupRepository: jest.Mocked<GroupRepository> = {
-    findByUserId: jest.fn(),
-    createGroup: jest.fn(),
-    addUserToGroup: jest.fn(),
-    memoizedFindByUserId: jest.fn(),
-    findUsersByGroupId: jest.fn(),
-    updateGroup: jest.fn(),
-};
-
-const mockMapRepository: jest.Mocked<MapRepository> = {
-    deleteMapPoints: jest.fn(),
-    createMapPoint: jest.fn(),
-    findAllMapPoints: jest.fn(),
-    findMapPointById: jest.fn(),
-    findMapByGroupId: jest.fn(),
-    memoizedFindMapByGroupId: jest.fn(),
-    createMap: jest.fn(),
-    createCategory: jest.fn(),
-    findCategoriesByMapId: jest.fn(),
-    updateMapPoint: jest.fn(),
-    updateMap: jest.fn(),
-    invalidateMapsCache: jest.fn(),
 };
 
 jest.mock("../../../src/db", () => ({

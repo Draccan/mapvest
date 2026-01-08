@@ -10,6 +10,7 @@ import * as swaggerUi from "swagger-ui-express";
 
 import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
+import AddUsersToGroup from "../../core/usecases/AddUsersToGroup";
 import CreateGroupMap from "../../core/usecases/CreateGroupMap";
 import CreateMapCategory from "../../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
@@ -34,6 +35,7 @@ import UpdateUserPassword from "../../core/usecases/UpdateUserPassword";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
+import AddUsersToGroupRoute from "./routes/AddUsersToGroupRoute";
 import CreateMapCategoryRoute from "./routes/CreateMapCategoryRoute";
 import CreateMapRoute from "./routes/CreateMapRoute";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
@@ -88,6 +90,7 @@ export default class RestInterface {
             updateMapPoint: UpdateMapPoint;
             updateMap: UpdateMap;
             updateGroup: UpdateGroup;
+            addUsersToGroup: AddUsersToGroup;
             updateUser: UpdateUser;
             resetPassword: ResetPassword;
             updateUserPassword: UpdateUserPassword;
@@ -95,6 +98,7 @@ export default class RestInterface {
         private jwtService: JwtService,
     ) {
         this.routes = [
+            AddUsersToGroupRoute(usecases.addUsersToGroup),
             CreateMapRoute(usecases.createGroupMap),
             CreateMapPointRoute(usecases.createMapPoint),
             CreateUserRoute(usecases.createUser),

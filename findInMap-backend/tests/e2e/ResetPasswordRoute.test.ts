@@ -1,6 +1,6 @@
 import request from "supertest";
 
-import { testUser, getMockEmailService } from "./helpers";
+import { testUser, getMockEmailService } from "../helpers";
 import { getTestApp } from "./setup";
 
 describe("Reset Password Route", () => {
