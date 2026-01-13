@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useIntl } from "react-intl";
 
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
@@ -60,11 +59,6 @@ export const Settings: React.FC = () => {
 
         try {
             await addUsersToGroup(selectedGroup!.id, [userEmail]);
-            toast.success(
-                intl.formatMessage({
-                    id: "views.Settings.addUserModal.successMessage",
-                }),
-            );
             toggleAddUserModal();
             fetchGroupUsers(selectedGroup!.id);
         } catch (err) {

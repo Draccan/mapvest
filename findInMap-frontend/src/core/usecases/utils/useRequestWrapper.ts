@@ -12,6 +12,7 @@ interface UseRequestWrapper<T> {
 export function useRequestWrapper<T, Args extends any[]>(
     apiRequest: (...args: Args) => Promise<T>,
     errorMessage?: string,
+    successMessage?: string,
 ): UseRequestWrapper<T> {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
@@ -21,7 +22,11 @@ export function useRequestWrapper<T, Args extends any[]>(
             try {
                 setLoading(true);
                 setError(null);
-                return await apiRequest(...args);
+                const result = await apiRequest(...args);
+                if (successMessage) {
+                    toast.success(successMessage, { duration: 5000 });
+                }
+                return result;
             } catch (err) {
                 if (err instanceof UnauthorizedError) {
                     throw err;

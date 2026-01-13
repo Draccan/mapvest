@@ -27,6 +27,9 @@ export default flattenObject({
         createMap: "Error creating map. Please try again later.",
         addUsersToGroup: "Error adding user to group. Please try again later.",
     },
+    messages: {
+        userAddedSuccessfully: "User added successfully",
+    },
     components: {
         Breadcrumb: {
             selectGroup: "Select Group",
@@ -153,9 +156,9 @@ export default flattenObject({
                 role: "Role",
                 noUsers: "No users found",
                 roles: {
-                    owner: "Owner",
-                    admin: "Administrator",
-                    contributor: "Contributor",
+                    [UserGroupRole.Owner]: "Owner",
+                    [UserGroupRole.Admin]: "Administrator",
+                    [UserGroupRole.Contributor]: "Contributor",
                 },
             },
         },

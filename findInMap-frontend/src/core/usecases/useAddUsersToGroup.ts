@@ -17,6 +17,7 @@ export const useAddUsersToGroup = (): UseAddUsersToGroup => {
         (groupId: string, userEmails: string[]) =>
             apiClient.addUsersToGroup(groupId, userEmails),
         intl.formatMessage({ id: "errors.addUsersToGroup" }),
+        intl.formatMessage({ id: "messages.userAddedSuccessfully" }),
     );
 
     const addUsersToGroup = async (

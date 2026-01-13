@@ -42,6 +42,9 @@ export default flattenObject({
         addUsersToGroup:
             "Errore durante l'aggiunta dell'utente al gruppo. Si prega di riprovare più tardi.",
     },
+    messages: {
+        userAddedSuccessfully: "Utente aggiunto con successo",
+    },
     components: {
         Breadcrumb: {
             selectGroup: "Seleziona Gruppo",
@@ -169,9 +172,9 @@ export default flattenObject({
                 role: "Ruolo",
                 noUsers: "Nessun utente trovato",
                 roles: {
-                    owner: "Proprietario",
-                    admin: "Amministratore",
-                    contributor: "Collaboratore",
+                    [UserGroupRole.Owner]: "Proprietario",
+                    [UserGroupRole.Admin]: "Amministratore",
+                    [UserGroupRole.Contributor]: "Collaboratore",
                 },
             },
         },
@@ -274,7 +277,6 @@ export default flattenObject({
                 add: "Aggiungi",
                 cancel: "Annulla",
                 invalidEmail: "Inserisci un indirizzo email valido",
-                successMessage: "Utente aggiunto con successo",
             },
         },
     },
