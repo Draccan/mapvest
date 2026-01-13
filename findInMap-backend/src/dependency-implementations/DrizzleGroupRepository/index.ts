@@ -96,7 +96,12 @@ export class DrizzleGroupRepository implements GroupRepository {
             role: role,
         }));
 
-        await dbInstance.insert(usersGroups).values(valuesToInsert);
+        await dbInstance
+            .insert(usersGroups)
+            .values(valuesToInsert)
+            // Warning: needed because of possible duplicate userIds in input if
+            // the client wants to add an already added user
+            .onConflictDoNothing();
     }
 
     async updateGroup(
