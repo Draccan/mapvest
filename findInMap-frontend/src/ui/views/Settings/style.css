@@ -42,6 +42,12 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.v-settings-group-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 1rem 1.5rem;
     background: var(--color-background-primary);
     backdrop-filter: var(--backdrop-blur);
@@ -123,4 +129,72 @@
         padding: 0.75rem 1rem;
         font-size: 0.875rem;
     }
+
+    .v-settings-group-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .v-settings-add-user-button {
+        width: 100%;
+    }
+}
+
+.v-settings-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.v-settings-modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.v-settings-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.v-settings-modal-label {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+.v-settings-modal-input {
+    padding: 0.75rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.v-settings-modal-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-transparent);
+}
+
+.v-settings-modal-input::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+.v-settings-modal-error {
+    color: var(--color-danger);
+    font-size: 0.875rem;
+}
+
+.v-settings-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 0.5rem;
 }

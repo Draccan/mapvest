@@ -1,3 +1,4 @@
+import { UserGroupRole } from "../core/commons/enums";
 import flattenObject from "../utils/flattenObject";
 
 export default flattenObject({
@@ -24,6 +25,7 @@ export default flattenObject({
         updateGroup: "Error updating group. Please try again later.",
         updateMap: "Error updating map. Please try again later.",
         createMap: "Error creating map. Please try again later.",
+        addUsersToGroup: "Error adding user to group. Please try again later.",
     },
     components: {
         Breadcrumb: {
@@ -233,12 +235,26 @@ export default flattenObject({
         Settings: {
             title: "Settings",
             group: "Group:",
+            addUser: "Add User",
+            addUserModal: {
+                title: "Add User to Group",
+                emailLabel: "User Email",
+                add: "Add",
+                cancel: "Cancel",
+                invalidEmail: "Please enter a valid email address",
+                successMessage: "User added successfully",
+            },
             table: {
                 name: "Name",
                 surname: "Surname",
                 email: "Email",
                 role: "Role",
                 noUsers: "No users found",
+                roles: {
+                    [UserGroupRole.Owner]: "Proprietario",
+                    [UserGroupRole.Admin]: "Amministratore",
+                    [UserGroupRole.Contributor]: "Collaboratore",
+                },
             },
         },
     },

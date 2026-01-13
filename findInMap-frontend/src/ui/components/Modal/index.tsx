@@ -9,6 +9,7 @@ interface ModalProps {
     onClose: () => void;
     children: React.ReactNode;
     title?: string | React.ReactNode;
+    isCloseDisabled?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -16,6 +17,7 @@ export const Modal: React.FC<ModalProps> = ({
     onClose,
     children,
     title,
+    isCloseDisabled = false,
 }) => {
     // Docs: needed to prevent background scrolling when modal is open
     useEffect(() => {
@@ -31,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
+            if (e.key === "Escape" && !isCloseDisabled) {
                 onClose();
             }
         };
@@ -41,10 +43,13 @@ export const Modal: React.FC<ModalProps> = ({
         return () => {
             document.removeEventListener("keydown", handleEscape);
         };
-    }, [isOpen, onClose]);
+    }, [isOpen, onClose, isCloseDisabled]);
 
     return !isOpen ? null : (
-        <div className="c-modal-overlay" onClick={onClose}>
+        <div
+            className="c-modal-overlay"
+            onClick={isCloseDisabled ? undefined : onClose}
+        >
             <div
                 className="c-modal-container"
                 onClick={(e) => e.stopPropagation()}
@@ -56,6 +61,7 @@ export const Modal: React.FC<ModalProps> = ({
                         size="icon"
                         onClick={onClose}
                         className="c-modal-close"
+                        disabled={isCloseDisabled}
                     >
                         <X size={20} />
                     </Button>

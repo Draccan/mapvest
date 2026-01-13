@@ -523,4 +523,21 @@ export default class ApiClient {
 
         return response.json();
     }
+
+    async addUsersToGroup(
+        groupId: string,
+        userEmails: string[],
+    ): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/groups/${groupId}/users`,
+            {
+                method: "POST",
+                body: JSON.stringify({ userEmails }),
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
 }

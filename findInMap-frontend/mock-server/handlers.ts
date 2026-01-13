@@ -271,7 +271,7 @@ let mockGroupUsers = [
         name: "Jane",
         surname: "Smith",
         email: "jane.smith@example.com",
-        userGroupRole: "member",
+        userGroupRole: "contributor",
         groupId: "group-1",
     },
 ];
@@ -704,6 +704,49 @@ export const handlers = [
             };
 
             return HttpResponse.json(mockMaps[mapIndex], { status: 200 });
+        },
+    ),
+    http.post(
+        "http://localhost:3001/groups/:groupId/users",
+        async ({ params, request }) => {
+            await delay(2000);
+            const { groupId } = params;
+            const payload = (await request.json()) as {
+                userEmails: string[];
+            };
+
+            if (
+                !payload.userEmails ||
+                !Array.isArray(payload.userEmails) ||
+                payload.userEmails.length === 0
+            ) {
+                return HttpResponse.json(
+                    {
+                        error: "userEmails array is required and cannot be empty",
+                    },
+                    { status: 400 },
+                );
+            }
+
+            payload.userEmails.forEach((email) => {
+                const existingUser = mockGroupUsers.find(
+                    (user) => user.email === email && user.groupId === groupId,
+                );
+
+                if (!existingUser) {
+                    const newUser = {
+                        id: `user-${++userIdCounter}`,
+                        name: email.split("@")[0],
+                        surname: "New",
+                        email: email,
+                        userGroupRole: "contributor",
+                        groupId: groupId as string,
+                    };
+                    mockGroupUsers.push(newUser);
+                }
+            });
+
+            return HttpResponse.json(undefined, { status: 204 });
         },
     ),
 ];
