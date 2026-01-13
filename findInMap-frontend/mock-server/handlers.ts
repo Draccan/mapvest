@@ -242,6 +242,11 @@ let mockGroups = [
         name: "First Group",
         role: "owner",
     },
+    {
+        id: "group-2",
+        name: "Second Group",
+        role: "contributor",
+    },
 ];
 
 let mockMaps = [
@@ -254,6 +259,11 @@ let mockMaps = [
         id: "map-2",
         groupId: "group-1",
         name: "Second Map",
+    },
+    {
+        id: "map-3",
+        groupId: "group-2",
+        name: "Third Map",
     },
 ];
 
@@ -273,6 +283,22 @@ let mockGroupUsers = [
         email: "jane.smith@example.com",
         userGroupRole: "contributor",
         groupId: "group-1",
+    },
+    {
+        id: "user-3",
+        name: "Alice",
+        surname: "Johnson",
+        email: "alice.johnson@example.com",
+        userGroupRole: "owner",
+        groupId: "group-2",
+    },
+    {
+        id: "user-1",
+        name: "John",
+        surname: "Doe",
+        email: "a@b.com",
+        userGroupRole: "contributor",
+        groupId: "group-2",
     },
 ];
 

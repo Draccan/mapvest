@@ -2,6 +2,7 @@ import { ChevronDown, ChevronRight, Edit2, Check, X, Plus } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useIntl } from "react-intl";
 
+import { UserGroupRole } from "../../../core/commons/enums";
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Popover } from "../Popover";
@@ -12,9 +13,11 @@ const fm = getFormattedMessageWithScope("components.Breadcrumb");
 export const Breadcrumb: React.FC = () => {
     const intl = useIntl();
     const {
+        groups,
         maps,
         selectedGroup,
         selectedMap,
+        selectGroup,
         selectMap,
         updateSelectedGroup,
         updateSelectedMap,
@@ -24,6 +27,7 @@ export const Breadcrumb: React.FC = () => {
         creatingMap,
     } = useGroupsMaps();
 
+    const [isGroupPopoverOpen, setIsGroupPopoverOpen] = useState(false);
     const [isMapPopoverOpen, setIsMapPopoverOpen] = useState(false);
     const [isEditingGroup, setIsEditingGroup] = useState(false);
     const [isEditingMap, setIsEditingMap] = useState(false);
@@ -32,10 +36,13 @@ export const Breadcrumb: React.FC = () => {
     const [mapName, setMapName] = useState("");
     const [newMapName, setNewMapName] = useState("");
 
+    const groupButtonRef = useRef<HTMLButtonElement>(null);
     const mapButtonRef = useRef<HTMLButtonElement>(null);
     const groupInputRef = useRef<HTMLInputElement>(null);
     const mapInputRef = useRef<HTMLInputElement>(null);
     const newMapInputRef = useRef<HTMLInputElement>(null);
+
+    const isGroupOwner = selectedGroup?.role === UserGroupRole.Owner;
 
     useEffect(() => {
         if (isEditingGroup && groupInputRef.current) {
@@ -128,6 +135,13 @@ export const Breadcrumb: React.FC = () => {
         }
     };
 
+    const handleGroupSelect = (group: typeof selectedGroup) => {
+        if (group) {
+            selectGroup(group);
+            setIsGroupPopoverOpen(false);
+        }
+    };
+
     const handleCreateMapClick = () => {
         setNewMapName("");
         setIsCreatingMap(true);
@@ -195,19 +209,66 @@ export const Breadcrumb: React.FC = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="c-breadcrumb-group-display">
-                        <span className="c-breadcrumb-name">
-                            {selectedGroup.name}
-                        </span>
+                    <div className="c-breadcrumb-selector">
                         <button
-                            className="c-breadcrumb-edit-icon"
-                            onClick={handleGroupEditClick}
-                            title={intl.formatMessage({
-                                id: "components.Breadcrumb.renameGroup",
-                            })}
+                            ref={groupButtonRef}
+                            className="c-breadcrumb-trigger"
+                            onClick={() =>
+                                setIsGroupPopoverOpen(!isGroupPopoverOpen)
+                            }
                         >
-                            <Edit2 size={14} />
+                            <span className="c-breadcrumb-name">
+                                {selectedGroup.name}
+                            </span>
+                            <ChevronDown
+                                size={16}
+                                className="c-breadcrumb-chevron"
+                            />
                         </button>
+                        <Popover
+                            isOpen={isGroupPopoverOpen}
+                            onClose={() => {
+                                setIsGroupPopoverOpen(false);
+                            }}
+                            anchorElement={groupButtonRef.current}
+                        >
+                            <div className="c-breadcrumb-dropdown">
+                                <div className="c-breadcrumb-dropdown-header">
+                                    {fm("selectGroup")}
+                                </div>
+                                <div className="c-breadcrumb-dropdown-list">
+                                    {groups?.map((group) => (
+                                        <button
+                                            key={group.id}
+                                            className={`c-breadcrumb-dropdown-item ${
+                                                group.id === selectedGroup.id
+                                                    ? "active"
+                                                    : ""
+                                            }`}
+                                            onClick={() =>
+                                                handleGroupSelect(group)
+                                            }
+                                        >
+                                            {group.name}
+                                        </button>
+                                    ))}
+                                </div>
+                                {isGroupOwner && (
+                                    <div className="c-breadcrumb-dropdown-actions">
+                                        <button
+                                            className="c-breadcrumb-dropdown-action"
+                                            onClick={() => {
+                                                handleGroupEditClick();
+                                                setIsGroupPopoverOpen(false);
+                                            }}
+                                        >
+                                            <Edit2 size={14} />
+                                            {fm("renameGroup")}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </Popover>
                     </div>
                 )}
             </div>
