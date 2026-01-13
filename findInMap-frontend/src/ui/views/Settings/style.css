@@ -67,50 +67,6 @@
     color: var(--color-text-primary);
 }
 
-.v-settings-table-wrapper {
-    background: var(--color-background-primary);
-    backdrop-filter: var(--backdrop-blur);
-    border-radius: 12px;
-    box-shadow: 0 4px 16px var(--color-shadow);
-    border: 1px solid var(--color-border-light);
-    overflow: hidden;
-}
-.v-settings-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.v-settings-table th,
-.v-settings-table td {
-    padding: 1rem 1.5rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border-light);
-}
-
-.v-settings-table th {
-    background: var(--color-background-secondary);
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.v-settings-table tbody tr:hover {
-    background: var(--color-background-hover);
-}
-
-.v-settings-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.v-settings-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-}
-
 @media (max-width: 768px) {
     .v-settings-container {
         padding: 1rem;
@@ -118,16 +74,6 @@
 
     .v-settings-title {
         font-size: 1.5rem;
-    }
-
-    .v-settings-table-wrapper {
-        overflow-x: auto;
-    }
-
-    .v-settings-table th,
-    .v-settings-table td {
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
     }
 
     .v-settings-group-row {

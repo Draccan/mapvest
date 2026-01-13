@@ -161,6 +161,20 @@ export default flattenObject({
             switchToDark: "Passa alla modalità scura",
             switchToLight: "Passa alla modalità chiara",
         },
+        Settings: {
+            UserTable: {
+                name: "Nome",
+                surname: "Cognome",
+                email: "Email",
+                role: "Ruolo",
+                noUsers: "Nessun utente trovato",
+                roles: {
+                    owner: "Proprietario",
+                    admin: "Amministratore",
+                    contributor: "Collaboratore",
+                },
+            },
+        },
     },
     views: {
         Home: {
@@ -261,18 +275,6 @@ export default flattenObject({
                 cancel: "Annulla",
                 invalidEmail: "Inserisci un indirizzo email valido",
                 successMessage: "Utente aggiunto con successo",
-            },
-            table: {
-                name: "Nome",
-                surname: "Cognome",
-                email: "Email",
-                role: "Ruolo",
-                noUsers: "Nessun utente trovato",
-                roles: {
-                    [UserGroupRole.Owner]: "Proprietario",
-                    [UserGroupRole.Admin]: "Amministratore",
-                    [UserGroupRole.Contributor]: "Collaboratore",
-                },
             },
         },
     },

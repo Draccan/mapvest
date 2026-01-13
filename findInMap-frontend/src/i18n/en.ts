@@ -145,6 +145,20 @@ export default flattenObject({
             switchToDark: "Switch to dark mode",
             switchToLight: "Switch to light mode",
         },
+        Settings: {
+            UserTable: {
+                name: "Name",
+                surname: "Surname",
+                email: "Email",
+                role: "Role",
+                noUsers: "No users found",
+                roles: {
+                    owner: "Owner",
+                    admin: "Administrator",
+                    contributor: "Contributor",
+                },
+            },
+        },
     },
     views: {
         Home: {
@@ -243,18 +257,6 @@ export default flattenObject({
                 cancel: "Cancel",
                 invalidEmail: "Please enter a valid email address",
                 successMessage: "User added successfully",
-            },
-            table: {
-                name: "Name",
-                surname: "Surname",
-                email: "Email",
-                role: "Role",
-                noUsers: "No users found",
-                roles: {
-                    [UserGroupRole.Owner]: "Proprietario",
-                    [UserGroupRole.Admin]: "Amministratore",
-                    [UserGroupRole.Contributor]: "Collaboratore",
-                },
             },
         },
     },

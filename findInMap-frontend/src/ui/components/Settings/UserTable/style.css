@@ -1,0 +1,56 @@
+.c-settings-user-table-wrapper {
+    background: var(--color-background-primary);
+    backdrop-filter: var(--backdrop-blur);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px var(--color-shadow);
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+}
+
+.c-settings-user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.c-settings-user-table th,
+.c-settings-user-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.c-settings-user-table th {
+    background: var(--color-background-secondary);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.c-settings-user-table tbody tr:hover {
+    background: var(--color-background-hover);
+}
+
+.c-settings-user-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.c-settings-user-table-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+
+@media (max-width: 768px) {
+    .c-settings-user-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .c-settings-user-table th,
+    .c-settings-user-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+}
