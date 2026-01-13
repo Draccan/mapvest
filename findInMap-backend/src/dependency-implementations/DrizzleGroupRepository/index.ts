@@ -104,6 +104,21 @@ export class DrizzleGroupRepository implements GroupRepository {
             .onConflictDoNothing();
     }
 
+    async removeUserFromGroup(
+        userId: string,
+        groupId: string,
+        dbInstance: DbOrTransaction = db,
+    ): Promise<void> {
+        await dbInstance
+            .delete(usersGroups)
+            .where(
+                and(
+                    eq(usersGroups.userId, userId),
+                    eq(usersGroups.groupId, groupId),
+                ),
+            );
+    }
+
     async updateGroup(
         groupId: string,
         userId: string,

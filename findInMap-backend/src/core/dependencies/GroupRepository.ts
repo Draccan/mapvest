@@ -26,6 +26,11 @@ export default interface GroupRepository {
         role: UserGroupRole,
         dbInstance?: DbOrTransaction,
     ): Promise<void>;
+    removeUserFromGroup(
+        userId: string,
+        groupId: string,
+        dbInstance?: DbOrTransaction,
+    ): Promise<void>;
     updateGroup(
         groupId: string,
         userId: string,

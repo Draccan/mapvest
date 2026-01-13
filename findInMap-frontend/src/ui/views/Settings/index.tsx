@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
+import { useUser } from "../../../core/contexts/UserContext";
 import { useAddUsersToGroup } from "../../../core/usecases/useAddUsersToGroup";
 import { useGetGroupUsers } from "../../../core/usecases/useGetGroupUsers";
+import { useRemoveUserFromGroup } from "../../../core/usecases/useRemoveUserFromGroup";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
@@ -17,6 +19,7 @@ const fm = getFormattedMessageWithScope("views.Settings");
 export const Settings: React.FC = () => {
     const intl = useIntl();
     const { selectedGroup } = useGroupsMaps();
+    const { user } = useUser();
     const {
         data: groupUsers,
         loading,
@@ -25,6 +28,8 @@ export const Settings: React.FC = () => {
         error,
     } = useGetGroupUsers();
     const { addUsersToGroup, loading: isAddingUser } = useAddUsersToGroup();
+    const { removeUserFromGroup, loading: isRemovingUser } =
+        useRemoveUserFromGroup();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");
@@ -66,6 +71,15 @@ export const Settings: React.FC = () => {
         }
     };
 
+    const handleRemoveUser = async (userId: string) => {
+        try {
+            await removeUserFromGroup(selectedGroup!.id, userId);
+            fetchGroupUsers(selectedGroup!.id);
+        } catch (err) {
+            console.error("Error removing user:", err);
+        }
+    };
+
     return (
         <div className="v-settings">
             <ThemeToggle className="v-settings-theme-toggle" />
@@ -90,7 +104,13 @@ export const Settings: React.FC = () => {
                             {fm("addUser")}
                         </Button>
                     </div>
-                    <UserTable users={groupUsers} loading={loading} />
+                    <UserTable
+                        users={groupUsers}
+                        loading={loading}
+                        onRemoveUser={handleRemoveUser}
+                        isRemoving={isRemovingUser}
+                        currentUserId={user!.id}
+                    />
                 </div>
             </div>
             <Modal

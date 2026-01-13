@@ -262,7 +262,7 @@ let mockGroupUsers = [
         id: "user-1",
         name: "John",
         surname: "Doe",
-        email: "john.doe@example.com",
+        email: "a@b.com",
         userGroupRole: "owner",
         groupId: "group-1",
     },
@@ -745,6 +745,28 @@ export const handlers = [
                     mockGroupUsers.push(newUser);
                 }
             });
+
+            return HttpResponse.json(undefined, { status: 204 });
+        },
+    ),
+    http.delete(
+        "http://localhost:3001/groups/:groupId/users/:userId",
+        async ({ params }) => {
+            await delay(2000);
+            const { groupId, userId } = params;
+
+            const userIndex = mockGroupUsers.findIndex(
+                (user) => user.id === userId && user.groupId === groupId,
+            );
+
+            if (userIndex === -1) {
+                return HttpResponse.json(
+                    { error: "User not found in this group" },
+                    { status: 404 },
+                );
+            }
+
+            mockGroupUsers.splice(userIndex, 1);
 
             return HttpResponse.json(undefined, { status: 204 });
         },

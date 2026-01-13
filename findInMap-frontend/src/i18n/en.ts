@@ -26,9 +26,12 @@ export default flattenObject({
         updateMap: "Error updating map. Please try again later.",
         createMap: "Error creating map. Please try again later.",
         addUsersToGroup: "Error adding user to group. Please try again later.",
+        removeUserFromGroup:
+            "Error removing user from group. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
+        userRemovedSuccessfully: "User removed successfully",
     },
     components: {
         Breadcrumb: {
@@ -154,6 +157,10 @@ export default flattenObject({
                 surname: "Surname",
                 email: "Email",
                 role: "Role",
+                actions: "Actions",
+                removeUser: "Remove user",
+                cannotRemoveSelf: "You cannot remove yourself",
+                cannotRemoveLastOwner: "Cannot remove the only owner",
                 noUsers: "No users found",
                 roles: {
                     [UserGroupRole.Owner]: "Owner",

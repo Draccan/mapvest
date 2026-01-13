@@ -41,9 +41,12 @@ export default flattenObject({
             "Errore durante la creazione della mappa. Si prega di riprovare più tardi.",
         addUsersToGroup:
             "Errore durante l'aggiunta dell'utente al gruppo. Si prega di riprovare più tardi.",
+        removeUserFromGroup:
+            "Errore durante la rimozione dell'utente dal gruppo. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
+        userRemovedSuccessfully: "Utente rimosso con successo",
     },
     components: {
         Breadcrumb: {
@@ -170,6 +173,11 @@ export default flattenObject({
                 surname: "Cognome",
                 email: "Email",
                 role: "Ruolo",
+                actions: "Azioni",
+                removeUser: "Rimuovi utente",
+                cannotRemoveSelf: "Non puoi rimuovere te stesso",
+                cannotRemoveLastOwner:
+                    "Non è possibile rimuovere l'unico proprietario",
                 noUsers: "Nessun utente trovato",
                 roles: {
                     [UserGroupRole.Owner]: "Proprietario",

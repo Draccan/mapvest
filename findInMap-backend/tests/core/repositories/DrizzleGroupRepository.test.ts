@@ -766,4 +766,202 @@ describe("DrizzleGroupRepository", () => {
             expect(groupUsers.map((u) => u.userId)).toContain(user2.id);
         });
     });
+
+    describe("removeUserFromGroup", () => {
+        it("should remove a user from a group", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                user.id,
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            let userGroups = await groupRepository.findByUserId(user.id);
+            expect(userGroups.length).toBe(1);
+
+            await groupRepository.removeUserFromGroup(user.id, group.id);
+
+            userGroups = await groupRepository.findByUserId(user.id);
+            expect(userGroups.length).toBe(0);
+        });
+
+        it("should not affect other users when removing one user", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user1 = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const user2 = await userRepository.create({
+                name: "User",
+                surname: "Two",
+                email: "user2@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Multi User Group",
+                owner.id,
+            );
+
+            await groupRepository.addUsersToGroup(
+                [user1.id, user2.id],
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            await groupRepository.removeUserFromGroup(user1.id, group.id);
+
+            const user1Groups = await groupRepository.findByUserId(user1.id);
+            const user2Groups = await groupRepository.findByUserId(user2.id);
+            const groupUsers = await groupRepository.findUsersByGroupId(
+                group.id,
+            );
+
+            expect(user1Groups.length).toBe(0);
+            expect(user2Groups.length).toBe(1);
+            expect(groupUsers.length).toBe(2);
+            expect(groupUsers.map((u) => u.userId)).toContain(owner.id);
+            expect(groupUsers.map((u) => u.userId)).toContain(user2.id);
+            expect(groupUsers.map((u) => u.userId)).not.toContain(user1.id);
+        });
+
+        it("should do nothing if user is not in the group", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                owner.id,
+            );
+
+            await groupRepository.removeUserFromGroup(user.id, group.id);
+
+            const groupUsers = await groupRepository.findUsersByGroupId(
+                group.id,
+            );
+            expect(groupUsers.length).toBe(1);
+            expect(groupUsers[0].userId).toBe(owner.id);
+        });
+
+        it("should remove user from specific group only", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const user = await userRepository.create({
+                name: "User",
+                surname: "One",
+                email: "user1@example.com",
+                password: "password123",
+            });
+
+            const group1 = await groupRepository.createGroup(
+                "Group One",
+                owner.id,
+            );
+
+            const group2 = await groupRepository.createGroup(
+                "Group Two",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                user.id,
+                group1.id,
+                UserGroupRole.Contributor,
+            );
+
+            await groupRepository.addUserToGroup(
+                user.id,
+                group2.id,
+                UserGroupRole.Contributor,
+            );
+
+            let userGroups = await groupRepository.findByUserId(user.id);
+            expect(userGroups.length).toBe(2);
+
+            await groupRepository.removeUserFromGroup(user.id, group1.id);
+
+            userGroups = await groupRepository.findByUserId(user.id);
+            expect(userGroups.length).toBe(1);
+            expect(userGroups[0].group.id).toBe(group2.id);
+        });
+
+        it("should allow removing admin user", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: "owner@example.com",
+                password: "password123",
+            });
+
+            const admin = await userRepository.create({
+                name: "Admin",
+                surname: "User",
+                email: "admin@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                admin.id,
+                group.id,
+                UserGroupRole.Admin,
+            );
+
+            let groupUsers = await groupRepository.findUsersByGroupId(group.id);
+            expect(groupUsers.length).toBe(2);
+
+            await groupRepository.removeUserFromGroup(admin.id, group.id);
+
+            groupUsers = await groupRepository.findUsersByGroupId(group.id);
+            expect(groupUsers.length).toBe(1);
+            expect(groupUsers[0].userId).toBe(owner.id);
+        });
+    });
 });

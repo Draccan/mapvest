@@ -17,6 +17,7 @@ import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
 import RefreshToken from "../core/usecases/RefreshToken";
+import RemoveUserFromGroup from "../core/usecases/RemoveUserFromGroup";
 import ResetPassword from "../core/usecases/ResetPassword";
 import SearchAddresses from "../core/usecases/SearchAddresses";
 import UpdateGroup from "../core/usecases/UpdateGroup";
@@ -71,6 +72,7 @@ const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
 const updateMap = new UpdateMap(mapRepository, groupRepository);
 const updateGroup = new UpdateGroup(groupRepository);
 const addUsersToGroup = new AddUsersToGroup(groupRepository, userRepository);
+const removeUserFromGroup = new RemoveUserFromGroup(groupRepository);
 const updateUser = new UpdateUser(userRepository);
 const getUser = new GetUser(userRepository);
 const resetPassword = new ResetPassword(
@@ -107,6 +109,7 @@ const restInterface = new RestInterface(
         updateMap,
         updateGroup,
         addUsersToGroup,
+        removeUserFromGroup,
         updateUser,
         resetPassword,
         updateUserPassword,

@@ -25,6 +25,7 @@ import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
 import RefreshToken from "../../core/usecases/RefreshToken";
+import RemoveUserFromGroup from "../../core/usecases/RemoveUserFromGroup";
 import ResetPassword from "../../core/usecases/ResetPassword";
 import SearchAddresses from "../../core/usecases/SearchAddresses";
 import UpdateGroup from "../../core/usecases/UpdateGroup";
@@ -52,6 +53,7 @@ import InfoRoute from "./routes/InfoRoute";
 import LoginUserRoute from "./routes/LoginUserRoute";
 import LogoutUserRoute from "./routes/LogoutUserRoute";
 import RefreshTokenRoute from "./routes/RefreshTokenRoute";
+import RemoveUserFromGroupRoute from "./routes/RemoveUserFromGroupRoute";
 import ResetPasswordRoute from "./routes/ResetPasswordRoute";
 import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 import UpdateGroupRoute from "./routes/UpdateGroupRoute";
@@ -91,6 +93,7 @@ export default class RestInterface {
             updateMap: UpdateMap;
             updateGroup: UpdateGroup;
             addUsersToGroup: AddUsersToGroup;
+            removeUserFromGroup: RemoveUserFromGroup;
             updateUser: UpdateUser;
             resetPassword: ResetPassword;
             updateUserPassword: UpdateUserPassword;
@@ -99,6 +102,7 @@ export default class RestInterface {
     ) {
         this.routes = [
             AddUsersToGroupRoute(usecases.addUsersToGroup),
+            RemoveUserFromGroupRoute(usecases.removeUserFromGroup),
             CreateMapRoute(usecases.createGroupMap),
             CreateMapPointRoute(usecases.createMapPoint),
             CreateUserRoute(usecases.createUser),

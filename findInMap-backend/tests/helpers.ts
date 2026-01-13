@@ -21,6 +21,7 @@ import GetUserGroups from "../src/core/usecases/GetUserGroups";
 import LoginUser from "../src/core/usecases/LoginUser";
 import LogoutUser from "../src/core/usecases/LogoutUser";
 import RefreshToken from "../src/core/usecases/RefreshToken";
+import RemoveUserFromGroup from "../src/core/usecases/RemoveUserFromGroup";
 import ResetPassword from "../src/core/usecases/ResetPassword";
 import SearchAddresses from "../src/core/usecases/SearchAddresses";
 import UpdateGroup from "../src/core/usecases/UpdateGroup";
@@ -40,6 +41,7 @@ export const mockGroupRepository: jest.Mocked<GroupRepository> = {
     createGroup: jest.fn(),
     addUserToGroup: jest.fn(),
     addUsersToGroup: jest.fn(),
+    removeUserFromGroup: jest.fn(),
     updateGroup: jest.fn(),
 };
 
@@ -158,6 +160,7 @@ export function createTestApp() {
         groupRepository,
         userRepository,
     );
+    const removeUserFromGroup = new RemoveUserFromGroup(groupRepository);
     const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
     const updateUser = new UpdateUser(userRepository);
     const resetPassword = new ResetPassword(
@@ -193,6 +196,7 @@ export function createTestApp() {
             updateMap,
             updateGroup,
             addUsersToGroup,
+            removeUserFromGroup,
             updateMapPoint,
             updateUser,
             resetPassword,

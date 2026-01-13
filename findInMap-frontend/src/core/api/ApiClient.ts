@@ -540,4 +540,17 @@ export default class ApiClient {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
     }
+
+    async removeUserFromGroup(groupId: string, userId: string): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/groups/${groupId}/users/${userId}`,
+            {
+                method: "DELETE",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
 }
