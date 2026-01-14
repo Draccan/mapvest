@@ -964,4 +964,138 @@ describe("DrizzleGroupRepository", () => {
             expect(groupUsers[0].userId).toBe(owner.id);
         });
     });
+
+    describe("updateUserInGroup", () => {
+        it("should update user role in group", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: `owner-${Date.now()}${Math.random()}@example.com`,
+                password: "password123",
+            });
+
+            const contributor = await userRepository.create({
+                name: "Contributor",
+                surname: "User",
+                email: `contributor-${Date.now()}${Math.random()}@example.com`,
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                contributor.id,
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            let groupUsers = await groupRepository.findUsersByGroupId(group.id);
+            const contributorRelation = groupUsers.find(
+                (u) => u.userId === contributor.id,
+            );
+            expect(contributorRelation?.role).toBe(UserGroupRole.Contributor);
+
+            await groupRepository.updateUserInGroup(
+                contributor.id,
+                group.id,
+                UserGroupRole.Admin,
+            );
+
+            groupUsers = await groupRepository.findUsersByGroupId(group.id);
+            const updatedContributorRelation = groupUsers.find(
+                (u) => u.userId === contributor.id,
+            );
+            expect(updatedContributorRelation?.role).toBe(UserGroupRole.Admin);
+        });
+
+        it("should update admin role to contributor", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: `owner-${Date.now()}${Math.random()}@example.com`,
+                password: "password123",
+            });
+
+            const admin = await userRepository.create({
+                name: "Admin",
+                surname: "User",
+                email: `admin-${Date.now()}${Math.random()}@example.com`,
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                admin.id,
+                group.id,
+                UserGroupRole.Admin,
+            );
+
+            let groupUsers = await groupRepository.findUsersByGroupId(group.id);
+            const adminRelation = groupUsers.find((u) => u.userId === admin.id);
+            expect(adminRelation?.role).toBe(UserGroupRole.Admin);
+
+            await groupRepository.updateUserInGroup(
+                admin.id,
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            groupUsers = await groupRepository.findUsersByGroupId(group.id);
+            const updatedAdminRelation = groupUsers.find(
+                (u) => u.userId === admin.id,
+            );
+            expect(updatedAdminRelation?.role).toBe(UserGroupRole.Contributor);
+        });
+
+        it("should handle transaction correctly", async () => {
+            const owner = await userRepository.create({
+                name: "Owner",
+                surname: "User",
+                email: `owner-${Date.now()}${Math.random()}@example.com`,
+                password: "password123",
+            });
+
+            const contributor = await userRepository.create({
+                name: "Contributor",
+                surname: "User",
+                email: `contributor-${Date.now()}${Math.random()}@example.com`,
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                owner.id,
+            );
+
+            await groupRepository.addUserToGroup(
+                contributor.id,
+                group.id,
+                UserGroupRole.Contributor,
+            );
+
+            await db.transaction(async (tx) => {
+                await groupRepository.updateUserInGroup(
+                    contributor.id,
+                    group.id,
+                    UserGroupRole.Admin,
+                    tx,
+                );
+            });
+
+            const groupUsers = await groupRepository.findUsersByGroupId(
+                group.id,
+            );
+            const updatedUser = groupUsers.find(
+                (u) => u.userId === contributor.id,
+            );
+            expect(updatedUser?.role).toBe(UserGroupRole.Admin);
+        });
+    });
 });

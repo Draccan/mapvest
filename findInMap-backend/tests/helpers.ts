@@ -28,6 +28,7 @@ import UpdateGroup from "../src/core/usecases/UpdateGroup";
 import UpdateMap from "../src/core/usecases/UpdateMap";
 import UpdateMapPoint from "../src/core/usecases/UpdateMapPoint";
 import UpdateUser from "../src/core/usecases/UpdateUser";
+import UpdateUserInGroup from "../src/core/usecases/UpdateUserInGroup";
 import UpdateUserPassword from "../src/core/usecases/UpdateUserPassword";
 import { DrizzleGroupRepository } from "../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../src/dependency-implementations/DrizzleMapRepository";
@@ -43,6 +44,7 @@ export const mockGroupRepository: jest.Mocked<GroupRepository> = {
     addUsersToGroup: jest.fn(),
     removeUserFromGroup: jest.fn(),
     updateGroup: jest.fn(),
+    updateUserInGroup: jest.fn(),
 };
 
 export const mockMapRepository: jest.Mocked<MapRepository> = {
@@ -163,6 +165,7 @@ export function createTestApp() {
     const removeUserFromGroup = new RemoveUserFromGroup(groupRepository);
     const updateMapPoint = new UpdateMapPoint(groupRepository, mapRepository);
     const updateUser = new UpdateUser(userRepository);
+    const updateUserInGroup = new UpdateUserInGroup(groupRepository);
     const resetPassword = new ResetPassword(
         userRepository,
         mockEmailService,
@@ -199,6 +202,7 @@ export function createTestApp() {
             removeUserFromGroup,
             updateMapPoint,
             updateUser,
+            updateUserInGroup,
             resetPassword,
             updateUserPassword,
         },

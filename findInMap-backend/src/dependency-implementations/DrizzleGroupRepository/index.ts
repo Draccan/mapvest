@@ -152,4 +152,23 @@ export class DrizzleGroupRepository implements GroupRepository {
 
         return makeGroupEntity(updatedGroup);
     }
+
+    async updateUserInGroup(
+        userId: string,
+        groupId: string,
+        role: UserGroupRole,
+        dbInstance: DbOrTransaction = db,
+    ): Promise<void> {
+        await dbInstance
+            .update(usersGroups)
+            .set({
+                role: role,
+            })
+            .where(
+                and(
+                    eq(usersGroups.userId, userId),
+                    eq(usersGroups.groupId, groupId),
+                ),
+            );
+    }
 }

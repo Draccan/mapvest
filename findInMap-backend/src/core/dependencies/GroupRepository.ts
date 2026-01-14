@@ -36,4 +36,10 @@ export default interface GroupRepository {
         userId: string,
         data: UpdateGroupDto,
     ): Promise<GroupEntity | null>;
+    updateUserInGroup(
+        userId: string,
+        groupId: string,
+        role: UserGroupRole,
+        dbInstance?: DbOrTransaction,
+    ): Promise<void>;
 }

@@ -32,6 +32,7 @@ import UpdateGroup from "../../core/usecases/UpdateGroup";
 import UpdateMap from "../../core/usecases/UpdateMap";
 import UpdateMapPoint from "../../core/usecases/UpdateMapPoint";
 import UpdateUser from "../../core/usecases/UpdateUser";
+import UpdateUserInGroup from "../../core/usecases/UpdateUserInGroup";
 import UpdateUserPassword from "../../core/usecases/UpdateUserPassword";
 import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
@@ -59,6 +60,7 @@ import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 import UpdateGroupRoute from "./routes/UpdateGroupRoute";
 import UpdateMapRoute from "./routes/UpdateMapRoute";
 import UpdateMapPointRoute from "./routes/UpdateMapPointRoute";
+import UpdateUserInGroupRoute from "./routes/UpdateUserInGroupRoute";
 import UpdateUserPasswordRoute from "./routes/UpdateUserPasswordRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
 
@@ -95,6 +97,7 @@ export default class RestInterface {
             addUsersToGroup: AddUsersToGroup;
             removeUserFromGroup: RemoveUserFromGroup;
             updateUser: UpdateUser;
+            updateUserInGroup: UpdateUserInGroup;
             resetPassword: ResetPassword;
             updateUserPassword: UpdateUserPassword;
         },
@@ -125,6 +128,7 @@ export default class RestInterface {
             UpdateGroupRoute(usecases.updateGroup),
             UpdateUserPasswordRoute(usecases.updateUserPassword),
             UpdateUserRoute(usecases.updateUser),
+            UpdateUserInGroupRoute(usecases.updateUserInGroup),
             ResetPasswordRoute(usecases.resetPassword),
         ];
 

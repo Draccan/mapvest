@@ -24,6 +24,7 @@ import UpdateGroup from "../core/usecases/UpdateGroup";
 import UpdateMap from "../core/usecases/UpdateMap";
 import UpdateMapPoint from "../core/usecases/UpdateMapPoint";
 import UpdateUser from "../core/usecases/UpdateUser";
+import UpdateUserInGroup from "../core/usecases/UpdateUserInGroup";
 import UpdateUserPassword from "../core/usecases/UpdateUserPassword";
 import { client } from "../db";
 import { DrizzleGroupRepository } from "../dependency-implementations/DrizzleGroupRepository";
@@ -74,6 +75,7 @@ const updateGroup = new UpdateGroup(groupRepository);
 const addUsersToGroup = new AddUsersToGroup(groupRepository, userRepository);
 const removeUserFromGroup = new RemoveUserFromGroup(groupRepository);
 const updateUser = new UpdateUser(userRepository);
+const updateUserInGroup = new UpdateUserInGroup(groupRepository);
 const getUser = new GetUser(userRepository);
 const resetPassword = new ResetPassword(
     userRepository,
@@ -111,6 +113,7 @@ const restInterface = new RestInterface(
         addUsersToGroup,
         removeUserFromGroup,
         updateUser,
+        updateUserInGroup,
         resetPassword,
         updateUserPassword,
     },
