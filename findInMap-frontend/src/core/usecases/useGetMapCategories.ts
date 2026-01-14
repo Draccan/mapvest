@@ -11,6 +11,7 @@ interface UseGetMapCategories {
     data: CategoryDto[] | null;
     fetch: (groupId: string, mapId: string) => Promise<void>;
     hasFetched: boolean;
+    reset: () => void;
 }
 
 export const useGetMapCategories = (): UseGetMapCategories => {
@@ -36,11 +37,17 @@ export const useGetMapCategories = (): UseGetMapCategories => {
         }
     };
 
+    const reset = () => {
+        setData(null);
+        setHasFetched(false);
+    };
+
     return {
         loading,
         error,
         data,
         fetch: fetchMapCategories,
         hasFetched,
+        reset,
     };
 };

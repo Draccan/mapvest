@@ -5,6 +5,7 @@ import { useIntl } from "react-intl";
 import { UserGroupRole } from "../../../core/commons/enums";
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import { LoadingSpinner } from "../LoadingSpinner";
 import { Popover } from "../Popover";
 import "./style.css";
 
@@ -411,6 +412,10 @@ export const Breadcrumb: React.FC = () => {
                                 )}
                             </div>
                         </Popover>
+                    </div>
+                ) : !selectedMap ? (
+                    <div>
+                        <LoadingSpinner />
                     </div>
                 ) : (
                     <span className="c-breadcrumb-name c-breadcrumb-name-placeholder">

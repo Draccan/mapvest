@@ -64,6 +64,7 @@ export const Home: React.FC = () => {
         fetch: fetchCategories,
         loading: loadingCategories,
         hasFetched: hasFetchedCategories,
+        reset: resetCategories,
     } = useGetMapCategories();
 
     const { createMapPoint, loading: creatingPoint } = useCreateMapPoint();
@@ -83,27 +84,9 @@ export const Home: React.FC = () => {
         if (
             selectedGroup &&
             selectedMap &&
-            !loadingPoints &&
-            !mapPointsData &&
-            !mapPointsError
-        ) {
-            fetchMapPoints(selectedGroup.id, selectedMap.id);
-        }
-    }, [
-        selectedGroup,
-        selectedMap,
-        loadingPoints,
-        mapPointsData,
-        mapPointsError,
-        fetchMapPoints,
-    ]);
-
-    useEffect(() => {
-        if (
-            selectedGroup &&
-            selectedMap &&
             !loadingCategories &&
-            (!categoriesData || (previousCreatingCategory && !creatingCategory))
+            previousCreatingCategory &&
+            !creatingCategory
         ) {
             fetchCategories(selectedGroup.id, selectedMap.id);
         }
@@ -121,10 +104,12 @@ export const Home: React.FC = () => {
         if (
             selectedGroup &&
             selectedMap &&
-            previousSelectedMapId &&
-            previousSelectedMapId !== selectedMap.id
+            previousSelectedMapId !== selectedMap.id &&
+            !loadingPoints &&
+            !mapPointsError
         ) {
             resetMapPoints();
+            resetCategories();
 
             setSelectedCoordinates(null);
             setPointToEdit(null);
@@ -134,8 +119,8 @@ export const Home: React.FC = () => {
             setRoutePoints([]);
             resetOptimizedRoute();
 
-            fetchMapPoints(selectedGroup.id, selectedMap.id);
             fetchCategories(selectedGroup.id, selectedMap.id);
+            fetchMapPoints(selectedGroup.id, selectedMap.id);
         }
     }, [
         selectedGroup,
