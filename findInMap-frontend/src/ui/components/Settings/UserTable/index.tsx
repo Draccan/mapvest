@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useIntl } from "react-intl";
 import { UserX } from "lucide-react";
 
@@ -7,6 +7,7 @@ import type UserGroupDto from "../../../../core/dtos/UserGroupDto";
 import getFormattedMessageWithScope from "../../../../utils/getFormattedMessageWithScope";
 import { Button } from "../../Button";
 import { LoadingSpinner } from "../../LoadingSpinner";
+import { Select, type SelectOption } from "../../Select";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.Settings.UserTable");
@@ -17,6 +18,12 @@ interface UserTableProps {
     onRemoveUser: (userId: string) => void;
     isRemoving: boolean;
     currentUserId: string | null;
+    currentUserRole?: UserGroupRole;
+    onUpdateUserRole: (
+        userId: string,
+        role: Exclude<UserGroupRole, UserGroupRole.Owner>,
+    ) => Promise<void>;
+    isUpdatingRole: boolean;
 }
 
 export const UserTable: React.FC<UserTableProps> = ({
@@ -25,8 +32,12 @@ export const UserTable: React.FC<UserTableProps> = ({
     onRemoveUser,
     isRemoving,
     currentUserId,
+    currentUserRole,
+    onUpdateUserRole,
+    isUpdatingRole,
 }) => {
     const intl = useIntl();
+    const [editingUserId, setEditingUserId] = useState<string | null>(null);
 
     const getRemoveButtonState = (user: UserGroupDto) => {
         if (user.id === currentUserId) {
@@ -62,6 +73,49 @@ export const UserTable: React.FC<UserTableProps> = ({
         };
     };
 
+    const canEditRole = (user: UserGroupDto): boolean => {
+        return (
+            user.userGroupRole !== UserGroupRole.Owner &&
+            (currentUserRole === UserGroupRole.Owner ||
+                currentUserRole === UserGroupRole.Admin)
+        );
+    };
+
+    const getRoleOptions = (): SelectOption[] => {
+        return [
+            {
+                value: UserGroupRole.Contributor,
+                label: intl.formatMessage({
+                    id: `components.Settings.UserTable.roles.${UserGroupRole.Contributor}`,
+                }),
+            },
+            {
+                value: UserGroupRole.Admin,
+                label: intl.formatMessage({
+                    id: `components.Settings.UserTable.roles.${UserGroupRole.Admin}`,
+                }),
+            },
+        ];
+    };
+
+    const handleRoleClick = (user: UserGroupDto) => {
+        if (canEditRole(user) && !isUpdatingRole) {
+            setEditingUserId(user.id);
+        }
+    };
+
+    const handleRoleChange = async (
+        userId: string,
+        newRole: Exclude<UserGroupRole, UserGroupRole.Owner>,
+    ) => {
+        try {
+            await onUpdateUserRole(userId, newRole);
+            setEditingUserId(null);
+        } catch (error) {
+            console.error("Error updating role:", error);
+        }
+    };
+
     return (
         <div className="c-settings-user-table-wrapper">
             {loading ? (
@@ -83,13 +137,44 @@ export const UserTable: React.FC<UserTableProps> = ({
                         {users && users.length > 0 ? (
                             users.map((user) => {
                                 const buttonState = getRemoveButtonState(user);
+                                const isEditable = canEditRole(user);
+                                const isCurrentlyEditing =
+                                    editingUserId === user.id;
                                 return (
                                     <tr key={user.id}>
-                                        <td>{user.name}</td>
-                                        <td>{user.surname}</td>
-                                        <td>{user.email}</td>
+                                        <td title={user.name}>{user.name}</td>
+                                        <td title={user.surname}>
+                                            {user.surname}
+                                        </td>
+                                        <td title={user.email}>{user.email}</td>
                                         <td>
-                                            {fm(`roles.${user.userGroupRole}`)}
+                                            {isCurrentlyEditing ? (
+                                                <Select
+                                                    value={user.userGroupRole}
+                                                    options={getRoleOptions()}
+                                                    onChange={(newRole) =>
+                                                        handleRoleChange(
+                                                            user.id,
+                                                            newRole as Exclude<
+                                                                UserGroupRole,
+                                                                UserGroupRole.Owner
+                                                            >,
+                                                        )
+                                                    }
+                                                    className="c-settings-user-table-role-select"
+                                                />
+                                            ) : (
+                                                <span
+                                                    className={`c-settings-user-table-role ${isEditable ? "c-settings-user-table-role--editable" : ""}`}
+                                                    onClick={() =>
+                                                        handleRoleClick(user)
+                                                    }
+                                                >
+                                                    {fm(
+                                                        `roles.${user.userGroupRole}`,
+                                                    )}
+                                                </span>
+                                            )}
                                         </td>
                                         <td>
                                             <Button

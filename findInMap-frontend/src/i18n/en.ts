@@ -28,10 +28,12 @@ export default flattenObject({
         addUsersToGroup: "Error adding user to group. Please try again later.",
         removeUserFromGroup:
             "Error removing user from group. Please try again later.",
+        updateUserInGroup: "Error updating user role. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
         userRemovedSuccessfully: "User removed successfully",
+        userRoleUpdatedSuccessfully: "User role updated successfully",
     },
     components: {
         Breadcrumb: {

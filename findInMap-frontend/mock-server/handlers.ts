@@ -824,4 +824,27 @@ export const handlers = [
             return HttpResponse.json(undefined, { status: 204 });
         },
     ),
+    http.put(
+        "http://localhost:3001/groups/:groupId/users/:userId",
+        async ({ params, request }) => {
+            await delay(2000);
+            const { groupId, userId } = params;
+            const payload = (await request.json()) as { role: string };
+
+            const userIndex = mockGroupUsers.findIndex(
+                (user) => user.id === userId && user.groupId === groupId,
+            );
+
+            if (userIndex === -1) {
+                return HttpResponse.json(
+                    { error: "User not found in this group" },
+                    { status: 404 },
+                );
+            }
+
+            mockGroupUsers[userIndex].userGroupRole = payload.role;
+
+            return HttpResponse.json(undefined, { status: 204 });
+        },
+    ),
 ];

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
+import type { UserGroupRole } from "../../../core/commons/enums";
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
 import { useUser } from "../../../core/contexts/UserContext";
 import { useAddUsersToGroup } from "../../../core/usecases/useAddUsersToGroup";
 import { useGetGroupUsers } from "../../../core/usecases/useGetGroupUsers";
 import { useRemoveUserFromGroup } from "../../../core/usecases/useRemoveUserFromGroup";
+import { useUpdateUserInGroup } from "../../../core/usecases/useUpdateUserInGroup";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
@@ -30,6 +32,8 @@ export const Settings: React.FC = () => {
     const { addUsersToGroup, loading: isAddingUser } = useAddUsersToGroup();
     const { removeUserFromGroup, loading: isRemovingUser } =
         useRemoveUserFromGroup();
+    const { updateUserInGroup, loading: isUpdatingUserInGroup } =
+        useUpdateUserInGroup();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");
@@ -80,6 +84,14 @@ export const Settings: React.FC = () => {
         }
     };
 
+    const handleUpdateUserRole = async (
+        userId: string,
+        role: Exclude<UserGroupRole, UserGroupRole.Owner>,
+    ): Promise<void> => {
+        await updateUserInGroup(selectedGroup!.id, userId, { role });
+        fetchGroupUsers(selectedGroup!.id);
+    };
+
     return (
         <div className="v-settings">
             <ThemeToggle className="v-settings-theme-toggle" />
@@ -110,6 +122,9 @@ export const Settings: React.FC = () => {
                         onRemoveUser={handleRemoveUser}
                         isRemoving={isRemovingUser}
                         currentUserId={user!.id}
+                        currentUserRole={selectedGroup?.role}
+                        onUpdateUserRole={handleUpdateUserRole}
+                        isUpdatingRole={isUpdatingUserInGroup}
                     />
                 </div>
             </div>

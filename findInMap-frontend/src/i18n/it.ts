@@ -43,10 +43,13 @@ export default flattenObject({
             "Errore durante l'aggiunta dell'utente al gruppo. Si prega di riprovare più tardi.",
         removeUserFromGroup:
             "Errore durante la rimozione dell'utente dal gruppo. Si prega di riprovare più tardi.",
+        updateUserInGroup:
+            "Errore durante l'aggiornamento del ruolo utente. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
         userRemovedSuccessfully: "Utente rimosso con successo",
+        userRoleUpdatedSuccessfully: "Ruolo utente aggiornato con successo",
     },
     components: {
         Breadcrumb: {

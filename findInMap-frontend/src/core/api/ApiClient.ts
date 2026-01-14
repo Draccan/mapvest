@@ -15,6 +15,7 @@ import type TokenResponseDto from "../dtos/TokenResponseDto";
 import type { UpdateGroupDto } from "../dtos/UpdateGroupDto";
 import type { UpdateMapDto } from "../dtos/UpdateMapDto";
 import type UpdateUserDto from "../dtos/UpdateUserDto";
+import type { UpdateUserInGroupDto } from "../dtos/UpdateUserInGroupDto";
 import type UserDto from "../dtos/UserDto";
 import type UserGroupDto from "../dtos/UserGroupDto";
 import { UnauthorizedError } from "./errors/UnauthorizedError";
@@ -546,6 +547,24 @@ export default class ApiClient {
             `${API_URL}/groups/${groupId}/users/${userId}`,
             {
                 method: "DELETE",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+
+    async updateUserInGroup(
+        groupId: string,
+        userId: string,
+        data: UpdateUserInGroupDto,
+    ): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/groups/${groupId}/users/${userId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(data),
             },
         );
 

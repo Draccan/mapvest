@@ -4,12 +4,12 @@
     border-radius: 12px;
     box-shadow: 0 4px 16px var(--color-shadow);
     border: 1px solid var(--color-border-light);
-    overflow: hidden;
 }
 
 .c-settings-user-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .c-settings-user-table th,
@@ -17,6 +17,37 @@
     padding: 1rem 1.5rem;
     text-align: left;
     border-bottom: 1px solid var(--color-border-light);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.c-settings-user-table th:nth-child(1),
+.c-settings-user-table td:nth-child(1) {
+    width: 15%;
+}
+
+.c-settings-user-table th:nth-child(2),
+.c-settings-user-table td:nth-child(2) {
+    width: 15%;
+}
+
+.c-settings-user-table th:nth-child(3),
+.c-settings-user-table td:nth-child(3) {
+    width: 35%;
+}
+
+.c-settings-user-table th:nth-child(4),
+.c-settings-user-table td:nth-child(4) {
+    width: 20%;
+    overflow: visible;
+    position: relative;
+}
+
+.c-settings-user-table th:nth-child(5),
+.c-settings-user-table td:nth-child(5) {
+    width: 15%;
+    text-align: center;
 }
 
 .c-settings-user-table th {
@@ -43,9 +74,29 @@
     padding: 3rem;
 }
 
+.c-settings-user-table-role {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+}
+
+.c-settings-user-table-role--editable {
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.c-settings-user-table-role--editable:hover {
+    background-color: var(--color-background-hover);
+}
+
+.c-settings-user-table-role-select {
+    min-width: 150px;
+}
+
 @media (max-width: 768px) {
     .c-settings-user-table-wrapper {
         overflow-x: auto;
+        overflow-y: visible;
     }
 
     .c-settings-user-table th,
