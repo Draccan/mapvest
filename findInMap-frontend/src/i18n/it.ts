@@ -94,6 +94,7 @@ export default flattenObject({
             pointsByCategory: "Punti per Categoria",
             noData: "Nessun dato disponibile",
             noCategory: "Senza Categoria",
+            count: "Numero",
         },
         DashboardHeatmap: {
             heatmap: "Mappa di Densità Geografica",

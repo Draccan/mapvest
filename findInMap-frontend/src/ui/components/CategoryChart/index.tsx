@@ -29,6 +29,10 @@ export const CategoryChart: React.FC<CategoryChartProps> = ({
 }) => {
     const intl = useIntl();
 
+    const countKey = intl.formatMessage({
+        id: "components.CategoryChart.count",
+    });
+
     const data = useMemo(() => {
         const pointsByCategory = mapPoints.reduce(
             (categoryRecord, point) => {
@@ -50,7 +54,7 @@ export const CategoryChart: React.FC<CategoryChartProps> = ({
                     intl.formatMessage({
                         id: "components.CategoryChart.noCategory",
                     }),
-                count,
+                [countKey]: count,
                 fill: category?.color || "#94a3b8",
             };
         });
@@ -67,7 +71,7 @@ export const CategoryChart: React.FC<CategoryChartProps> = ({
                         <YAxis />
                         <Tooltip labelStyle={{ color: "#000000" }} />
                         <Legend />
-                        <Bar dataKey="count" fill="#8884d8" />
+                        <Bar dataKey={countKey} fill="#8884d8" />
                     </BarChart>
                 </ResponsiveContainer>
             ) : (
