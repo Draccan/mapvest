@@ -9,6 +9,7 @@ import { useGetGroupUsers } from "../../../core/usecases/useGetGroupUsers";
 import { useRemoveUserFromGroup } from "../../../core/usecases/useRemoveUserFromGroup";
 import { useUpdateUserInGroup } from "../../../core/usecases/useUpdateUserInGroup";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import usePrevious from "../../commons/hooks/usePrevious";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
 import { Modal } from "../../components/Modal";
@@ -26,7 +27,6 @@ export const Settings: React.FC = () => {
         data: groupUsers,
         loading,
         fetch: fetchGroupUsers,
-        hasFetched,
         error,
     } = useGetGroupUsers();
     const { addUsersToGroup, loading: isAddingUser } = useAddUsersToGroup();
@@ -35,15 +35,22 @@ export const Settings: React.FC = () => {
     const { updateUserInGroup, loading: isUpdatingUserInGroup } =
         useUpdateUserInGroup();
 
+    const previousSelectedGroupId = usePrevious(selectedGroup?.id);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const [emailError, setEmailError] = useState("");
 
     useEffect(() => {
-        if (selectedGroup?.id && !loading && !hasFetched && !error) {
+        if (
+            selectedGroup?.id &&
+            !loading &&
+            !error &&
+            previousSelectedGroupId !== selectedGroup.id
+        ) {
             fetchGroupUsers(selectedGroup.id);
         }
-    }, [selectedGroup?.id, loading, hasFetched, error]);
+    }, [previousSelectedGroupId, selectedGroup?.id, loading, error]);
 
     const validateEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

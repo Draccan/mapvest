@@ -35,16 +35,16 @@ export const Dashboard: React.FC = () => {
             selectedGroup &&
             selectedMap &&
             !loadingPoints &&
-            !mapPointsData &&
-            !mapPointsError
+            !mapPointsError &&
+            previousSelectedMapId !== selectedMap.id
         ) {
             fetchMapPoints(selectedGroup.id, selectedMap.id);
         }
     }, [
+        previousSelectedMapId,
         selectedGroup,
         selectedMap,
         loadingPoints,
-        mapPointsData,
         mapPointsError,
         fetchMapPoints,
     ]);
