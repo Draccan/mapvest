@@ -182,6 +182,8 @@ export default flattenObject({
                 cannotRemoveSelf: "Non puoi rimuovere te stesso",
                 cannotRemoveLastOwner:
                     "Non è possibile rimuovere l'unico proprietario",
+                contributorsCannotRemove:
+                    "I collaboratori non possono rimuovere utenti",
                 noUsers: "Nessun utente trovato",
                 roles: {
                     [UserGroupRole.Owner]: "Proprietario",

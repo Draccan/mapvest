@@ -40,6 +40,15 @@ export const UserTable: React.FC<UserTableProps> = ({
     const [editingUserId, setEditingUserId] = useState<string | null>(null);
 
     const getRemoveButtonState = (user: UserGroupDto) => {
+        if (currentUserRole === UserGroupRole.Contributor) {
+            return {
+                disabled: true,
+                title: intl.formatMessage({
+                    id: "components.Settings.UserTable.contributorsCannotRemove",
+                }),
+            };
+        }
+
         if (user.id === currentUserId) {
             return {
                 disabled: true,
