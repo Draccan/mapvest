@@ -181,6 +181,9 @@ export default flattenObject({
             logout: "Logout",
             enterAnalysisMode: "Analyze Area",
             exitAnalysisMode: "Exit Analysis Mode",
+            publicMapToggle: "Public map",
+            copyPublicLink: "Copy public link",
+            linkCopied: "Link copied to clipboard!",
         },
         User: {
             title: "User Profile",

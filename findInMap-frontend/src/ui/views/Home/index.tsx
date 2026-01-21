@@ -1,7 +1,9 @@
-import { ScanSearch, X } from "lucide-react";
+import { Copy, ScanSearch, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
+import toast from "react-hot-toast";
 
+import { UserGroupRole } from "../../../core/commons/enums";
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
 import type { CategoryDto } from "../../../core/dtos/CategoryDto";
 import { type CreateMapPointDto } from "../../../core/dtos/CreateMapPointDto";
@@ -28,11 +30,13 @@ import { MapPointForm } from "../../components/MapPointForm";
 import { RouteDetailsModal } from "../../components/RouteDetailsModal";
 import { Skeleton } from "../../components/Skeleton";
 import { ThemeToggle } from "../../components/ThemeToggle";
+import { Toggle } from "../../components/Toggle";
 import "./style.css";
 
 export const Home: React.FC = () => {
     const intl = useIntl();
-    const { selectedGroup, selectedMap } = useGroupsMaps();
+    const { selectedGroup, selectedMap, updateSelectedMap, updatingMap } =
+        useGroupsMaps();
     const [selectedCoordinates, setSelectedCoordinates] = useState<{
         long: number;
         lat: number;
@@ -197,6 +201,21 @@ export const Home: React.FC = () => {
         }
     };
 
+    const canTogglePublic =
+        selectedGroup?.role === UserGroupRole.Owner ||
+        selectedGroup?.role === UserGroupRole.Admin;
+
+    const handlePublicToggle = async (isPublic: boolean) => {
+        updateSelectedMap({ isPublic });
+    };
+
+    const handleCopyPublicLink = () => {
+        if (!selectedMap?.publicId) return;
+        const publicLink = `${window.location.origin}/public/map/${selectedMap.publicId}`;
+        navigator.clipboard.writeText(publicLink);
+        toast.success(intl.formatMessage({ id: "views.Home.linkCopied" }));
+    };
+
     const handleOptimizeRoute = () => {
         if (!startPoint || !endPoint || pointsInArea.length === 0) {
             return;
@@ -266,6 +285,39 @@ export const Home: React.FC = () => {
                                     <ScanSearch size={20} />
                                 )}
                             </Button>
+                            {canTogglePublic && (
+                                <div className="v-home-public-toggle-wrapper">
+                                    <span className="v-home-public-toggle-label">
+                                        {intl.formatMessage({
+                                            id: "views.Home.publicMapToggle",
+                                        })}
+                                    </span>
+                                    <Toggle
+                                        checked={selectedMap?.isPublic ?? false}
+                                        onChange={handlePublicToggle}
+                                        disabled={updatingMap}
+                                        ariaLabel={intl.formatMessage({
+                                            id: "views.Home.publicMapToggle",
+                                        })}
+                                    />
+                                </div>
+                            )}
+                            {selectedMap?.isPublic && (
+                                <Button
+                                    kind="secondary"
+                                    size="icon"
+                                    onClick={handleCopyPublicLink}
+                                    title={intl.formatMessage({
+                                        id: "views.Home.copyPublicLink",
+                                    })}
+                                    aria-label={intl.formatMessage({
+                                        id: "views.Home.copyPublicLink",
+                                    })}
+                                    className="v-home-copy-link"
+                                >
+                                    <Copy size={20} />
+                                </Button>
+                            )}
                         </div>
                         <div className="v-home-map">
                             {!hasFetched || !hasFetchedCategories ? (

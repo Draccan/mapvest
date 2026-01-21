@@ -277,16 +277,22 @@ let mockMaps = [
         id: "map-1",
         groupId: "group-1",
         name: "First Map",
+        isPublic: true,
+        publicId: "abc123-public-map-1",
     },
     {
         id: "map-2",
         groupId: "group-1",
         name: "Second Map",
+        isPublic: false,
+        publicId: null,
     },
     {
         id: "map-3",
         groupId: "group-2",
         name: "Third Map",
+        isPublic: false,
+        publicId: null,
     },
 ];
 
@@ -383,6 +389,8 @@ export const handlers = [
                 id: `map-${mapIdCounter}`,
                 groupId: groupId as string,
                 name: mapData.name,
+                isPublic: false,
+                publicId: null,
             };
             mockMaps.push(newMap);
             mapIdCounter++;
@@ -525,6 +533,8 @@ export const handlers = [
             id: `map-${mapIdCounter}`,
             groupId: newGroup.id,
             name: "First Map",
+            isPublic: false,
+            publicId: null,
         };
         mockMaps.push(newMap);
 
@@ -738,7 +748,10 @@ export const handlers = [
         async ({ params, request }) => {
             await delay(1000);
             const { groupId, mapId } = params;
-            const updateData = (await request.json()) as { name: string };
+            const updateData = (await request.json()) as {
+                name?: string;
+                isPublic?: boolean;
+            };
 
             const mapIndex = mockMaps.findIndex(
                 (map) => map.id === mapId && map.groupId === groupId,
@@ -751,10 +764,17 @@ export const handlers = [
                 );
             }
 
-            mockMaps[mapIndex] = {
-                ...mockMaps[mapIndex],
-                name: updateData.name,
-            };
+            if (updateData.name !== undefined) {
+                mockMaps[mapIndex].name = updateData.name;
+            }
+
+            if (updateData.isPublic !== undefined) {
+                mockMaps[mapIndex].isPublic = updateData.isPublic;
+                if (updateData.isPublic && !mockMaps[mapIndex].publicId) {
+                    mockMaps[mapIndex].publicId =
+                        `public-${mapId}-${Date.now()}`;
+                }
+            }
 
             return HttpResponse.json(mockMaps[mapIndex], { status: 200 });
         },

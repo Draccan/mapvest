@@ -77,6 +77,24 @@
     flex-shrink: 0;
 }
 
+.v-home-public-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.v-home-public-toggle-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.v-home-copy-link {
+    flex-shrink: 0;
+}
+
 .v-home-map {
     height: 500px;
     border-radius: 16px;

@@ -1,0 +1,68 @@
+.c-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.c-toggle:focus {
+    outline: none;
+}
+
+.c-toggle:focus-visible .c-toggle-track {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.c-toggle-track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: var(--color-background-tertiary);
+    border-radius: 12px;
+    border: 2px solid var(--color-border);
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.c-toggle-checked .c-toggle-track {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.c-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.c-toggle-checked .c-toggle-thumb {
+    transform: translateX(20px);
+}
+
+.c-toggle-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.c-toggle:not(.c-toggle-disabled):hover .c-toggle-track {
+    border-color: var(--color-primary);
+}
+
+.c-toggle:not(.c-toggle-disabled):active .c-toggle-thumb {
+    width: 18px;
+}
+
+.c-toggle-checked:not(.c-toggle-disabled):active .c-toggle-thumb {
+    transform: translateX(18px);
+}

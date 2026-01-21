@@ -201,6 +201,9 @@ export default flattenObject({
             title: "La mia Mappa",
             enterAnalysisMode: "Analizza Area",
             exitAnalysisMode: "Esci dalla Modalità Analisi",
+            publicMapToggle: "Mappa pubblica",
+            copyPublicLink: "Copia link pubblico",
+            linkCopied: "Link copiato negli appunti!",
         },
         User: {
             title: "Profilo Utente",
