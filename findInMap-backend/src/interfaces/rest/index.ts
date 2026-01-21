@@ -20,6 +20,7 @@ import GetGroupMaps from "../../core/usecases/GetGroupMaps";
 import GetGroupUsers from "../../core/usecases/GetGroupUsers";
 import GetMapCategories from "../../core/usecases/GetMapCategories";
 import GetMapPoints from "../../core/usecases/GetMapPoints";
+import GetPublicMap from "../../core/usecases/GetPublicMap";
 import GetUser from "../../core/usecases/GetUser";
 import GetUserGroups from "../../core/usecases/GetUserGroups";
 import LoginUser from "../../core/usecases/LoginUser";
@@ -48,6 +49,7 @@ import GetGroupUsersRoute from "./routes/GetGroupUsersRoute";
 import GetMapCategoriesRoute from "./routes/GetMapCategoriesRoute";
 import GetMapPointsRoute from "./routes/GetMapPointsRoute";
 import GetMapsRoute from "./routes/GetMapsRoute";
+import GetPublicMapRoute from "./routes/GetPublicMapRoute";
 import GetUserRoute from "./routes/GetUserRoute";
 import HealthRoute from "./routes/HealthRoute";
 import InfoRoute from "./routes/InfoRoute";
@@ -83,6 +85,7 @@ export default class RestInterface {
             getGroupMaps: GetGroupMaps;
             getGroupUsers: GetGroupUsers;
             getMapPoints: GetMapPoints;
+            getPublicMap: GetPublicMap;
             getUser: GetUser;
             getUserGroups: GetUserGroups;
             loginUser: LoginUser;
@@ -114,6 +117,7 @@ export default class RestInterface {
             GetGroupUsersRoute(usecases.getGroupUsers),
             GetMapPointsRoute(usecases.getMapPoints),
             GetMapsRoute(usecases.getGroupMaps),
+            GetPublicMapRoute(usecases.getPublicMap),
             GetUserRoute(usecases.getUser),
             HealthRoute(),
             InfoRoute(),

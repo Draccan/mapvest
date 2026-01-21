@@ -9,6 +9,7 @@ import { MapCategoryEntity } from "../entities/MapCategoryEntity";
 import DbOrTransaction from "./DatabaseTransaction";
 
 export default interface MapRepository {
+    findMapByPublicId(publicId: string): Promise<MapEntity | null>;
     createMapPoint(
         data: CreateMapPointDto,
         mapId: string,

@@ -1075,4 +1075,67 @@ describe("DrizzleMapRepository", () => {
             expect(updatedMap!.publicId).toBeDefined();
         });
     });
+
+    describe("findMapByPublicId", () => {
+        it("should return a map when publicId exists", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {
+                isPublic: true,
+            });
+
+            const result = await repository.findMapByPublicId(
+                updatedMap!.publicId!,
+            );
+
+            expect(result).toBeDefined();
+            expect(result!.id).toBe(map.id);
+            expect(result!.name).toBe("Test Map");
+            expect(result!.publicId).toBe(updatedMap!.publicId);
+        });
+
+        it("should return null when publicId does not exist", async () => {
+            const result = await repository.findMapByPublicId(
+                "00000000-0000-0000-0000-000000000000",
+            );
+
+            expect(result).toBeNull();
+        });
+
+        it("should return null when map is not public", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Private Map",
+            });
+
+            const result = await repository.findMapByPublicId(map.id);
+
+            expect(result).toBeNull();
+        });
+    });
 });

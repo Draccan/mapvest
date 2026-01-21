@@ -12,6 +12,7 @@ import GetGroupMaps from "../core/usecases/GetGroupMaps";
 import GetGroupUsers from "../core/usecases/GetGroupUsers";
 import GetMapCategories from "../core/usecases/GetMapCategories";
 import GetMapPoints from "../core/usecases/GetMapPoints";
+import GetPublicMap from "../core/usecases/GetPublicMap";
 import GetUser from "../core/usecases/GetUser";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
@@ -77,6 +78,7 @@ const removeUserFromGroup = new RemoveUserFromGroup(groupRepository);
 const updateUser = new UpdateUser(userRepository);
 const updateUserInGroup = new UpdateUserInGroup(groupRepository);
 const getUser = new GetUser(userRepository);
+const getPublicMap = new GetPublicMap(mapRepository);
 const resetPassword = new ResetPassword(
     userRepository,
     emailService,
@@ -99,6 +101,7 @@ const restInterface = new RestInterface(
         getGroupMaps,
         getGroupUsers,
         getMapPoints,
+        getPublicMap,
         getUser,
         getUserGroups,
         loginUser,

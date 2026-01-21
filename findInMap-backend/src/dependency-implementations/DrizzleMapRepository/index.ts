@@ -19,6 +19,15 @@ import { makeMapEntity } from "./converters/makeMapEntity";
 import { makeMapPointEntity } from "./converters/makeMapPointEntity";
 
 export class DrizzleMapRepository implements MapRepository {
+    async findMapByPublicId(publicId: string): Promise<MapEntity | null> {
+        const [map] = await db
+            .select()
+            .from(maps)
+            .where(eq(maps.publicId, publicId));
+
+        return map ? makeMapEntity(map) : null;
+    }
+
     async findAllMapPoints(mapId: string): Promise<MapPointEntity[]> {
         const allMapPoints = await db
             .select({

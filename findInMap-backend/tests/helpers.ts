@@ -16,6 +16,7 @@ import GetGroupMaps from "../src/core/usecases/GetGroupMaps";
 import GetGroupUsers from "../src/core/usecases/GetGroupUsers";
 import GetMapCategories from "../src/core/usecases/GetMapCategories";
 import GetMapPoints from "../src/core/usecases/GetMapPoints";
+import GetPublicMap from "../src/core/usecases/GetPublicMap";
 import GetUser from "../src/core/usecases/GetUser";
 import GetUserGroups from "../src/core/usecases/GetUserGroups";
 import LoginUser from "../src/core/usecases/LoginUser";
@@ -49,6 +50,7 @@ export const mockGroupRepository: jest.Mocked<GroupRepository> = {
 
 export const mockMapRepository: jest.Mocked<MapRepository> = {
     findAllMapPoints: jest.fn(),
+    findMapByPublicId: jest.fn(),
     findMapByGroupId: jest.fn(),
     createMapPoint: jest.fn(),
     findMapPointById: jest.fn(),
@@ -151,6 +153,7 @@ export function createTestApp() {
     );
     const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
     const getUser = new GetUser(userRepository);
+    const getPublicMap = new GetPublicMap(mapRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);
@@ -190,6 +193,7 @@ export function createTestApp() {
             getGroupUsers,
             getMapCategories,
             getMapPoints,
+            getPublicMap,
             getUser,
             getUserGroups,
             loginUser,
