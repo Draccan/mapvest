@@ -1,0 +1,1 @@
+ALTER TABLE "map_points" ALTER COLUMN "public_id" DROP DEFAULT;

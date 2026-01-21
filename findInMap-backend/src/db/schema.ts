@@ -74,7 +74,7 @@ export const mapPoints = pgTable("map_points", {
     date: date("date").notNull(),
     dueDate: date("due_date"),
     isPublic: boolean("is_public").default(false),
-    publicId: uuid("public_id").unique().defaultRandom(),
+    publicId: uuid("public_id").unique(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 })
         .defaultNow()
