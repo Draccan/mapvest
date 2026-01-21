@@ -1,4 +1,5 @@
 import {
+    boolean,
     pgTable,
     uuid,
     varchar,
@@ -72,6 +73,8 @@ export const mapPoints = pgTable("map_points", {
     description: varchar("description"),
     date: date("date").notNull(),
     dueDate: date("due_date"),
+    isPublic: boolean("is_public").default(false),
+    publicId: uuid("public_id").unique().defaultRandom(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 })
         .defaultNow()
