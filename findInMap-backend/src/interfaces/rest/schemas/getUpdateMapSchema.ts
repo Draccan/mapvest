@@ -5,7 +5,8 @@ export default function getUpdateMapSchema(): OpenAPIV3.SchemaObject {
         type: "object",
         properties: {
             name: { type: "string" },
+            isPublic: { type: "boolean" },
         },
-        required: ["name"],
+        additionalProperties: false,
     };
 }

@@ -32,7 +32,13 @@ describe("GetMapCategories", () => {
         ]);
 
         mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue([
-            { id: mapId, groupId: groupId, name: "Test Map" },
+            {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
+            },
         ]);
 
         mockMapRepository.findCategoriesByMapId.mockResolvedValue([
@@ -122,7 +128,13 @@ describe("GetMapCategories", () => {
         ]);
 
         mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue([
-            { id: mapId, groupId: groupId, name: "Test Map" },
+            {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
+            },
         ]);
 
         mockMapRepository.findCategoriesByMapId.mockResolvedValue([]);

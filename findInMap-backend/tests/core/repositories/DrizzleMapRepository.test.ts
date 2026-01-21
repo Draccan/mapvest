@@ -876,6 +876,8 @@ describe("DrizzleMapRepository", () => {
             expect(updatedMap!.id).toBe(map.id);
             expect(updatedMap!.name).toBe("Updated Map Name");
             expect(updatedMap!.groupId).toBe(group.id);
+            expect(updatedMap!.isPublic).toBe(false);
+            expect(updatedMap!.publicId).toBeNull();
         });
 
         it("should return null when updating a non-existent map", async () => {
@@ -930,6 +932,147 @@ describe("DrizzleMapRepository", () => {
 
             const maps = await repository.findMapByGroupId(group1.id);
             expect(maps[0].name).toBe("Original Map Name");
+        });
+
+        it("should set isPublic to true and generate publicId", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {
+                isPublic: true,
+            });
+
+            expect(updatedMap).toBeDefined();
+            expect(updatedMap!.isPublic).toBe(true);
+            expect(updatedMap!.publicId).toBeDefined();
+            expect(typeof updatedMap!.publicId).toBe("string");
+        });
+
+        it("should set isPublic to false and remove publicId", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            await repository.updateMap(map.id, group.id, {
+                isPublic: true,
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {
+                isPublic: false,
+            });
+
+            expect(updatedMap).toBeDefined();
+            expect(updatedMap!.isPublic).toBe(false);
+            expect(updatedMap!.publicId).toBeNull();
+        });
+
+        it("should update both name and isPublic together", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Original Name",
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {
+                name: "New Name",
+                isPublic: true,
+            });
+
+            expect(updatedMap).toBeDefined();
+            expect(updatedMap!.name).toBe("New Name");
+            expect(updatedMap!.isPublic).toBe(true);
+            expect(updatedMap!.publicId).toBeDefined();
+        });
+
+        it("should return existing map when payload is empty", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {});
+
+            expect(updatedMap).toBeDefined();
+            expect(updatedMap!.id).toBe(map.id);
+            expect(updatedMap!.name).toBe("Test Map");
+            expect(updatedMap!.isPublic).toBe(false);
+        });
+
+        it("should not modify isPublic when not provided in payload", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Original Name",
+            });
+
+            await repository.updateMap(map.id, group.id, {
+                isPublic: true,
+            });
+
+            const updatedMap = await repository.updateMap(map.id, group.id, {
+                name: "New Name",
+            });
+
+            expect(updatedMap).toBeDefined();
+            expect(updatedMap!.name).toBe("New Name");
+            expect(updatedMap!.isPublic).toBe(true);
+            expect(updatedMap!.publicId).toBeDefined();
         });
     });
 });

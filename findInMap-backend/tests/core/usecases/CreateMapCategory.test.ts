@@ -37,7 +37,13 @@ describe("CreateMapCategory", () => {
         ]);
 
         mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue([
-            { id: mapId, groupId: groupId, name: "Test Map" },
+            {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
+            },
         ]);
 
         mockMapRepository.createCategory.mockResolvedValue({

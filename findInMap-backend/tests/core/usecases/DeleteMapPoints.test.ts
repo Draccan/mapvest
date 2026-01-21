@@ -43,6 +43,8 @@ describe("DeleteMapPoints", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -116,6 +118,8 @@ describe("DeleteMapPoints", () => {
                     id: "different-map-id",
                     groupId: groupId,
                     name: "Different Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -155,6 +159,8 @@ describe("DeleteMapPoints", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 

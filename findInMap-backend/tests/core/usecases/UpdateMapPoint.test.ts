@@ -56,6 +56,8 @@ describe("UpdateMapPoint", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -144,6 +146,8 @@ describe("UpdateMapPoint", () => {
                     id: "different-map-id",
                     groupId: groupId,
                     name: "Different Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -182,6 +186,8 @@ describe("UpdateMapPoint", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -222,6 +228,8 @@ describe("UpdateMapPoint", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -275,6 +283,8 @@ describe("UpdateMapPoint", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 

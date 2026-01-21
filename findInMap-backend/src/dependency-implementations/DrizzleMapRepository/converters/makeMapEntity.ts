@@ -6,5 +6,7 @@ export const makeMapEntity = (map: Map): MapEntity => {
         id: map.id,
         groupId: map.groupId,
         name: map.name,
+        isPublic: map.isPublic ?? false,
+        publicId: map.publicId,
     };
 };

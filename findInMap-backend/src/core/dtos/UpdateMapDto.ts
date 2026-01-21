@@ -1,3 +1,4 @@
 export default interface UpdateMapDto {
-    name: string;
+    name?: string;
+    isPublic?: boolean;
 }

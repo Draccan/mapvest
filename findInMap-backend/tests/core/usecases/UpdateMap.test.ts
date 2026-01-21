@@ -42,6 +42,8 @@ describe("UpdateMap", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Original Map Name",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -49,6 +51,8 @@ describe("UpdateMap", () => {
                 id: mapId,
                 groupId: groupId,
                 name: "Updated Map Name",
+                isPublic: false,
+                publicId: null,
             };
 
             mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
@@ -69,6 +73,8 @@ describe("UpdateMap", () => {
             expect(result).toEqual({
                 id: mapId,
                 name: "Updated Map Name",
+                isPublic: false,
+                publicId: null,
             });
             expect(
                 mockGroupRepository.memoizedFindByUserId,
@@ -160,11 +166,15 @@ describe("UpdateMap", () => {
                     id: "map-123",
                     groupId: groupId,
                     name: "First Map",
+                    isPublic: false,
+                    publicId: null,
                 },
                 {
                     id: "map-456",
                     groupId: groupId,
                     name: "Second Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -227,6 +237,8 @@ describe("UpdateMap", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Original Map Name",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -258,7 +270,7 @@ describe("UpdateMap", () => {
             );
         });
 
-        it("should work with different user group roles", async () => {
+        it("should work with different user group roles for name update", async () => {
             const userId = "user-123";
             const groupId = "group-1";
             const mapId = "map-123";
@@ -284,6 +296,8 @@ describe("UpdateMap", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Original Map Name",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -291,6 +305,8 @@ describe("UpdateMap", () => {
                 id: mapId,
                 groupId: groupId,
                 name: "Updated Map Name",
+                isPublic: false,
+                publicId: null,
             };
 
             mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
@@ -311,6 +327,392 @@ describe("UpdateMap", () => {
             expect(result).toEqual({
                 id: mapId,
                 name: "Updated Map Name",
+                isPublic: false,
+                publicId: null,
+            });
+            expect(mockMapRepository.updateMap).toHaveBeenCalledWith(
+                mapId,
+                groupId,
+                updateMapDto,
+            );
+        });
+
+        it("should allow owner to set isPublic to true", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const mapId = "map-123";
+            const updateMapDto: UpdateMapDto = {
+                isPublic: true,
+            };
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            const mockMaps: MapEntity[] = [
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ];
+
+            const mockUpdatedMap: MapEntity = {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: true,
+                publicId: "generated-public-id",
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue(
+                mockMaps,
+            );
+            mockMapRepository.updateMap.mockResolvedValue(mockUpdatedMap);
+
+            const result = await updateMap.execute(
+                mapId,
+                groupId,
+                userId,
+                updateMapDto,
+            );
+
+            expect(result).toEqual({
+                id: mapId,
+                name: "Test Map",
+                isPublic: true,
+                publicId: "generated-public-id",
+            });
+            expect(mockMapRepository.updateMap).toHaveBeenCalledWith(
+                mapId,
+                groupId,
+                updateMapDto,
+            );
+        });
+
+        it("should allow admin to set isPublic to true", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const mapId = "map-123";
+            const updateMapDto: UpdateMapDto = {
+                isPublic: true,
+            };
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: "other-user",
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Admin,
+                },
+            ];
+
+            const mockMaps: MapEntity[] = [
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ];
+
+            const mockUpdatedMap: MapEntity = {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: true,
+                publicId: "generated-public-id",
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue(
+                mockMaps,
+            );
+            mockMapRepository.updateMap.mockResolvedValue(mockUpdatedMap);
+
+            const result = await updateMap.execute(
+                mapId,
+                groupId,
+                userId,
+                updateMapDto,
+            );
+
+            expect(result).toEqual({
+                id: mapId,
+                name: "Test Map",
+                isPublic: true,
+                publicId: "generated-public-id",
+            });
+            expect(mockMapRepository.updateMap).toHaveBeenCalledWith(
+                mapId,
+                groupId,
+                updateMapDto,
+            );
+        });
+
+        it("should throw NotAllowedActionError when contributor tries to set isPublic", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const mapId = "map-123";
+            const updateMapDto: UpdateMapDto = {
+                isPublic: true,
+            };
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: "other-user",
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Contributor,
+                },
+            ];
+
+            const mockMaps: MapEntity[] = [
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ];
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue(
+                mockMaps,
+            );
+
+            await expect(
+                updateMap.execute(mapId, groupId, userId, updateMapDto),
+            ).rejects.toThrow(NotAllowedActionError);
+            await expect(
+                updateMap.execute(mapId, groupId, userId, updateMapDto),
+            ).rejects.toThrow(
+                "Only owners and admins can change the isPublic setting",
+            );
+
+            expect(mockMapRepository.updateMap).not.toHaveBeenCalled();
+        });
+
+        it("should allow owner to set isPublic to false", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const mapId = "map-123";
+            const updateMapDto: UpdateMapDto = {
+                isPublic: false,
+            };
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            const mockMaps: MapEntity[] = [
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: true,
+                    publicId: "existing-public-id",
+                },
+            ];
+
+            const mockUpdatedMap: MapEntity = {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue(
+                mockMaps,
+            );
+            mockMapRepository.updateMap.mockResolvedValue(mockUpdatedMap);
+
+            const result = await updateMap.execute(
+                mapId,
+                groupId,
+                userId,
+                updateMapDto,
+            );
+
+            expect(result).toEqual({
+                id: mapId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
+            });
+            expect(mockMapRepository.updateMap).toHaveBeenCalledWith(
+                mapId,
+                groupId,
+                updateMapDto,
+            );
+        });
+
+        it("should allow owner to update both name and isPublic at the same time", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const mapId = "map-123";
+            const updateMapDto: UpdateMapDto = {
+                name: "New Map Name",
+                isPublic: true,
+            };
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            const mockMaps: MapEntity[] = [
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ];
+
+            const mockUpdatedMap: MapEntity = {
+                id: mapId,
+                groupId: groupId,
+                name: "New Map Name",
+                isPublic: true,
+                publicId: "generated-public-id",
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue(
+                mockMaps,
+            );
+            mockMapRepository.updateMap.mockResolvedValue(mockUpdatedMap);
+
+            const result = await updateMap.execute(
+                mapId,
+                groupId,
+                userId,
+                updateMapDto,
+            );
+
+            expect(result).toEqual({
+                id: mapId,
+                name: "New Map Name",
+                isPublic: true,
+                publicId: "generated-public-id",
+            });
+            expect(mockMapRepository.updateMap).toHaveBeenCalledWith(
+                mapId,
+                groupId,
+                updateMapDto,
+            );
+        });
+
+        it("should successfully execute with empty payload", async () => {
+            const userId = "user-123";
+            const groupId = "group-1";
+            const mapId = "map-123";
+            const updateMapDto: UpdateMapDto = {};
+
+            const mockUserGroups: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: groupId,
+                        name: "My Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            const mockMaps: MapEntity[] = [
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ];
+
+            const mockUpdatedMap: MapEntity = {
+                id: mapId,
+                groupId: groupId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
+                mockUserGroups,
+            );
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue(
+                mockMaps,
+            );
+            mockMapRepository.updateMap.mockResolvedValue(mockUpdatedMap);
+
+            const result = await updateMap.execute(
+                mapId,
+                groupId,
+                userId,
+                updateMapDto,
+            );
+
+            expect(result).toEqual({
+                id: mapId,
+                name: "Test Map",
+                isPublic: false,
+                publicId: null,
             });
             expect(mockMapRepository.updateMap).toHaveBeenCalledWith(
                 mapId,

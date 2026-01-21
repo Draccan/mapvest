@@ -43,6 +43,8 @@ describe("CreateGroupMap", () => {
                 id: "map-123",
                 groupId: groupId,
                 name: "New Map",
+                isPublic: false,
+                publicId: null,
             };
 
             mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
@@ -59,6 +61,8 @@ describe("CreateGroupMap", () => {
             expect(result).toEqual({
                 id: "map-123",
                 name: "New Map",
+                isPublic: false,
+                publicId: null,
             });
             expect(
                 mockGroupRepository.memoizedFindByUserId,
@@ -94,6 +98,8 @@ describe("CreateGroupMap", () => {
                 id: "map-456",
                 groupId: groupId,
                 name: "New Map",
+                isPublic: false,
+                publicId: null,
             };
 
             mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
@@ -166,6 +172,8 @@ describe("CreateGroupMap", () => {
                 id: "map-456",
                 groupId: groupId,
                 name: "Contributor Map",
+                isPublic: false,
+                publicId: null,
             };
 
             mockGroupRepository.memoizedFindByUserId.mockResolvedValue(
@@ -182,6 +190,8 @@ describe("CreateGroupMap", () => {
             expect(result).toEqual({
                 id: "map-456",
                 name: "Contributor Map",
+                isPublic: false,
+                publicId: null,
             });
             expect(
                 mockGroupRepository.memoizedFindByUserId,

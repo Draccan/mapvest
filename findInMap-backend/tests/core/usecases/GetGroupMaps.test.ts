@@ -37,11 +37,15 @@ describe("GetGroupMaps", () => {
                     id: "map-1",
                     groupId: groupId,
                     name: "First Map",
+                    isPublic: false,
+                    publicId: null,
                 },
                 {
                     id: "map-2",
                     groupId: groupId,
                     name: "Second Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -53,8 +57,18 @@ describe("GetGroupMaps", () => {
             const result = await getGroupMaps.execute(groupId, userId);
 
             expect(result).toEqual([
-                { id: "map-1", name: "First Map" },
-                { id: "map-2", name: "Second Map" },
+                {
+                    id: "map-1",
+                    name: "First Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+                {
+                    id: "map-2",
+                    name: "Second Map",
+                    isPublic: false,
+                    publicId: null,
+                },
             ]);
             expect(
                 mockGroupRepository.memoizedFindByUserId,
@@ -147,6 +161,8 @@ describe("GetGroupMaps", () => {
                     id: "map-1",
                     groupId: groupId,
                     name: "Shared Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -157,7 +173,14 @@ describe("GetGroupMaps", () => {
 
             const result = await getGroupMaps.execute(groupId, userId);
 
-            expect(result).toEqual([{ id: "map-1", name: "Shared Map" }]);
+            expect(result).toEqual([
+                {
+                    id: "map-1",
+                    name: "Shared Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ]);
             expect(
                 mockGroupRepository.memoizedFindByUserId,
             ).toHaveBeenCalledWith(userId);
@@ -185,6 +208,8 @@ describe("GetGroupMaps", () => {
                     id: "map-1",
                     groupId: groupId,
                     name: "Admin Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -195,7 +220,14 @@ describe("GetGroupMaps", () => {
 
             const result = await getGroupMaps.execute(groupId, userId);
 
-            expect(result).toEqual([{ id: "map-1", name: "Admin Map" }]);
+            expect(result).toEqual([
+                {
+                    id: "map-1",
+                    name: "Admin Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ]);
         });
 
         it("should work when user belongs to multiple groups", async () => {
@@ -230,6 +262,8 @@ describe("GetGroupMaps", () => {
                     id: "map-1",
                     groupId: requestedGroupId,
                     name: "Second Group Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ];
 
@@ -240,7 +274,14 @@ describe("GetGroupMaps", () => {
 
             const result = await getGroupMaps.execute(requestedGroupId, userId);
 
-            expect(result).toEqual([{ id: "map-1", name: "Second Group Map" }]);
+            expect(result).toEqual([
+                {
+                    id: "map-1",
+                    name: "Second Group Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ]);
         });
     });
 });

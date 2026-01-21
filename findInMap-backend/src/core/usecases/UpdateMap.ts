@@ -1,3 +1,4 @@
+import { UserGroupRole } from "../commons/enums";
 import GroupRepository from "../dependencies/GroupRepository";
 import MapRepository from "../dependencies/MapRepository";
 import UpdateMapDto from "../dtos/UpdateMapDto";
@@ -17,7 +18,9 @@ export default class UpdateMap {
         data: UpdateMapDto,
     ): Promise<MapDto> {
         const groups = await this.groupRepository.memoizedFindByUserId(userId);
-        if (groups.find((group) => group.group.id === groupId) === undefined) {
+        const userGroup = groups.find((group) => group.group.id === groupId);
+
+        if (userGroup === undefined) {
             throw new NotAllowedActionError(
                 "User cannot access map for this group",
             );
@@ -28,6 +31,17 @@ export default class UpdateMap {
             throw new NotAllowedActionError(
                 "This group has no access to the specified map",
             );
+        }
+
+        if (data.isPublic !== undefined) {
+            if (
+                userGroup.role !== UserGroupRole.Owner &&
+                userGroup.role !== UserGroupRole.Admin
+            ) {
+                throw new NotAllowedActionError(
+                    "Only owners and admins can change the isPublic setting",
+                );
+            }
         }
 
         const updatedMap = await this.mapRepository.updateMap(

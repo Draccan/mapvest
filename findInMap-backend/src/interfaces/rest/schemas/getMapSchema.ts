@@ -11,8 +11,16 @@ export default function getMapSchema(): OpenAPIV3.SchemaObject {
             name: {
                 type: "string",
             },
+            isPublic: {
+                type: "boolean",
+            },
+            publicId: {
+                type: "string",
+                format: "uuid",
+                nullable: true,
+            },
         },
-        required: ["id", "name"],
+        required: ["id", "name", "isPublic", "publicId"],
         additionalProperties: false,
     };
 }

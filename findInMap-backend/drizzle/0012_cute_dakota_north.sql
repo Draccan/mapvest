@@ -1,0 +1,1 @@
+ALTER TABLE "maps" ALTER COLUMN "is_public" DROP NOT NULL;

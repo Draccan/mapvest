@@ -72,6 +72,8 @@ describe("CreateUser", () => {
                 id: "map-123",
                 name: "First Map",
                 groupId: "group-123",
+                isPublic: false,
+                publicId: null,
             };
 
             mockUserRepository.findByEmail.mockResolvedValue(null);

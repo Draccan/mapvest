@@ -1,5 +1,6 @@
 import request from "supertest";
 
+import { UserGroupRole } from "../../src/core/commons/enums";
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
 import { getTestApp } from "./setup";
@@ -44,6 +45,8 @@ describe("Update Map Route", () => {
         expect(response.body).toHaveProperty("id");
         expect(response.body.id).toBe(mapId);
         expect(response.body.name).toBe("Updated Map Name");
+        expect(response.body.isPublic).toBe(false);
+        expect(response.body.publicId).toBeNull();
     });
 
     it("PUT /:groupId/maps/:mapId should return correct map structure", async () => {
@@ -84,8 +87,11 @@ describe("Update Map Route", () => {
 
         expect(response.body).toHaveProperty("id");
         expect(response.body).toHaveProperty("name");
+        expect(response.body).toHaveProperty("isPublic");
+        expect(response.body).toHaveProperty("publicId");
         expect(typeof response.body.id).toBe("string");
         expect(typeof response.body.name).toBe("string");
+        expect(typeof response.body.isPublic).toBe("boolean");
         expect(response.body.name).toBe("New Name");
     });
 
@@ -258,7 +264,7 @@ describe("Update Map Route", () => {
             .expect(403);
     });
 
-    it("PUT /:groupId/maps/:mapId should validate required fields", async () => {
+    it("PUT /:groupId/maps/:mapId should succeed with empty payload", async () => {
         const app = getTestApp();
 
         const uniqueUser = {
@@ -288,10 +294,336 @@ describe("Update Map Route", () => {
         });
         const mapId = map.id;
 
-        await request(app)
+        const response = await request(app)
             .put(`/${groupId}/maps/${mapId}`)
             .set("Authorization", `Bearer ${accessToken}`)
             .send({})
-            .expect(400);
+            .expect(200);
+
+        expect(response.body.name).toBe("Original Name");
+        expect(response.body.isPublic).toBe(false);
+        expect(response.body.publicId).toBeNull();
+    });
+
+    it("PUT /:groupId/maps/:mapId should set isPublic to true as owner", async () => {
+        const app = getTestApp();
+
+        const uniqueUser = {
+            name: "UpdateMaps",
+            surname: "TestUser",
+            email: `update-maps-test-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(uniqueUser);
+
+        const loginResponse = await request(app).post("/users/login").send({
+            email: uniqueUser.email,
+            password: uniqueUser.password,
+        });
+
+        const accessToken = loginResponse.body.token;
+        const userId = loginResponse.body.user.id;
+
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", userId);
+        const groupId = group.id;
+
+        const mapRepository = new DrizzleMapRepository();
+        const map = await mapRepository.createMap(groupId, {
+            name: "Test Map",
+        });
+        const mapId = map.id;
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({ isPublic: true })
+            .expect(200);
+
+        expect(response.body.isPublic).toBe(true);
+        expect(response.body.publicId).toBeDefined();
+        expect(typeof response.body.publicId).toBe("string");
+    });
+
+    it("PUT /:groupId/maps/:mapId should set isPublic to true as admin", async () => {
+        const app = getTestApp();
+
+        const owner = {
+            name: "Owner",
+            surname: "User",
+            email: `owner-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        const admin = {
+            name: "Admin",
+            surname: "User",
+            email: `admin-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(owner);
+        await request(app).post("/users").send(admin);
+
+        const ownerLoginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: owner.email,
+                password: owner.password,
+            });
+
+        const adminLoginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: admin.email,
+                password: admin.password,
+            });
+
+        const ownerId = ownerLoginResponse.body.user.id;
+        const adminAccessToken = adminLoginResponse.body.token;
+        const adminId = adminLoginResponse.body.user.id;
+
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", ownerId);
+        const groupId = group.id;
+
+        await groupRepository.addUserToGroup(
+            adminId,
+            groupId,
+            UserGroupRole.Admin,
+        );
+
+        const mapRepository = new DrizzleMapRepository();
+        const map = await mapRepository.createMap(groupId, {
+            name: "Test Map",
+        });
+        const mapId = map.id;
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${adminAccessToken}`)
+            .send({ isPublic: true })
+            .expect(200);
+
+        expect(response.body.isPublic).toBe(true);
+        expect(response.body.publicId).toBeDefined();
+        expect(typeof response.body.publicId).toBe("string");
+    });
+
+    it("PUT /:groupId/maps/:mapId should return 403 when contributor tries to set isPublic", async () => {
+        const app = getTestApp();
+
+        const owner = {
+            name: "Owner",
+            surname: "User",
+            email: `owner-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        const contributor = {
+            name: "Contributor",
+            surname: "User",
+            email: `contributor-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(owner);
+        await request(app).post("/users").send(contributor);
+
+        const ownerLoginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: owner.email,
+                password: owner.password,
+            });
+
+        const contributorLoginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: contributor.email,
+                password: contributor.password,
+            });
+
+        const ownerId = ownerLoginResponse.body.user.id;
+        const contributorAccessToken = contributorLoginResponse.body.token;
+        const contributorId = contributorLoginResponse.body.user.id;
+
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", ownerId);
+        const groupId = group.id;
+
+        await groupRepository.addUserToGroup(
+            contributorId,
+            groupId,
+            UserGroupRole.Contributor,
+        );
+
+        const mapRepository = new DrizzleMapRepository();
+        const map = await mapRepository.createMap(groupId, {
+            name: "Test Map",
+        });
+        const mapId = map.id;
+
+        await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${contributorAccessToken}`)
+            .send({ isPublic: true })
+            .expect(403);
+
+        const maps = await mapRepository.findMapByGroupId(groupId);
+        const unchangedMap = maps.find((m) => m.id === mapId);
+        expect(unchangedMap?.isPublic).toBe(false);
+    });
+
+    it("PUT /:groupId/maps/:mapId should allow contributor to update name only", async () => {
+        const app = getTestApp();
+
+        const owner = {
+            name: "Owner",
+            surname: "User",
+            email: `owner-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        const contributor = {
+            name: "Contributor",
+            surname: "User",
+            email: `contributor-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(owner);
+        await request(app).post("/users").send(contributor);
+
+        const ownerLoginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: owner.email,
+                password: owner.password,
+            });
+
+        const contributorLoginResponse = await request(app)
+            .post("/users/login")
+            .send({
+                email: contributor.email,
+                password: contributor.password,
+            });
+
+        const ownerId = ownerLoginResponse.body.user.id;
+        const contributorAccessToken = contributorLoginResponse.body.token;
+        const contributorId = contributorLoginResponse.body.user.id;
+
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", ownerId);
+        const groupId = group.id;
+
+        await groupRepository.addUserToGroup(
+            contributorId,
+            groupId,
+            UserGroupRole.Contributor,
+        );
+
+        const mapRepository = new DrizzleMapRepository();
+        const map = await mapRepository.createMap(groupId, {
+            name: "Original Name",
+        });
+        const mapId = map.id;
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${contributorAccessToken}`)
+            .send({ name: "Updated Name" })
+            .expect(200);
+
+        expect(response.body.name).toBe("Updated Name");
+        expect(response.body.isPublic).toBe(false);
+    });
+
+    it("PUT /:groupId/maps/:mapId should set isPublic to false and remove publicId", async () => {
+        const app = getTestApp();
+
+        const uniqueUser = {
+            name: "UpdateMaps",
+            surname: "TestUser",
+            email: `update-maps-test-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(uniqueUser);
+
+        const loginResponse = await request(app).post("/users/login").send({
+            email: uniqueUser.email,
+            password: uniqueUser.password,
+        });
+
+        const accessToken = loginResponse.body.token;
+        const userId = loginResponse.body.user.id;
+
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", userId);
+        const groupId = group.id;
+
+        const mapRepository = new DrizzleMapRepository();
+        const map = await mapRepository.createMap(groupId, {
+            name: "Test Map",
+        });
+        const mapId = map.id;
+
+        await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({ isPublic: true })
+            .expect(200);
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({ isPublic: false })
+            .expect(200);
+
+        expect(response.body.isPublic).toBe(false);
+        expect(response.body.publicId).toBeNull();
+    });
+
+    it("PUT /:groupId/maps/:mapId should update name and isPublic together", async () => {
+        const app = getTestApp();
+
+        const uniqueUser = {
+            name: "UpdateMaps",
+            surname: "TestUser",
+            email: `update-maps-test-${Date.now()}${Math.random()}@example.com`,
+            password: "testpass123",
+        };
+
+        await request(app).post("/users").send(uniqueUser);
+
+        const loginResponse = await request(app).post("/users/login").send({
+            email: uniqueUser.email,
+            password: uniqueUser.password,
+        });
+
+        const accessToken = loginResponse.body.token;
+        const userId = loginResponse.body.user.id;
+
+        const groupRepository = new DrizzleGroupRepository();
+        const group = await groupRepository.createGroup("Test Group", userId);
+        const groupId = group.id;
+
+        const mapRepository = new DrizzleMapRepository();
+        const map = await mapRepository.createMap(groupId, {
+            name: "Original Name",
+        });
+        const mapId = map.id;
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({ name: "New Name", isPublic: true })
+            .expect(200);
+
+        expect(response.body.name).toBe("New Name");
+        expect(response.body.isPublic).toBe(true);
+        expect(response.body.publicId).toBeDefined();
     });
 });

@@ -56,6 +56,8 @@ describe("GetMapPoints", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 
@@ -112,6 +114,8 @@ describe("GetMapPoints", () => {
                     id: mapId,
                     groupId: groupId,
                     name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
                 },
             ]);
 

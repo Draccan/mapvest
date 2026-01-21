@@ -1,5 +1,6 @@
 import { eq, sql, inArray, and } from "drizzle-orm";
 import mem from "mem";
+import { v4 as uuidv4 } from "uuid";
 
 import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import MapRepository from "../../core/dependencies/MapRepository";
@@ -196,11 +197,37 @@ export class DrizzleMapRepository implements MapRepository {
         groupId: string,
         data: UpdateMapDto,
     ): Promise<MapEntity | null> {
+        const updateData: Record<string, unknown> = {};
+
+        if (data.name !== undefined) {
+            updateData.name = data.name;
+        }
+
+        if (data.isPublic !== undefined) {
+            updateData.isPublic = data.isPublic;
+            if (data.isPublic) {
+                updateData.publicId = uuidv4();
+            } else {
+                updateData.publicId = null;
+            }
+        }
+
+        if (Object.keys(updateData).length === 0) {
+            const [existingMap] = await db
+                .select()
+                .from(maps)
+                .where(and(eq(maps.id, mapId), eq(maps.groupId, groupId)));
+
+            if (!existingMap) {
+                return null;
+            }
+
+            return makeMapEntity(existingMap);
+        }
+
         const [updatedMap] = await db
             .update(maps)
-            .set({
-                name: data.name,
-            })
+            .set(updateData)
             .where(and(eq(maps.id, mapId), eq(maps.groupId, groupId)))
             .returning();
 
