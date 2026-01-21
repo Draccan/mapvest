@@ -29,6 +29,11 @@ export default flattenObject({
         removeUserFromGroup:
             "Error removing user from group. Please try again later.",
         updateUserInGroup: "Error updating user role. Please try again later.",
+        getPublicMap: "Error loading public map. Please try again later.",
+        getPublicMapPoints:
+            "Error loading public map points. Please try again later.",
+        getPublicMapCategories:
+            "Error loading public map categories. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
@@ -112,6 +117,8 @@ export default flattenObject({
             startPoint: "Start Point",
             endPoint: "End Point",
             stop: "Stop",
+        },
+        UserLocationMarker: {
             userLocation: "Your Location",
         },
         MapPointForm: {
@@ -275,6 +282,9 @@ export default flattenObject({
                 invalidEmail: "Please enter a valid email address",
                 successMessage: "User added successfully",
             },
+        },
+        PublicMap: {
+            mapNotFound: "Public map not found or no longer available.",
         },
     },
 });

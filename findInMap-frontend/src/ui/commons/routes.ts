@@ -7,6 +7,8 @@ const routes = {
     login: () => "/login",
     register: () => "/register",
     resetPassword: () => "/reset-password",
+    publicMap: (mapId?: string) =>
+        mapId ? `/public/map/${mapId}` : "/public/map/:mapId",
 };
 
 export default routes;

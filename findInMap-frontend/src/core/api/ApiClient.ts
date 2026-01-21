@@ -10,6 +10,7 @@ import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
 import type { MapDto } from "../dtos/MapDto";
 import type { MapPointDto } from "../dtos/MapPointDto";
+import type { PublicMapDto } from "../dtos/PublicMapDto";
 import type { RouteDto } from "../dtos/RouteDto";
 import type TokenResponseDto from "../dtos/TokenResponseDto";
 import type { UpdateGroupDto } from "../dtos/UpdateGroupDto";
@@ -571,5 +572,56 @@ export default class ApiClient {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+    }
+
+    async getPublicMap(publicMapId: string): Promise<PublicMapDto> {
+        const response = await fetch(`${API_URL}/public/maps/${publicMapId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async getPublicMapPoints(publicMapId: string): Promise<MapPointDto[]> {
+        const response = await fetch(
+            `${API_URL}/public/maps/${publicMapId}/points`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async getPublicMapCategories(publicMapId: string): Promise<CategoryDto[]> {
+        const response = await fetch(
+            `${API_URL}/public/maps/${publicMapId}/categories`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
     }
 }

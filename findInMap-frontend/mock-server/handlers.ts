@@ -272,7 +272,13 @@ let mockGroups = [
     },
 ];
 
-let mockMaps = [
+let mockMaps: {
+    id: string;
+    groupId: string;
+    name: string;
+    isPublic: boolean;
+    publicId: string | null;
+}[] = [
     {
         id: "map-1",
         groupId: "group-1",
@@ -370,6 +376,67 @@ export const handlers = [
                 (user) => user.groupId === groupId,
             );
             return HttpResponse.json(groupUsers);
+        },
+    ),
+    // Public map handlers - MUST be before /:groupId/maps routes to avoid being
+    // caught by parameterized routes (e.g /:groupId/maps..)
+    http.get(
+        "http://localhost:3001/public/maps/:publicMapId",
+        async ({ params }) => {
+            await delay(1000);
+            const { publicMapId } = params;
+
+            const map = mockMaps.find((m) => m.publicId === publicMapId);
+
+            if (!map || !map.isPublic) {
+                return HttpResponse.json(
+                    { error: "Public map not found" },
+                    { status: 404 },
+                );
+            }
+
+            return HttpResponse.json({
+                name: map.name,
+                publicId: map.publicId,
+            });
+        },
+    ),
+    http.get(
+        "http://localhost:3001/public/maps/:publicMapId/points",
+        async ({ params }) => {
+            await delay(1000);
+            const { publicMapId } = params;
+
+            const map = mockMaps.find((m) => m.publicId === publicMapId);
+
+            if (!map || !map.isPublic) {
+                return HttpResponse.json(
+                    { error: "Public map not found" },
+                    { status: 404 },
+                );
+            }
+
+            const mapPoints = getMapPoints(map.id);
+            return HttpResponse.json(mapPoints);
+        },
+    ),
+    http.get(
+        "http://localhost:3001/public/maps/:publicMapId/categories",
+        async ({ params }) => {
+            await delay(1000);
+            const { publicMapId } = params;
+
+            const map = mockMaps.find((m) => m.publicId === publicMapId);
+
+            if (!map || !map.isPublic) {
+                return HttpResponse.json(
+                    { error: "Public map not found" },
+                    { status: 404 },
+                );
+            }
+
+            const categories = getCategories(map.id);
+            return HttpResponse.json(categories);
         },
     ),
     http.get("http://localhost:3001/:groupId/maps", async ({ params }) => {

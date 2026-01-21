@@ -5,10 +5,10 @@ import { Popup, Marker, useMap } from "react-leaflet";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import "./style.css";
 
-const fm = getFormattedMessageWithScope("components.MapContainer");
+const fm = getFormattedMessageWithScope("components.UserLocationMarker");
 
 interface UserLocationMarkerProps {
-    onClick: (lng: number, lat: number) => void;
+    onClick?: (lng: number, lat: number) => void;
 }
 
 export const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({
@@ -51,9 +51,9 @@ export const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({
         <Marker
             position={position}
             icon={L.divIcon({
-                className: "c-map-container-user-location-marker",
+                className: "c-user-location-marker",
                 html: `
-                    <div class="c-map-container-user-location-wrapper">
+                    <div class="c-user-location-marker-wrapper">
                         <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
@@ -80,12 +80,16 @@ export const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({
                 iconSize: [32, 32],
                 iconAnchor: [16, 16],
             })}
-            eventHandlers={{
-                click: (e) => {
-                    e.originalEvent.stopPropagation();
-                    onClick(position.lng, position.lat);
-                },
-            }}
+            eventHandlers={
+                onClick
+                    ? {
+                          click: (e) => {
+                              e.originalEvent.stopPropagation();
+                              onClick(position.lng, position.lat);
+                          },
+                      }
+                    : undefined
+            }
         >
             <Popup>{fm("userLocation")}</Popup>
         </Marker>

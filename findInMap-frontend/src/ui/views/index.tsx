@@ -14,6 +14,7 @@ import { Dashboard } from "./Dashboard";
 import { Home } from "./Home";
 import { Login } from "./Login";
 import NotFound from "./NotFound";
+import { PublicMap } from "./PublicMap";
 import { Register } from "./Register";
 import { ResetPassword } from "./ResetPassword";
 import { User } from "./User";
@@ -52,6 +53,10 @@ const App: React.FC = () => {
                                         <Route
                                             path={routes.resetPassword()}
                                             element={<ResetPassword />}
+                                        />
+                                        <Route
+                                            path={routes.publicMap()}
+                                            element={<PublicMap />}
                                         />
                                         <Route
                                             path={routes.home()}

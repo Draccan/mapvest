@@ -17,10 +17,10 @@ import { type MapPointDto } from "../../../core/dtos/MapPointDto";
 import type { RouteDto } from "../../../core/dtos/RouteDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
+import { UserLocationMarker } from "../UserLocationMarker";
 import { GeomanControl } from "./GeomanControl";
 import { PolylineWithArrows } from "./PolylineWithArrows";
 import "./style.css";
-import { UserLocationMarker } from "./UserLocationMarker";
 
 const fm = getFormattedMessageWithScope("components.MapContainer");
 
@@ -29,13 +29,13 @@ export const DEFAULT_MAP_CLICK_ZOOM = 15;
 interface MapContainerProps {
     mapPoints: MapPointDto[];
     categories: CategoryDto[];
-    onMapClick: (lng: number, lat: number) => void;
-    selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
-    onDeletePoint: (pointId: string) => void;
-    onEditPoint: (point: MapPointDto) => void;
+    onMapClick?: (lng: number, lat: number) => void;
+    selectedCoordinates?: { long: number; lat: number; zoom?: number } | null;
+    onDeletePoint?: (pointId: string) => void;
+    onEditPoint?: (point: MapPointDto) => void;
     deletingPointId?: string | null;
     drawingEnabled?: boolean;
-    onAreaDrawn: (bounds: L.LatLngBounds | null) => void;
+    onAreaDrawn?: (bounds: L.LatLngBounds | null) => void;
     optimizedRoute?: RouteDto | null;
     startPoint?: MapPointDto | null;
     endPoint?: MapPointDto | null;
@@ -54,7 +54,7 @@ const MapClickHandler: React.FC<{
 };
 
 const MapController: React.FC<{
-    selectedCoordinates: { long: number; lat: number; zoom?: number } | null;
+    selectedCoordinates?: { long: number; lat: number; zoom?: number } | null;
     mapId?: string | number;
 }> = ({ selectedCoordinates, mapId }) => {
     const map = useMap();
@@ -136,13 +136,13 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     function deletePoint(e: React.MouseEvent, pointId: string) {
         // Warning: Prevent the map click event from firing
         e.stopPropagation();
-        onDeletePoint(pointId);
+        onDeletePoint?.(pointId);
     }
 
     function editPoint(e: React.MouseEvent, point: MapPointDto) {
         // Warning: Prevent the map click event from firing
         e.stopPropagation();
-        onEditPoint(point);
+        onEditPoint?.(point);
     }
 
     const getWaypointIndex = (point: MapPointDto): number | null => {
@@ -176,13 +176,20 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {!drawingEnabled && <MapClickHandler onMapClick={onMapClick} />}
+            {onMapClick && !drawingEnabled && (
+                <MapClickHandler onMapClick={onMapClick} />
+            )}
             <UserLocationMarker onClick={onMapClick} />
             <MapController
                 selectedCoordinates={selectedCoordinates}
                 mapId={mapId}
             />
-            <GeomanControl enabled={drawingEnabled} onAreaDrawn={onAreaDrawn} />
+            {onAreaDrawn && (
+                <GeomanControl
+                    enabled={drawingEnabled}
+                    onAreaDrawn={onAreaDrawn}
+                />
+            )}
             {optimizedRoute && (
                 <PolylineWithArrows positions={optimezedRouteGeometry} />
             )}
@@ -230,10 +237,12 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                         weight={shouldBlink ? 4 : 2}
                         className={shouldBlink ? "c-map-container-blink" : ""}
                         eventHandlers={{
-                            click: (e) => {
-                                e.originalEvent.stopPropagation();
-                                onMapClick(point.long, point.lat);
-                            },
+                            click: onMapClick
+                                ? (e) => {
+                                      e.originalEvent.stopPropagation();
+                                      onMapClick(point.long, point.lat);
+                                  }
+                                : undefined,
                         }}
                     >
                         <Popup>
@@ -293,40 +302,50 @@ export const MapContainer: React.FC<MapContainerProps> = ({
                                             </div>
                                         )}
                                     </div>
-                                    <div className="c-map-container-actions">
-                                        <Button
-                                            kind="primary"
-                                            size="icon"
-                                            onClick={(e) => {
-                                                editPoint(e, point);
-                                            }}
-                                            title={editPointLabel}
-                                            aria-label={editPointLabel}
-                                            fullWidth={false}
-                                            className="c-map-container-edit-btn"
-                                        >
-                                            <Edit size={18} />
-                                        </Button>
-                                        <Button
-                                            kind="danger"
-                                            size="icon"
-                                            onClick={(e) =>
-                                                deletePoint(e, point.id)
-                                            }
-                                            title={deletePointLabel}
-                                            aria-label={deletePointLabel}
-                                            disabled={
-                                                deletingPointId === point.id
-                                            }
-                                            loading={
-                                                deletingPointId === point.id
-                                            }
-                                            fullWidth={false}
-                                            className="c-map-container-delete-btn"
-                                        >
-                                            <Trash2 size={18} />
-                                        </Button>
-                                    </div>
+                                    {(onEditPoint || onDeletePoint) && (
+                                        <div className="c-map-container-actions">
+                                            {onEditPoint && (
+                                                <Button
+                                                    kind="primary"
+                                                    size="icon"
+                                                    onClick={(e) => {
+                                                        editPoint(e, point);
+                                                    }}
+                                                    title={editPointLabel}
+                                                    aria-label={editPointLabel}
+                                                    fullWidth={false}
+                                                    className="c-map-container-edit-btn"
+                                                >
+                                                    <Edit size={18} />
+                                                </Button>
+                                            )}
+                                            {onDeletePoint && (
+                                                <Button
+                                                    kind="danger"
+                                                    size="icon"
+                                                    onClick={(e) =>
+                                                        deletePoint(e, point.id)
+                                                    }
+                                                    title={deletePointLabel}
+                                                    aria-label={
+                                                        deletePointLabel
+                                                    }
+                                                    disabled={
+                                                        deletingPointId ===
+                                                        point.id
+                                                    }
+                                                    loading={
+                                                        deletingPointId ===
+                                                        point.id
+                                                    }
+                                                    fullWidth={false}
+                                                    className="c-map-container-delete-btn"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </Button>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </Popup>

@@ -45,6 +45,12 @@ export default flattenObject({
             "Errore durante la rimozione dell'utente dal gruppo. Si prega di riprovare più tardi.",
         updateUserInGroup:
             "Errore durante l'aggiornamento del ruolo utente. Si prega di riprovare più tardi.",
+        getPublicMap:
+            "Errore durante il caricamento della mappa pubblica. Si prega di riprovare più tardi.",
+        getPublicMapPoints:
+            "Errore durante il caricamento dei punti della mappa pubblica. Si prega di riprovare più tardi.",
+        getPublicMapCategories:
+            "Errore durante il caricamento delle categorie della mappa pubblica. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
@@ -128,6 +134,8 @@ export default flattenObject({
             startPoint: "Punto di Partenza",
             endPoint: "Punto di Arrivo",
             stop: "Tappa",
+        },
+        UserLocationMarker: {
             userLocation: "La Tua Posizione",
         },
         MapPointForm: {
@@ -295,6 +303,9 @@ export default flattenObject({
                 cancel: "Annulla",
                 invalidEmail: "Inserisci un indirizzo email valido",
             },
+        },
+        PublicMap: {
+            mapNotFound: "Mappa pubblica non trovata o non più disponibile.",
         },
     },
 });

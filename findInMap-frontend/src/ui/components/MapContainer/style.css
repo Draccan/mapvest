@@ -89,27 +89,3 @@
 .c-map-container-blink {
     animation: blinkMarker 1.2s ease-in-out infinite;
 }
-
-.c-map-container-user-location-marker {
-    background: transparent;
-    border: none;
-}
-
-.c-map-container-user-location-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: pulseLocation 2s ease-in-out infinite;
-}
-
-@keyframes pulseLocation {
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 0.9;
-    }
-}
