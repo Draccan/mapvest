@@ -13,6 +13,8 @@ import GetGroupUsers from "../core/usecases/GetGroupUsers";
 import GetMapCategories from "../core/usecases/GetMapCategories";
 import GetMapPoints from "../core/usecases/GetMapPoints";
 import GetPublicMap from "../core/usecases/GetPublicMap";
+import GetPublicMapCategories from "../core/usecases/GetPublicMapCategories";
+import GetPublicMapPoints from "../core/usecases/GetPublicMapPoints";
 import GetUser from "../core/usecases/GetUser";
 import GetUserGroups from "../core/usecases/GetUserGroups";
 import LoginUser from "../core/usecases/LoginUser";
@@ -79,6 +81,8 @@ const updateUser = new UpdateUser(userRepository);
 const updateUserInGroup = new UpdateUserInGroup(groupRepository);
 const getUser = new GetUser(userRepository);
 const getPublicMap = new GetPublicMap(mapRepository);
+const getPublicMapCategories = new GetPublicMapCategories(mapRepository);
+const getPublicMapPoints = new GetPublicMapPoints(mapRepository);
 const resetPassword = new ResetPassword(
     userRepository,
     emailService,
@@ -102,6 +106,8 @@ const restInterface = new RestInterface(
         getGroupUsers,
         getMapPoints,
         getPublicMap,
+        getPublicMapCategories,
+        getPublicMapPoints,
         getUser,
         getUserGroups,
         loginUser,

@@ -17,6 +17,8 @@ import GetGroupUsers from "../src/core/usecases/GetGroupUsers";
 import GetMapCategories from "../src/core/usecases/GetMapCategories";
 import GetMapPoints from "../src/core/usecases/GetMapPoints";
 import GetPublicMap from "../src/core/usecases/GetPublicMap";
+import GetPublicMapCategories from "../src/core/usecases/GetPublicMapCategories";
+import GetPublicMapPoints from "../src/core/usecases/GetPublicMapPoints";
 import GetUser from "../src/core/usecases/GetUser";
 import GetUserGroups from "../src/core/usecases/GetUserGroups";
 import LoginUser from "../src/core/usecases/LoginUser";
@@ -154,6 +156,8 @@ export function createTestApp() {
     const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
     const getUser = new GetUser(userRepository);
     const getPublicMap = new GetPublicMap(mapRepository);
+    const getPublicMapCategories = new GetPublicMapCategories(mapRepository);
+    const getPublicMapPoints = new GetPublicMapPoints(mapRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);
@@ -194,6 +198,8 @@ export function createTestApp() {
             getMapCategories,
             getMapPoints,
             getPublicMap,
+            getPublicMapCategories,
+            getPublicMapPoints,
             getUser,
             getUserGroups,
             loginUser,
