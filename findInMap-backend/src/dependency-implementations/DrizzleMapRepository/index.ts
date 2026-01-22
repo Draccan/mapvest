@@ -39,6 +39,7 @@ export class DrizzleMapRepository implements MapRepository {
                 description: mapPoints.description,
                 date: mapPoints.date,
                 dueDate: mapPoints.dueDate,
+                notes: mapPoints.notes,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             })
@@ -72,6 +73,7 @@ export class DrizzleMapRepository implements MapRepository {
                 description: data.description,
                 date: data.date,
                 dueDate: data.dueDate,
+                notes: data.notes,
                 categoryId: data.categoryId,
                 mapId: mapId,
             })
@@ -84,6 +86,7 @@ export class DrizzleMapRepository implements MapRepository {
                 description: mapPoints.description,
                 date: mapPoints.date,
                 dueDate: mapPoints.dueDate,
+                notes: mapPoints.notes,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             });
@@ -117,6 +120,7 @@ export class DrizzleMapRepository implements MapRepository {
                 description: mapPoints.description,
                 date: mapPoints.date,
                 dueDate: mapPoints.dueDate,
+                notes: mapPoints.notes,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             })
@@ -178,6 +182,7 @@ export class DrizzleMapRepository implements MapRepository {
                 description: data.description,
                 date: data.date,
                 dueDate: data.dueDate ?? null,
+                notes: data.notes,
                 categoryId: data.categoryId,
             })
             .where(and(eq(mapPoints.id, pointId), eq(mapPoints.mapId, mapId)))
@@ -190,6 +195,7 @@ export class DrizzleMapRepository implements MapRepository {
                 description: mapPoints.description,
                 date: mapPoints.date,
                 dueDate: mapPoints.dueDate,
+                notes: mapPoints.notes,
                 createdAt: mapPoints.createdAt,
                 updatedAt: mapPoints.updatedAt,
             });

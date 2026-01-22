@@ -300,5 +300,61 @@ describe("UpdateMapPoint", () => {
 
             expect(result.categoryId).toBe("category-id-123");
         });
+
+        it("should update with notes", async () => {
+            const updateData: UpdateMapPointDto = {
+                description: "Updated Theft",
+                date: "2025-10-15",
+                notes: "These are detailed notes about this map point",
+            };
+
+            const updatedPoint: MapPointEntity = {
+                id: pointId,
+                long: 45.0,
+                lat: 9.0,
+                description: updateData.description!,
+                date: updateData.date,
+                notes: updateData.notes,
+                created_at: mockDate,
+                updated_at: new Date("2025-10-15T00:00:00.000Z"),
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
+                {
+                    group: {
+                        id: groupId,
+                        name: "Test Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                    },
+                    role: UserGroupRole.Admin,
+                },
+            ]);
+
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue([
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ]);
+
+            mockMapRepository.updateMapPoint.mockResolvedValue(updatedPoint);
+
+            const result = await updateMapPoint.exec(
+                pointId,
+                updateData,
+                userId,
+                groupId,
+                mapId,
+            );
+
+            expect(result.notes).toBe(
+                "These are detailed notes about this map point",
+            );
+        });
     });
 });

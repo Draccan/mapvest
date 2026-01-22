@@ -163,4 +163,50 @@ describe("Update Map Point Route", () => {
         expect(response.body.description).toBe(updateData.description);
         expect(response.body.date).toBe(updateData.date);
     });
+
+    it("PUT /:groupId/maps/:mapId/points/:pointId should update with notes", async () => {
+        const updateData = {
+            description: "Updated with Notes",
+            date: "2025-12-20",
+            notes: "These are detailed notes about this location",
+        };
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}/points/${pointId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send(updateData)
+            .expect(200);
+
+        expect(response.body.notes).toBe(updateData.notes);
+        expect(response.body.description).toBe(updateData.description);
+        expect(response.body.date).toBe(updateData.date);
+    });
+
+    it("PUT /:groupId/maps/:mapId/points/:pointId should update notes to empty", async () => {
+        const createResponse = await request(app)
+            .post(`/${groupId}/maps/${mapId}/points`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({
+                long: 45.4642,
+                lat: 9.19,
+                description: "Point with notes",
+                date: "2025-12-01",
+                notes: "Initial notes",
+            });
+
+        const newPointId = createResponse.body.id;
+
+        const updateData = {
+            description: "Point without notes",
+            date: "2025-12-01",
+        };
+
+        const response = await request(app)
+            .put(`/${groupId}/maps/${mapId}/points/${newPointId}`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send(updateData)
+            .expect(200);
+
+        expect(response.body.description).toBe(updateData.description);
+    });
 });

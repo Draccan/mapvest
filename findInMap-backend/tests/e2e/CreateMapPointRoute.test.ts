@@ -85,6 +85,30 @@ describe("Create Map Point Route", () => {
         expect(response.body.dueDate).toBe(testMapPointWithDueDate.dueDate);
     });
 
+    it("POST /:groupId/maps/:mapId/points should create a new map point with notes", async () => {
+        const testMapPointWithNotes = {
+            long: 45.4642,
+            lat: 9.19,
+            description: "THEFT",
+            date: "2025-12-03",
+            notes: "Additional notes about this location",
+        };
+
+        const response = await request(app)
+            .post(`/${groupId}/maps/${mapId}/points`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send(testMapPointWithNotes)
+            .expect(201);
+
+        expect(response.body).toHaveProperty("id");
+        expect(response.body.long).toBe(testMapPointWithNotes.long);
+        expect(response.body.lat).toBe(testMapPointWithNotes.lat);
+        expect(response.body.description).toBe(
+            testMapPointWithNotes.description,
+        );
+        expect(response.body.notes).toBe(testMapPointWithNotes.notes);
+    });
+
     it("POST /:groupId/maps/:mapId/points should return 401 without token", async () => {
         const testMapPoint = {
             long: 45.4642,
