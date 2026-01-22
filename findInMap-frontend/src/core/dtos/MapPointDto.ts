@@ -7,6 +7,7 @@ export interface MapPointDto {
     date: string;
     // dueDate in YYYY-MM-DD format
     dueDate?: string;
+    notes?: string;
     // timestamp in ISO format
     createdAt: string;
     categoryId?: string;

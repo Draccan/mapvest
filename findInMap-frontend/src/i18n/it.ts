@@ -144,6 +144,7 @@ export default flattenObject({
             date: "Data",
             dueDate: "Data di Scadenza",
             addDueDate: "Aggiungi Data di Scadenza",
+            notes: "Note",
             addOtherFields: "Aggiungi Altri Dati",
             category: "Categoria",
             selectCategory: "Seleziona una categoria",

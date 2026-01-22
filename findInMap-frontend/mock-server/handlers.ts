@@ -46,6 +46,7 @@ const mockMapPointsByMap: Record<string, MapPointDto[]> = {
             description: "THEFT",
             date: "2025-11-07",
             dueDate: "2025-12-11",
+            notes: "This is a test note for the map point.",
             createdAt: "2025-11-07T07:46:12.491Z",
         },
         {
@@ -192,6 +193,7 @@ const mockMapPointsByMap: Record<string, MapPointDto[]> = {
             description: "AAA",
             date: "2025-12-12",
             dueDate: "2025-12-19",
+            notes: "Sample note with up to 300 characters allowed.",
             categoryId: "74f9aa54-dd40-4f63-9d50-1c2387b2623d",
             createdAt: "2025-12-12T14:18:26.623Z",
         },
@@ -536,6 +538,7 @@ export const handlers = [
                 date: string;
                 categoryId?: string;
                 dueDate?: string;
+                notes?: string;
             };
 
             const currentPoints = getMapPoints(mapId as string);

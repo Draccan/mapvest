@@ -58,6 +58,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
         undefined,
     );
     const [showDueDate, setShowDueDate] = useState(false);
+    const [notesValue, setNotesValue] = useState<string>("");
+    const [showNotes, setShowNotes] = useState(false);
     const [categoryId, setCategoryId] = useState<string>("");
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [isAddFieldPopoverOpen, setIsAddFieldPopoverOpen] = useState(false);
@@ -70,12 +72,16 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
             setDateValue(pointToEdit.date);
             setDueDateValue(pointToEdit.dueDate);
             setShowDueDate(!!pointToEdit.dueDate);
+            setNotesValue(pointToEdit.notes || "");
+            setShowNotes(!!pointToEdit.notes);
             setCategoryId(pointToEdit.categoryId || "");
         } else {
             setDescription("");
             setDateValue(getTodayYyyymmdd());
             setDueDateValue(undefined);
             setShowDueDate(false);
+            setNotesValue("");
+            setShowNotes(false);
             setCategoryId("");
         }
     }, [pointToEdit]);
@@ -86,6 +92,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
             setDateValue(getTodayYyyymmdd());
             setDueDateValue(undefined);
             setShowDueDate(false);
+            setNotesValue("");
+            setShowNotes(false);
             setCategoryId("");
             setErrors([]);
         }
@@ -114,6 +122,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                             description.trim() === "" ? undefined : description,
                         date: dateValue,
                         dueDate: dueDateValue || undefined,
+                        notes:
+                            notesValue.trim() === "" ? undefined : notesValue,
                         categoryId: categoryId || undefined,
                     });
                 } else if (selectedCoordinates) {
@@ -124,6 +134,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                             description.trim() === "" ? undefined : description,
                         date: dateValue,
                         dueDate: dueDateValue || undefined,
+                        notes:
+                            notesValue.trim() === "" ? undefined : notesValue,
                         categoryId: categoryId || undefined,
                     });
                 }
@@ -132,6 +144,8 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 setDateValue(getTodayYyyymmdd());
                 setDueDateValue(undefined);
                 setShowDueDate(false);
+                setNotesValue("");
+                setShowNotes(false);
                 setCategoryId("");
             } catch (error) {
                 setErrors(["Errore durante il salvataggio"]);
@@ -227,6 +241,22 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                         />
                     </div>
                 )}
+                {showNotes && (
+                    <div className="c-map-point-form-group">
+                        <label htmlFor="notes">{fm("notes")}:</label>
+                        <textarea
+                            id="notes"
+                            value={notesValue}
+                            maxLength={300}
+                            onChange={(e) => setNotesValue(e.target.value)}
+                            className="c-map-point-form-notes-textarea"
+                            rows={4}
+                        />
+                        <div className="c-map-point-form-notes-counter">
+                            {notesValue.length}/300
+                        </div>
+                    </div>
+                )}
                 <div className="c-map-point-form-add-field-wrapper">
                     <Button
                         ref={addFieldButtonRef}
@@ -254,6 +284,14 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                                 }),
                                 disabled: showDueDate,
                                 onSelect: () => setShowDueDate(true),
+                            },
+                            {
+                                id: "notes",
+                                label: intl.formatMessage({
+                                    id: "components.MapPointForm.notes",
+                                }),
+                                disabled: showNotes,
+                                onSelect: () => setShowNotes(true),
                             },
                         ]}
                     />
