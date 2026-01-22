@@ -10,6 +10,7 @@ build
 .vscode
 .idea
 .env.local
+scripts
 
 ## Manual Tests to run occasionally
 **/EmailService.manual.test.ts
