@@ -8,6 +8,7 @@ import {
     pgEnum,
     customType,
     primaryKey,
+    text,
 } from "drizzle-orm/pg-core";
 
 const geometry = customType<{ data: string; driverData: string }>({
@@ -73,6 +74,7 @@ export const mapPoints = pgTable("map_points", {
     description: varchar("description"),
     date: date("date").notNull(),
     dueDate: date("due_date"),
+    notes: text("notes"),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 })
         .defaultNow()

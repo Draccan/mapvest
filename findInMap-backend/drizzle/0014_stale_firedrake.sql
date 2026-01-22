@@ -1,0 +1,1 @@
+ALTER TABLE "map_points" ALTER COLUMN "notes" SET DATA TYPE text;
