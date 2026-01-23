@@ -60,8 +60,11 @@ const MapController: React.FC<{
     const map = useMap();
 
     useEffect(() => {
-        if (selectedCoordinates && map.getZoom() < DEFAULT_MAP_CLICK_ZOOM) {
-            const zoom = selectedCoordinates.zoom || DEFAULT_MAP_CLICK_ZOOM;
+        if (selectedCoordinates) {
+            const zoom =
+                map.getZoom() < DEFAULT_MAP_CLICK_ZOOM
+                    ? selectedCoordinates.zoom || DEFAULT_MAP_CLICK_ZOOM
+                    : map.getZoom();
             map.setView(
                 [selectedCoordinates.lat, selectedCoordinates.long],
                 zoom,
