@@ -104,6 +104,30 @@
     overflow-y: auto;
 }
 
+.c-breadcrumb-dropdown-empty {
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.c-breadcrumb-trigger-warning {
+    animation: breadcrumb-warning-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes breadcrumb-warning-pulse {
+    0%,
+    100% {
+        border-color: var(--color-danger);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        border-color: var(--color-danger);
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
+}
+
 .c-breadcrumb-dropdown-item {
     display: block;
     width: 100%;
@@ -151,6 +175,15 @@
 .c-breadcrumb-dropdown-action:hover {
     background: var(--color-background-tertiary);
     color: var(--color-text-primary);
+}
+
+.c-breadcrumb-dropdown-action-danger {
+    color: var(--color-danger);
+}
+
+.c-breadcrumb-dropdown-action-danger:hover {
+    background: var(--color-danger-light);
+    color: var(--color-danger);
 }
 
 .c-breadcrumb-edit-container {
@@ -266,4 +299,23 @@
 .c-breadcrumb-dropdown-add-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.c-breadcrumb-delete-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.c-breadcrumb-delete-modal-message {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+}
+
+.c-breadcrumb-delete-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
 }

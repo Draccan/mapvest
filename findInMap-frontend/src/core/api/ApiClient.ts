@@ -526,6 +526,19 @@ export default class ApiClient {
         return response.json();
     }
 
+    async deleteMap(groupId: string, mapId: string): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}`,
+            {
+                method: "DELETE",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+
     async addUsersToGroup(
         groupId: string,
         userEmails: string[],

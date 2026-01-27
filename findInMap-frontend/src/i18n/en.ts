@@ -34,11 +34,13 @@ export default flattenObject({
             "Error loading public map points. Please try again later.",
         getPublicMapCategories:
             "Error loading public map categories. Please try again later.",
+        deleteMap: "Error deleting map. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
         userRemovedSuccessfully: "User removed successfully",
         userRoleUpdatedSuccessfully: "User role updated successfully",
+        mapDeletedSuccessfully: "Map deleted successfully",
     },
     components: {
         Breadcrumb: {
@@ -47,10 +49,20 @@ export default flattenObject({
             renameGroup: "Rename Group",
             renameMap: "Rename Map",
             addMap: "Add Map",
+            deleteMap: "Delete Map",
             newMapPlaceholder: "Enter map name...",
             noMapSelected: "No map selected",
+            noMaps: "No maps",
+            noMapsAvailable: "No maps available. Create a new one.",
             save: "Save",
             cancel: "Cancel",
+            deleteMapModal: {
+                title: "Delete Map",
+                message:
+                    "Are you sure you want to delete the map {mapName}? Once deleted, you will lose all data related to this map.",
+                confirm: "Delete",
+                cancel: "Cancel",
+            },
         },
         LoggedRouteWrapper: {
             loadingData: "Loading data...",

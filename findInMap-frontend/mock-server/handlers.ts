@@ -849,6 +849,30 @@ export const handlers = [
             return HttpResponse.json(mockMaps[mapIndex], { status: 200 });
         },
     ),
+    http.delete(
+        "http://localhost:3001/:groupId/maps/:mapId",
+        async ({ params }) => {
+            await delay(2000);
+            const { groupId, mapId } = params;
+
+            const mapIndex = mockMaps.findIndex(
+                (map) => map.id === mapId && map.groupId === groupId,
+            );
+
+            if (mapIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Map not found" },
+                    { status: 404 },
+                );
+            }
+
+            mockMaps.splice(mapIndex, 1);
+            delete mockMapPointsByMap[mapId as string];
+            delete mockCategoriesByMap[mapId as string];
+
+            return HttpResponse.json(undefined, { status: 204 });
+        },
+    ),
     http.post(
         "http://localhost:3001/groups/:groupId/users",
         async ({ params, request }) => {

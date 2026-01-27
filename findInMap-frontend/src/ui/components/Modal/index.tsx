@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 import { Button } from "../Button";
 import "./style.css";
@@ -45,7 +46,9 @@ export const Modal: React.FC<ModalProps> = ({
         };
     }, [isOpen, onClose, isCloseDisabled]);
 
-    return !isOpen ? null : (
+    if (!isOpen) return null;
+
+    return createPortal(
         <div
             className="c-modal-overlay"
             onClick={isCloseDisabled ? undefined : onClose}
@@ -68,6 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
                 </div>
                 <div className="c-modal-content">{children}</div>
             </div>
-        </div>
+        </div>,
+        document.body,
     );
 };

@@ -51,11 +51,14 @@ export default flattenObject({
             "Errore durante il caricamento dei punti della mappa pubblica. Si prega di riprovare più tardi.",
         getPublicMapCategories:
             "Errore durante il caricamento delle categorie della mappa pubblica. Si prega di riprovare più tardi.",
+        deleteMap:
+            "Errore durante l'eliminazione della mappa. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
         userRemovedSuccessfully: "Utente rimosso con successo",
         userRoleUpdatedSuccessfully: "Ruolo utente aggiornato con successo",
+        mapDeletedSuccessfully: "Mappa eliminata con successo",
     },
     components: {
         Breadcrumb: {
@@ -64,10 +67,20 @@ export default flattenObject({
             renameGroup: "Rinomina Gruppo",
             renameMap: "Rinomina Mappa",
             addMap: "Aggiungi Mappa",
+            deleteMap: "Elimina Mappa",
             newMapPlaceholder: "Inserisci nome mappa...",
             noMapSelected: "Nessuna mappa selezionata",
+            noMaps: "Nessuna mappa",
+            noMapsAvailable: "Nessuna mappa disponibile. Creane una nuova.",
             save: "Salva",
             cancel: "Annulla",
+            deleteMapModal: {
+                title: "Elimina Mappa",
+                message:
+                    "Sei sicuro di voler eliminare la mappa {mapName}? Una volta cancellata perderai tutti i dati relativi a questa mappa.",
+                confirm: "Elimina",
+                cancel: "Annulla",
+            },
         },
         LoggedRouteWrapper: {
             loadingData: "Caricamento dati...",

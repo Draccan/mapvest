@@ -36,7 +36,10 @@ const App: React.FC = () => {
                             : i18nMessages.en
                     }
                 >
-                    <Toaster position="top-right" />
+                    <Toaster
+                        position="top-right"
+                        containerStyle={{ zIndex: 10001 }}
+                    />
                     <ApiClientProvider>
                         <UserProvider>
                             <Router>
