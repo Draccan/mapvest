@@ -11,6 +11,7 @@ import CreateGroupMap from "../src/core/usecases/CreateGroupMap";
 import CreateMapCategory from "../src/core/usecases/CreateMapCategory";
 import CreateMapPoint from "../src/core/usecases/CreateMapPoint";
 import CreateUser from "../src/core/usecases/CreateUser";
+import DeleteMap from "../src/core/usecases/DeleteMap";
 import DeleteMapPoints from "../src/core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../src/core/usecases/GetGroupMaps";
 import GetGroupUsers from "../src/core/usecases/GetGroupUsers";
@@ -57,6 +58,7 @@ export const mockMapRepository: jest.Mocked<MapRepository> = {
     createMapPoint: jest.fn(),
     findMapPointById: jest.fn(),
     deleteMapPoints: jest.fn(),
+    deleteMap: jest.fn(),
     memoizedFindMapByGroupId: jest.fn(),
     createMap: jest.fn(),
     createCategory: jest.fn(),
@@ -146,6 +148,7 @@ export function createTestApp() {
         groupRepository,
         mapRepository,
     );
+    const deleteMap = new DeleteMap(groupRepository, mapRepository);
     const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
     const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
     const getGroupUsers = new GetGroupUsers(groupRepository, userRepository);
@@ -192,6 +195,7 @@ export function createTestApp() {
             createMapCategory,
             createMapPoint,
             createUser,
+            deleteMap,
             deleteMapPoints,
             getGroupMaps,
             getGroupUsers,

@@ -7,6 +7,7 @@ import CreateGroupMap from "../core/usecases/CreateGroupMap";
 import CreateMapCategory from "../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
 import CreateUser from "../core/usecases/CreateUser";
+import DeleteMap from "../core/usecases/DeleteMap";
 import DeleteMapPoints from "../core/usecases/DeleteMapPoints";
 import GetGroupMaps from "../core/usecases/GetGroupMaps";
 import GetGroupUsers from "../core/usecases/GetGroupUsers";
@@ -56,6 +57,7 @@ const emailService = new EmailService(
 // Usecases
 const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
 const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+const deleteMap = new DeleteMap(groupRepository, mapRepository);
 const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
 const createUser = new CreateUser(
     userRepository,
@@ -101,6 +103,7 @@ const restInterface = new RestInterface(
         createGroupMap,
         createMapPoint,
         createUser,
+        deleteMap,
         deleteMapPoints,
         getGroupMaps,
         getGroupUsers,

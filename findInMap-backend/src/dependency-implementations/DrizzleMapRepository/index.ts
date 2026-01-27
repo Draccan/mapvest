@@ -253,6 +253,22 @@ export class DrizzleMapRepository implements MapRepository {
         return makeMapEntity(updatedMap);
     }
 
+    async deleteMap(mapId: string): Promise<void> {
+        await db.transaction(async (transaction) => {
+            await transaction
+                .delete(mapPoints)
+                .where(eq(mapPoints.mapId, mapId));
+
+            await transaction
+                .delete(mapCategories)
+                .where(eq(mapCategories.mapId, mapId));
+
+            await transaction.delete(maps).where(and(eq(maps.id, mapId)));
+        });
+
+        this.invalidateMapsCache();
+    }
+
     invalidateMapsCache(): void {
         mem.clear(this.memoizedFindMapByGroupId);
     }
