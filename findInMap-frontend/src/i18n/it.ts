@@ -55,6 +55,8 @@ export default flattenObject({
             "Errore durante l'eliminazione della mappa. Si prega di riprovare più tardi.",
         deleteMapCategory:
             "Errore durante l'eliminazione della categoria. Si prega di riprovare più tardi.",
+        updateMapCategory:
+            "Errore durante l'aggiornamento della categoria. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
@@ -62,6 +64,7 @@ export default flattenObject({
         userRoleUpdatedSuccessfully: "Ruolo utente aggiornato con successo",
         mapDeletedSuccessfully: "Mappa eliminata con successo",
         categoryDeletedSuccessfully: "Categoria eliminata con successo",
+        categoryUpdatedSuccessfully: "Categoria aggiornata con successo",
     },
     components: {
         Breadcrumb: {
@@ -167,6 +170,7 @@ export default flattenObject({
             addNewCategory: "Aggiungi Nuova Categoria",
             noCategories: "Nessuna categoria disponibile",
             deleteCategory: "Elimina categoria",
+            editCategory: "Modifica categoria",
             save: "Salva Punto",
             update: "Modifica Punto",
             saving: "Salvataggio...",
@@ -176,6 +180,9 @@ export default flattenObject({
         },
         CategoryModal: {
             title: "Crea Nuova Categoria",
+            titleEdit: "Modifica Categoria",
+            editMessage:
+                "La modifica di questa categoria influenzerà tutti i punti su questa mappa.",
             description: "Descrizione Categoria",
             color: "Colore",
             save: "Salva Categoria",
@@ -194,6 +201,7 @@ export default flattenObject({
             confirm: "Elimina",
             cancel: "Annulla",
         },
+
         SupportBox: {
             contactSupport: "Contatta il Supporto",
             emailSubject: "Richiesta supporto - MapVest",

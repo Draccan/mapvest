@@ -483,6 +483,27 @@ export default class ApiClient {
         }
     }
 
+    async updateMapCategory(
+        groupId: string,
+        mapId: string,
+        categoryId: string,
+        data: { description: string; color: string },
+    ): Promise<CategoryDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}/categories/${categoryId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(data),
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
     async updateMapPoint(
         groupId: string,
         mapId: string,

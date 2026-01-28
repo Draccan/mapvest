@@ -31,6 +31,7 @@ import ResetPassword from "../src/core/usecases/ResetPassword";
 import SearchAddresses from "../src/core/usecases/SearchAddresses";
 import UpdateGroup from "../src/core/usecases/UpdateGroup";
 import UpdateMap from "../src/core/usecases/UpdateMap";
+import UpdateMapCategory from "../src/core/usecases/UpdateMapCategory";
 import UpdateMapPoint from "../src/core/usecases/UpdateMapPoint";
 import UpdateUser from "../src/core/usecases/UpdateUser";
 import UpdateUserInGroup from "../src/core/usecases/UpdateUserInGroup";
@@ -67,6 +68,7 @@ export const mockMapRepository: jest.Mocked<MapRepository> = {
     updateMapPoint: jest.fn(),
     updateMap: jest.fn(),
     deleteMapCategory: jest.fn(),
+    updateCategory: jest.fn(),
     invalidateMapsCache: jest.fn(),
 };
 
@@ -173,6 +175,10 @@ export function createTestApp() {
     const refreshToken = new RefreshToken(jwtService);
     const searchAddresses = new SearchAddresses(googleRepository);
     const updateMap = new UpdateMap(mapRepository, groupRepository);
+    const updateMapCategory = new UpdateMapCategory(
+        groupRepository,
+        mapRepository,
+    );
     const updateGroup = new UpdateGroup(groupRepository);
     const addUsersToGroup = new AddUsersToGroup(
         groupRepository,
@@ -218,6 +224,7 @@ export function createTestApp() {
             refreshToken,
             searchAddresses,
             updateMap,
+            updateMapCategory,
             updateGroup,
             addUsersToGroup,
             removeUserFromGroup,

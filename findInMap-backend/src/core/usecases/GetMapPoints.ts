@@ -1,6 +1,6 @@
 import GroupRepository from "../dependencies/GroupRepository";
 import MapRepository from "../dependencies/MapRepository";
-import { makeMapPointDto, MapPointDto } from "../dtos/MapPointDto";
+import MapPointDto, { makeMapPointDto } from "../dtos/MapPointDto";
 import NotAllowedActionError from "../errors/NotAllowedActionError";
 
 export default class GetMapPoints {

@@ -1,6 +1,6 @@
 import { MapPointEntity } from "../entities/MapPointEntity";
 
-export interface MapPointDto {
+export default interface MapPointDto {
     id: string;
     long: number;
     lat: number;

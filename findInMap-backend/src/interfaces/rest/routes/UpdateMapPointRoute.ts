@@ -1,5 +1,5 @@
 import { UpdateMapPointDto } from "../../../core/dtos/UpdateMapPointDto";
-import { MapPointDto } from "../../../core/dtos/MapPointDto";
+import MapPointDto from "../../../core/dtos/MapPointDto";
 import UpdateMapPoint from "../../../core/usecases/UpdateMapPoint";
 import Route from "../Route";
 import getMapPointSchema from "../schemas/getMapPointSchema";

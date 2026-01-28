@@ -1,10 +1,10 @@
 import Route from "../Route";
 import UpdateGroup from "../../../core/usecases/UpdateGroup";
 import UpdateGroupDto from "../../../core/dtos/UpdateGroupDto";
-import GroupEntity from "../../../core/entities/GroupEntity";
 import getGroupSchema from "../schemas/getGroupSchema";
 import getUpdateGroupSchema from "../schemas/getUpdateGroupSchema";
 import { auhtorizationParam } from "./common/authorizationParam";
+import GroupDto from "../../../core/dtos/GroupDto";
 
 interface ReqParams {
     groupId: string;
@@ -12,7 +12,7 @@ interface ReqParams {
 
 type ReqBody = UpdateGroupDto;
 
-type ResBody = GroupEntity;
+type ResBody = Omit<GroupDto, "role">;
 
 export default (
     updateGroup: UpdateGroup,

@@ -6,7 +6,8 @@ import DbOrTransaction from "../../core/dependencies/DatabaseTransaction";
 import MapRepository from "../../core/dependencies/MapRepository";
 import CreateCategoryDto from "../../core/dtos/CreateCategoryDto";
 import CreateMapDto from "../../core/dtos/CreateMapDto";
-import { CreateMapPointDto } from "../../core/dtos/CreateMapPointDto";
+import CreateMapPointDto from "../../core/dtos/CreateMapPointDto";
+import UpdateCategoryDto from "../../core/dtos/UpdateCategoryDto";
 import { UpdateMapPointDto } from "../../core/dtos/UpdateMapPointDto";
 import UpdateMapDto from "../../core/dtos/UpdateMapDto";
 import { MapCategoryEntity } from "../../core/entities/MapCategoryEntity";
@@ -290,6 +291,32 @@ export class DrizzleMapRepository implements MapRepository {
                     ),
                 );
         });
+    }
+
+    async updateCategory(
+        mapId: string,
+        categoryId: string,
+        data: UpdateCategoryDto,
+    ): Promise<MapCategoryEntity | null> {
+        const [updatedCategory] = await db
+            .update(mapCategories)
+            .set({
+                description: data.description,
+                color: data.color,
+            })
+            .where(
+                and(
+                    eq(mapCategories.id, categoryId),
+                    eq(mapCategories.mapId, mapId),
+                ),
+            )
+            .returning();
+
+        if (!updatedCategory) {
+            return null;
+        }
+
+        return makeMapCategoryEntity(updatedCategory);
     }
 
     invalidateMapsCache(): void {

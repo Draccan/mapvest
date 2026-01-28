@@ -184,6 +184,13 @@
     margin-bottom: 1.5rem;
 }
 
+.c-map-point-form-category-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.c-map-point-form-category-edit-btn,
 .c-map-point-form-category-delete-btn {
     display: flex;
     align-items: center;
@@ -195,6 +202,11 @@
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.2s ease;
+}
+
+.c-map-point-form-category-edit-btn:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--color-primary);
 }
 
 .c-map-point-form-category-delete-btn:hover {

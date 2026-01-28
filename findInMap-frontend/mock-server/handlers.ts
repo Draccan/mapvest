@@ -812,6 +812,41 @@ export const handlers = [
         },
     ),
     http.put(
+        "http://localhost:3001/:groupId/maps/:mapId/categories/:categoryId",
+        async ({ params, request }) => {
+            await delay(2000);
+            const { mapId, categoryId } = params;
+            const updateData = (await request.json()) as {
+                description: string;
+                color: string;
+            };
+
+            const currentCategories = getCategories(mapId as string);
+            const categoryIndex = currentCategories.findIndex(
+                (cat) => cat.id === categoryId,
+            );
+
+            if (categoryIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Category not found" },
+                    { status: 404 },
+                );
+            }
+
+            currentCategories[categoryIndex] = {
+                ...currentCategories[categoryIndex],
+                description: updateData.description,
+                color: updateData.color,
+            };
+
+            setCategories(mapId as string, currentCategories);
+
+            return HttpResponse.json(currentCategories[categoryIndex], {
+                status: 200,
+            });
+        },
+    ),
+    http.put(
         "http://localhost:3001/groups/:groupId",
         async ({ params, request }) => {
             await delay(1000);

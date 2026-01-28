@@ -1,4 +1,4 @@
-import { MapPointDto } from "./MapPointDto";
+import MapPointDto from "./MapPointDto";
 
-export interface CreateMapPointDto
+export default interface CreateMapPointDto
     extends Omit<MapPointDto, "id" | "createdAt"> {}

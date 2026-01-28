@@ -1,6 +1,6 @@
 import GroupRepository from "../dependencies/GroupRepository";
+import GroupDto from "../dtos/GroupDto";
 import UpdateGroupDto from "../dtos/UpdateGroupDto";
-import GroupEntity from "../entities/GroupEntity";
 import NotAllowedActionError from "../errors/NotAllowedActionError";
 
 export default class UpdateGroup {
@@ -10,7 +10,7 @@ export default class UpdateGroup {
         userId: string,
         groupId: string,
         data: UpdateGroupDto,
-    ): Promise<GroupEntity> {
+    ): Promise<Omit<GroupDto, "role">> {
         const groups = await this.groupRepository.memoizedFindByUserId(userId);
         if (groups.find((group) => group.group.id === groupId) === undefined) {
             throw new NotAllowedActionError("User cannot access this group");

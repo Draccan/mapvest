@@ -35,6 +35,7 @@ import ResetPassword from "../../core/usecases/ResetPassword";
 import SearchAddresses from "../../core/usecases/SearchAddresses";
 import UpdateGroup from "../../core/usecases/UpdateGroup";
 import UpdateMap from "../../core/usecases/UpdateMap";
+import UpdateMapCategory from "../../core/usecases/UpdateMapCategory";
 import UpdateMapPoint from "../../core/usecases/UpdateMapPoint";
 import UpdateUser from "../../core/usecases/UpdateUser";
 import UpdateUserInGroup from "../../core/usecases/UpdateUserInGroup";
@@ -70,6 +71,7 @@ import SearchAddressesRoute from "./routes/SearchAddressesRoute";
 import UpdateGroupRoute from "./routes/UpdateGroupRoute";
 import UpdateMapRoute from "./routes/UpdateMapRoute";
 import UpdateMapPointRoute from "./routes/UpdateMapPointRoute";
+import UpdateMapCategoryRoute from "./routes/UpdateMapCategoryRoute";
 import UpdateUserInGroupRoute from "./routes/UpdateUserInGroupRoute";
 import UpdateUserPasswordRoute from "./routes/UpdateUserPasswordRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
@@ -108,6 +110,7 @@ export default class RestInterface {
             getMapCategories: GetMapCategories;
             updateMapPoint: UpdateMapPoint;
             updateMap: UpdateMap;
+            updateMapCategory: UpdateMapCategory;
             updateGroup: UpdateGroup;
             addUsersToGroup: AddUsersToGroup;
             removeUserFromGroup: RemoveUserFromGroup;
@@ -145,6 +148,7 @@ export default class RestInterface {
             GetMapCategoriesRoute(usecases.getMapCategories),
             UpdateMapPointRoute(usecases.updateMapPoint),
             UpdateMapRoute(usecases.updateMap),
+            UpdateMapCategoryRoute(usecases.updateMapCategory),
             UpdateGroupRoute(usecases.updateGroup),
             UpdateUserPasswordRoute(usecases.updateUserPassword),
             UpdateUserRoute(usecases.updateUser),

@@ -1,5 +1,5 @@
 import CreateCategoryDto from "../../../src/core/dtos/CreateCategoryDto";
-import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
+import CreateMapPointDto from "../../../src/core/dtos/CreateMapPointDto";
 import { db } from "../../../src/db";
 import {
     mapPoints,
@@ -1596,6 +1596,163 @@ describe("DrizzleMapRepository", () => {
             const points = await repository.findAllMapPoints(map.id);
             expect(points.length).toBe(2);
             expect(points.every((p) => !p.category_id)).toBe(true);
+        });
+    });
+
+    describe("updateCategory", () => {
+        it("should update a category successfully", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category = await repository.createCategory(map.id, {
+                description: "Original Description",
+                color: "#FF0000",
+            });
+
+            const updatedCategory = await repository.updateCategory(
+                map.id,
+                category.id,
+                {
+                    description: "Updated Description",
+                    color: "#00FF00",
+                },
+            );
+
+            expect(updatedCategory).toBeDefined();
+            expect(updatedCategory!.id).toBe(category.id);
+            expect(updatedCategory!.description).toBe("Updated Description");
+            expect(updatedCategory!.color).toBe("#00FF00");
+            expect(updatedCategory!.map_id).toBe(map.id);
+        });
+
+        it("should return null when category does not exist", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const updatedCategory = await repository.updateCategory(
+                map.id,
+                "00000000-0000-0000-0000-000000000000",
+                {
+                    description: "Updated Description",
+                    color: "#00FF00",
+                },
+            );
+
+            expect(updatedCategory).toBeNull();
+        });
+
+        it("should return null when mapId does not match", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "Map 1",
+            });
+
+            const map2 = await repository.createMap(group.id, {
+                name: "Map 2",
+            });
+
+            const category = await repository.createCategory(map1.id, {
+                description: "Original Description",
+                color: "#FF0000",
+            });
+
+            const updatedCategory = await repository.updateCategory(
+                map2.id,
+                category.id,
+                {
+                    description: "Updated Description",
+                    color: "#00FF00",
+                },
+            );
+
+            expect(updatedCategory).toBeNull();
+
+            const categories = await repository.findCategoriesByMapId(map1.id);
+            expect(categories[0].description).toBe("Original Description");
+            expect(categories[0].color).toBe("#FF0000");
+        });
+
+        it("should update only the specified category", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category1 = await repository.createCategory(map.id, {
+                description: "Category 1",
+                color: "#FF0000",
+            });
+
+            const category2 = await repository.createCategory(map.id, {
+                description: "Category 2",
+                color: "#0000FF",
+            });
+
+            await repository.updateCategory(map.id, category1.id, {
+                description: "Updated Category 1",
+                color: "#00FF00",
+            });
+
+            const categories = await repository.findCategoriesByMapId(map.id);
+            const updatedCategory1 = categories.find(
+                (c) => c.id === category1.id,
+            );
+            const unchangedCategory2 = categories.find(
+                (c) => c.id === category2.id,
+            );
+
+            expect(updatedCategory1!.description).toBe("Updated Category 1");
+            expect(updatedCategory1!.color).toBe("#00FF00");
+            expect(unchangedCategory2!.description).toBe("Category 2");
+            expect(unchangedCategory2!.color).toBe("#0000FF");
         });
     });
 

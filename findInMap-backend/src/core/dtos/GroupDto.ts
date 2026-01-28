@@ -1,5 +1,6 @@
 import { UserGroupRole } from "../commons/enums";
 import DetailedGroupEntity from "../entities/DetailedGroupEntity";
+import GroupEntity from "../entities/GroupEntity";
 
 export default interface GroupDto {
     id: string;
@@ -9,10 +10,20 @@ export default interface GroupDto {
 
 export function makeGroupDto(
     detailedGroupEntity: DetailedGroupEntity,
-): GroupDto {
+): GroupDto;
+export function makeGroupDto(groupEntity: GroupEntity): Omit<GroupDto, "role">;
+export function makeGroupDto(
+    entity: DetailedGroupEntity | GroupEntity,
+): GroupDto | Omit<GroupDto, "role"> {
+    if ("group" in entity) {
+        return {
+            id: entity.group.id,
+            name: entity.group.name,
+            role: entity.role,
+        };
+    }
     return {
-        id: detailedGroupEntity.group.id,
-        name: detailedGroupEntity.group.name,
-        role: detailedGroupEntity.role,
+        id: entity.id,
+        name: entity.name,
     };
 }

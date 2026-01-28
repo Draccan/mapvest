@@ -16,6 +16,7 @@ import { useDeleteMapCategory } from "../../../core/usecases/useDeleteMapCategor
 import { useDeleteMapPoints } from "../../../core/usecases/useDeleteMapPoints";
 import { useGetMapCategories } from "../../../core/usecases/useGetMapCategories";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
+import { useUpdateMapCategory } from "../../../core/usecases/useUpdateMapCategory";
 import { useUpdateMapPoint } from "../../../core/usecases/useUpdateMapPoint";
 import getPointsInBounds from "../../../utils/getPointsInBounds";
 import usePrevious from "../../commons/hooks/usePrevious";
@@ -78,6 +79,8 @@ export const Home: React.FC = () => {
         useCreateMapCategory();
     const { deleteCategory, loading: deletingCategory } =
         useDeleteMapCategory();
+    const { updateCategory, loading: updatingCategory } =
+        useUpdateMapCategory();
     const previousCreatingCategory = usePrevious(creatingCategory);
     const { deleteMapPoints } = useDeleteMapPoints();
     const {
@@ -266,6 +269,26 @@ export const Home: React.FC = () => {
         return success;
     };
 
+    const handleUpdateCategory = async (
+        categoryId: string,
+        description: string,
+        color: string,
+    ): Promise<boolean> => {
+        const result = await updateCategory(
+            selectedGroup!.id,
+            selectedMap!.id,
+            categoryId,
+            { description, color },
+        );
+        if (result) {
+            resetCategories();
+            resetMapPoints();
+            fetchCategories(selectedGroup!.id, selectedMap!.id);
+            fetchMapPoints(selectedGroup!.id, selectedMap!.id);
+        }
+        return !!result;
+    };
+
     const mapPoints = mapPointsData || [];
     const categories = categoriesData || [];
 
@@ -385,8 +408,10 @@ export const Home: React.FC = () => {
                                 categories={categories}
                                 onCreateCategory={handleCreateCategory}
                                 onDeleteCategory={handleDeleteCategory}
+                                onUpdateCategory={handleUpdateCategory}
                                 loadingCategory={creatingCategory}
                                 loadingDeleteCategory={deletingCategory}
+                                loadingUpdateCategory={updatingCategory}
                                 pointToEdit={pointToEdit}
                                 mapId={selectedMap?.id}
                             />

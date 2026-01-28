@@ -1,7 +1,7 @@
 import GroupRepository from "../dependencies/GroupRepository";
 import MapRepository from "../dependencies/MapRepository";
 import { UpdateMapPointDto } from "../dtos/UpdateMapPointDto";
-import { makeMapPointDto, MapPointDto } from "../dtos/MapPointDto";
+import MapPointDto, { makeMapPointDto } from "../dtos/MapPointDto";
 import ItemNotFoundError from "../errors/ItemNotFoundError";
 import NotAllowedActionError from "../errors/NotAllowedActionError";
 

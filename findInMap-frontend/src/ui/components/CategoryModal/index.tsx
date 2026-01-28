@@ -1,18 +1,26 @@
 import { AlertCircle, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 
+import type { CategoryDto } from "../../../core/dtos/CategoryDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.CategoryModal");
 
+export enum CategoryModalMode {
+    Create = "create",
+    Edit = "edit",
+}
+
 interface CategoryModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSave: (description: string, color: string) => Promise<void>;
     loading: boolean;
+    category?: CategoryDto | null;
+    mode?: CategoryModalMode;
 }
 
 export const CategoryModal: React.FC<CategoryModalProps> = ({
@@ -20,12 +28,24 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
     onClose,
     onSave,
     loading,
+    category,
+    mode = CategoryModalMode.Create,
 }) => {
     const intl = useIntl();
-    const [description, setDescription] = useState("");
     const defaultColor = "#FF5733";
+    const [description, setDescription] = useState("");
     const [color, setColor] = useState(defaultColor);
     const [errors, setErrors] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (category && mode === "edit") {
+            setDescription(category.description);
+            setColor(category.color);
+        } else {
+            setDescription("");
+            setColor(defaultColor);
+        }
+    }, [category, mode, isOpen]);
 
     const resetForm = () => {
         setDescription("");
@@ -74,6 +94,8 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
 
     if (!isOpen) return null;
 
+    const isEditMode = mode === "edit";
+
     return (
         <div className="c-categoryModal-overlay" onClick={handleClose}>
             <div
@@ -81,11 +103,12 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="c-categoryModal-header">
-                    <h2>{fm("title")}</h2>
+                    <h2>{isEditMode ? fm("titleEdit") : fm("title")}</h2>
                     <button
                         type="button"
                         onClick={handleClose}
                         className="c-categoryModal-close"
+                        disabled={loading}
                         aria-label={intl.formatMessage({
                             id: "components.CategoryModal.cancel",
                         })}
@@ -93,6 +116,11 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                         <X size={20} />
                     </button>
                 </div>
+                {isEditMode && (
+                    <p className="c-categoryModal-message">
+                        {fm("editMessage")}
+                    </p>
+                )}
                 <form onSubmit={handleSubmit}>
                     <div className="c-categoryModal-form-group">
                         <label htmlFor="categoryDescription">

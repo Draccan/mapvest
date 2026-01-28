@@ -1,5 +1,5 @@
 import { UserGroupRole } from "../../../src/core/commons/enums";
-import { CreateMapPointDto } from "../../../src/core/dtos/CreateMapPointDto";
+import CreateMapPointDto from "../../../src/core/dtos/CreateMapPointDto";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import CreateMapPoint from "../../../src/core/usecases/CreateMapPoint";
 import { mockGroupRepository, mockMapRepository } from "../../helpers";

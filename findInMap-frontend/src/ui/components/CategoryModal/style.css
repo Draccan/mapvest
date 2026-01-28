@@ -52,6 +52,18 @@
     color: var(--text-primary);
 }
 
+.c-categoryModal-close:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.c-categoryModal-message {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
 .c-categoryModal-color-picker-wrapper {
     display: flex;
     gap: 8px;

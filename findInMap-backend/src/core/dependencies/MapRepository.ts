@@ -1,8 +1,9 @@
 import CreateMapDto from "../dtos/CreateMapDto";
-import { CreateMapPointDto } from "../dtos/CreateMapPointDto";
+import CreateMapPointDto from "../dtos/CreateMapPointDto";
 import { UpdateMapPointDto } from "../dtos/UpdateMapPointDto";
 import UpdateMapDto from "../dtos/UpdateMapDto";
 import CreateCategoryDto from "../dtos/CreateCategoryDto";
+import UpdateCategoryDto from "../dtos/UpdateCategoryDto";
 import MapEntity from "../entities/MapEntity";
 import { MapPointEntity } from "../entities/MapPointEntity";
 import { MapCategoryEntity } from "../entities/MapCategoryEntity";
@@ -41,5 +42,10 @@ export default interface MapRepository {
     ): Promise<MapEntity | null>;
     deleteMap(mapId: string): Promise<void>;
     deleteMapCategory(mapId: string, categoryId: string): Promise<void>;
+    updateCategory(
+        mapId: string,
+        categoryId: string,
+        data: UpdateCategoryDto,
+    ): Promise<MapCategoryEntity | null>;
     invalidateMapsCache(): void;
 }

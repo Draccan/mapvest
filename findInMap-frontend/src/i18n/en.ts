@@ -36,6 +36,7 @@ export default flattenObject({
             "Error loading public map categories. Please try again later.",
         deleteMap: "Error deleting map. Please try again later.",
         deleteMapCategory: "Error deleting category. Please try again later.",
+        updateMapCategory: "Error updating category. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
@@ -43,6 +44,7 @@ export default flattenObject({
         userRoleUpdatedSuccessfully: "User role updated successfully",
         mapDeletedSuccessfully: "Map deleted successfully",
         categoryDeletedSuccessfully: "Category deleted successfully",
+        categoryUpdatedSuccessfully: "Category updated successfully",
     },
     components: {
         Breadcrumb: {
@@ -148,6 +150,7 @@ export default flattenObject({
             addNewCategory: "Add New Category",
             noCategories: "No categories available",
             deleteCategory: "Delete category",
+            editCategory: "Edit category",
             save: "Save Point",
             update: "Update Point",
             saving: "Saving...",
@@ -156,6 +159,9 @@ export default flattenObject({
         },
         CategoryModal: {
             title: "Create New Category",
+            titleEdit: "Edit Category",
+            editMessage:
+                "Editing this category will update all the points on this map.",
             description: "Category Description",
             color: "Color",
             save: "Save Category",
@@ -174,6 +180,7 @@ export default flattenObject({
             confirm: "Delete",
             cancel: "Cancel",
         },
+
         SupportBox: {
             contactSupport: "Contact Support",
             emailSubject: "Support Request - MapVest",

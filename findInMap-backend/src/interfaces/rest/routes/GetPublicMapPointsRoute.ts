@@ -1,4 +1,4 @@
-import { MapPointDto } from "../../../core/dtos/MapPointDto";
+import MapPointDto from "../../../core/dtos/MapPointDto";
 import GetPublicMapPoints from "../../../core/usecases/GetPublicMapPoints";
 import Route from "../Route";
 import getMapPointSchema from "../schemas/getMapPointSchema";

@@ -1,5 +1,5 @@
 import MapRepository from "../dependencies/MapRepository";
-import { makeMapPointDto, MapPointDto } from "../dtos/MapPointDto";
+import MapPointDto, { makeMapPointDto } from "../dtos/MapPointDto";
 import ItemNotFoundError from "../errors/ItemNotFoundError";
 
 export default class GetPublicMapPoints {
