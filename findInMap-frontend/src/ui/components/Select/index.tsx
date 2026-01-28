@@ -7,6 +7,7 @@ export interface SelectOption {
     value: string;
     label: string;
     prefixComponent?: React.ReactNode;
+    suffixComponent?: React.ReactNode;
 }
 
 interface SelectProps {
@@ -90,7 +91,14 @@ export const Select: React.FC<SelectProps> = ({
                             onClick={() => handleSelect(option.value)}
                         >
                             {option.prefixComponent}
-                            <span>{option.label}</span>
+                            <span className="c-select-option-label">
+                                {option.label}
+                            </span>
+                            {option.suffixComponent && (
+                                <span className="c-select-option-suffix">
+                                    {option.suffixComponent}
+                                </span>
+                            )}
                         </button>
                     ))}
                 </div>

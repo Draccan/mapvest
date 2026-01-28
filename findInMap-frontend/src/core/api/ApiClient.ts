@@ -466,6 +466,23 @@ export default class ApiClient {
         return response.json();
     }
 
+    async deleteMapCategory(
+        groupId: string,
+        mapId: string,
+        categoryId: string,
+    ): Promise<void> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}/categories/${categoryId}`,
+            {
+                method: "DELETE",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+
     async updateMapPoint(
         groupId: string,
         mapId: string,

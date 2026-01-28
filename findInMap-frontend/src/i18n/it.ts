@@ -53,12 +53,15 @@ export default flattenObject({
             "Errore durante il caricamento delle categorie della mappa pubblica. Si prega di riprovare più tardi.",
         deleteMap:
             "Errore durante l'eliminazione della mappa. Si prega di riprovare più tardi.",
+        deleteMapCategory:
+            "Errore durante l'eliminazione della categoria. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
         userRemovedSuccessfully: "Utente rimosso con successo",
         userRoleUpdatedSuccessfully: "Ruolo utente aggiornato con successo",
         mapDeletedSuccessfully: "Mappa eliminata con successo",
+        categoryDeletedSuccessfully: "Categoria eliminata con successo",
     },
     components: {
         Breadcrumb: {
@@ -163,6 +166,7 @@ export default flattenObject({
             selectCategory: "Seleziona una categoria",
             addNewCategory: "Aggiungi Nuova Categoria",
             noCategories: "Nessuna categoria disponibile",
+            deleteCategory: "Elimina categoria",
             save: "Salva Punto",
             update: "Modifica Punto",
             saving: "Salvataggio...",
@@ -182,6 +186,13 @@ export default flattenObject({
         },
         RoutesWrapper: {
             restoringSession: "Ripristino della sessione in corso...",
+        },
+        DeleteCategoryModal: {
+            title: "Elimina Categoria",
+            message:
+                "Sei sicuro di voler eliminare questa categoria? La categoria verrà rimossa da tutti i punti su questa mappa.",
+            confirm: "Elimina",
+            cancel: "Annulla",
         },
         SupportBox: {
             contactSupport: "Contatta il Supporto",

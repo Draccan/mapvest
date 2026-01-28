@@ -35,12 +35,14 @@ export default flattenObject({
         getPublicMapCategories:
             "Error loading public map categories. Please try again later.",
         deleteMap: "Error deleting map. Please try again later.",
+        deleteMapCategory: "Error deleting category. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
         userRemovedSuccessfully: "User removed successfully",
         userRoleUpdatedSuccessfully: "User role updated successfully",
         mapDeletedSuccessfully: "Map deleted successfully",
+        categoryDeletedSuccessfully: "Category deleted successfully",
     },
     components: {
         Breadcrumb: {
@@ -145,6 +147,7 @@ export default flattenObject({
             selectCategory: "Select a category",
             addNewCategory: "Add New Category",
             noCategories: "No categories available",
+            deleteCategory: "Delete category",
             save: "Save Point",
             update: "Update Point",
             saving: "Saving...",
@@ -163,6 +166,13 @@ export default flattenObject({
         },
         RoutesWrapper: {
             restoringSession: "Restoring session...",
+        },
+        DeleteCategoryModal: {
+            title: "Delete Category",
+            message:
+                "Are you sure you want to delete this category? The category will be removed from all points on this map.",
+            confirm: "Delete",
+            cancel: "Cancel",
         },
         SupportBox: {
             contactSupport: "Contact Support",

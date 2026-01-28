@@ -1,4 +1,4 @@
-import { MapPin, AlertCircle, Plus } from "lucide-react";
+import { MapPin, AlertCircle, Plus, Trash2 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 
@@ -9,6 +9,7 @@ import type { UpdateMapPointDto } from "../../../core/dtos/UpdateMapPointDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
 import { CategoryModal } from "../CategoryModal";
+import { DeleteCategoryModal } from "../DeleteCategoryModal";
 import { Select } from "../Select";
 import { SelectionPopover } from "../SelectionPopover";
 import "./style.css";
@@ -35,7 +36,9 @@ interface MapPointFormProps {
         description: string,
         color: string,
     ) => Promise<CategoryDto | null>;
+    onDeleteCategory: (categoryId: string) => Promise<boolean>;
     loadingCategory: boolean;
+    loadingDeleteCategory?: boolean;
     pointToEdit?: MapPointDto | null;
     mapId?: string | number;
 }
@@ -47,7 +50,9 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     loading,
     categories,
     onCreateCategory,
+    onDeleteCategory,
     loadingCategory,
+    loadingDeleteCategory,
     pointToEdit,
     mapId,
 }) => {
@@ -62,6 +67,11 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
     const [showNotes, setShowNotes] = useState(false);
     const [categoryId, setCategoryId] = useState<string>("");
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [isDeleteCategoryModalOpen, setIsDeleteCategoryModalOpen] =
+        useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState<string | null>(
+        null,
+    );
     const [isAddFieldPopoverOpen, setIsAddFieldPopoverOpen] = useState(false);
     const [errors, setErrors] = useState<string[]>([]);
     const addFieldButtonRef = useRef<HTMLButtonElement>(null);
@@ -158,6 +168,23 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
         setCategoryId(category ? category.id : "");
     };
 
+    const handleDeleteCategoryClick = (catId: string) => {
+        setCategoryToDelete(catId);
+        setIsDeleteCategoryModalOpen(true);
+    };
+
+    const handleConfirmDeleteCategory = async () => {
+        if (categoryToDelete) {
+            if (categoryId === categoryToDelete) {
+                setCategoryId("");
+            }
+            const deletedCategoryId = categoryToDelete;
+            setCategoryToDelete(null);
+            await onDeleteCategory(deletedCategoryId);
+            setIsDeleteCategoryModalOpen(false);
+        }
+    };
+
     const isEditMode = !!pointToEdit;
 
     return (
@@ -200,6 +227,21 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                                             backgroundColor: cat.color,
                                         }}
                                     />
+                                ),
+                                suffixComponent: (
+                                    <button
+                                        type="button"
+                                        className="c-map-point-form-category-delete-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteCategoryClick(cat.id);
+                                        }}
+                                        title={intl.formatMessage({
+                                            id: "components.MapPointForm.deleteCategory",
+                                        })}
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
                                 ),
                             }))}
                             placeholder={
@@ -334,6 +376,15 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                 onClose={() => setIsCategoryModalOpen(false)}
                 onSave={handleCreateCategory}
                 loading={loadingCategory}
+            />
+            <DeleteCategoryModal
+                isOpen={isDeleteCategoryModalOpen}
+                onClose={() => {
+                    setIsDeleteCategoryModalOpen(false);
+                    setCategoryToDelete(null);
+                }}
+                onConfirm={handleConfirmDeleteCategory}
+                loading={loadingDeleteCategory || false}
             />
         </div>
     );

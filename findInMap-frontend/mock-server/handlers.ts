@@ -787,6 +787,30 @@ export const handlers = [
             return HttpResponse.json(category, { status: 201 });
         },
     ),
+    http.delete(
+        "http://localhost:3001/:groupId/maps/:mapId/categories/:categoryId",
+        async ({ params }) => {
+            await delay(2000);
+            const { mapId, categoryId } = params;
+
+            const currentCategories = getCategories(mapId as string);
+            const filteredCategories = currentCategories.filter(
+                (cat) => cat.id !== categoryId,
+            );
+            setCategories(mapId as string, filteredCategories);
+
+            const currentPoints = getMapPoints(mapId as string);
+            const updatedPoints = currentPoints.map((point) => {
+                if (point.categoryId === categoryId) {
+                    return { ...point, categoryId: undefined };
+                }
+                return point;
+            });
+            setMapPoints(mapId as string, updatedPoints);
+
+            return HttpResponse.json(undefined, { status: 204 });
+        },
+    ),
     http.put(
         "http://localhost:3001/groups/:groupId",
         async ({ params, request }) => {

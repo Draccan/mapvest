@@ -101,6 +101,16 @@
     text-align: left;
 }
 
+.c-select-option-label {
+    flex: 1;
+}
+
+.c-select-option-suffix {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
 .c-select-option:hover {
     background-color: var(--color-background-secondary);
 }
