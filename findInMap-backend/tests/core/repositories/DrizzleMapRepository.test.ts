@@ -1335,6 +1335,270 @@ describe("DrizzleMapRepository", () => {
         });
     });
 
+    describe("deleteMapCategory", () => {
+        it("should delete a category and remove it from all map points", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category = await repository.createCategory(map.id, {
+                description: "Furto",
+                color: "#FF0000",
+            });
+
+            await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Point 1",
+                    date: "2024-01-01",
+                    categoryId: category.id,
+                },
+                map.id,
+            );
+
+            await repository.createMapPoint(
+                {
+                    long: 13.4964,
+                    lat: 42.9028,
+                    description: "Point 2",
+                    date: "2024-01-02",
+                    categoryId: category.id,
+                },
+                map.id,
+            );
+
+            await repository.deleteMapCategory(map.id, category.id);
+
+            const categories = await repository.findCategoriesByMapId(map.id);
+            expect(categories.length).toBe(0);
+
+            const points = await repository.findAllMapPoints(map.id);
+            expect(points.length).toBe(2);
+            expect(points[0].category_id).toBeFalsy();
+            expect(points[1].category_id).toBeFalsy();
+        });
+
+        it("should only remove category from points of the specified map", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "Map 1",
+            });
+
+            const map2 = await repository.createMap(group.id, {
+                name: "Map 2",
+            });
+
+            const category1 = await repository.createCategory(map1.id, {
+                description: "Category for Map 1",
+                color: "#FF0000",
+            });
+
+            const category2 = await repository.createCategory(map2.id, {
+                description: "Category for Map 2",
+                color: "#00FF00",
+            });
+
+            await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Point for Map 1",
+                    date: "2024-01-01",
+                    categoryId: category1.id,
+                },
+                map1.id,
+            );
+
+            await repository.createMapPoint(
+                {
+                    long: 13.4964,
+                    lat: 42.9028,
+                    description: "Point for Map 2",
+                    date: "2024-01-02",
+                    categoryId: category2.id,
+                },
+                map2.id,
+            );
+
+            await repository.deleteMapCategory(map1.id, category1.id);
+
+            const map1Categories = await repository.findCategoriesByMapId(
+                map1.id,
+            );
+            expect(map1Categories.length).toBe(0);
+
+            const map2Categories = await repository.findCategoriesByMapId(
+                map2.id,
+            );
+            expect(map2Categories.length).toBe(1);
+            expect(map2Categories[0].id).toBe(category2.id);
+
+            const map1Points = await repository.findAllMapPoints(map1.id);
+            expect(map1Points[0].category_id).toBeFalsy();
+
+            const map2Points = await repository.findAllMapPoints(map2.id);
+            expect(map2Points[0].category_id).toBe(category2.id);
+        });
+
+        it("should handle deleting category that has no associated points", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category = await repository.createCategory(map.id, {
+                description: "Unused Category",
+                color: "#FF0000",
+            });
+
+            await repository.deleteMapCategory(map.id, category.id);
+
+            const categories = await repository.findCategoriesByMapId(map.id);
+            expect(categories.length).toBe(0);
+        });
+
+        it("should handle deleting non-existent category gracefully", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            await repository.deleteMapCategory(
+                map.id,
+                "00000000-0000-0000-0000-000000000000",
+            );
+        });
+
+        it("should not delete category if mapId does not match", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "Map 1",
+            });
+
+            const map2 = await repository.createMap(group.id, {
+                name: "Map 2",
+            });
+
+            const category = await repository.createCategory(map1.id, {
+                description: "Category for Map 1",
+                color: "#FF0000",
+            });
+
+            await repository.deleteMapCategory(map2.id, category.id);
+
+            const categories = await repository.findCategoriesByMapId(map1.id);
+            expect(categories.length).toBe(1);
+            expect(categories[0].id).toBe(category.id);
+        });
+
+        it("should preserve points without category when deleting a category", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category = await repository.createCategory(map.id, {
+                description: "Furto",
+                color: "#FF0000",
+            });
+
+            await repository.createMapPoint(
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Point with category",
+                    date: "2024-01-01",
+                    categoryId: category.id,
+                },
+                map.id,
+            );
+
+            await repository.createMapPoint(
+                {
+                    long: 13.4964,
+                    lat: 42.9028,
+                    description: "Point without category",
+                    date: "2024-01-02",
+                },
+                map.id,
+            );
+
+            await repository.deleteMapCategory(map.id, category.id);
+
+            const points = await repository.findAllMapPoints(map.id);
+            expect(points.length).toBe(2);
+            expect(points.every((p) => !p.category_id)).toBe(true);
+        });
+    });
+
     describe("findMapByPublicId", () => {
         it("should return a map when publicId exists", async () => {
             const user = await userRepository.create({

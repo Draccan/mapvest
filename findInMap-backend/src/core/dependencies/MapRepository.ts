@@ -40,5 +40,6 @@ export default interface MapRepository {
         data: UpdateMapDto,
     ): Promise<MapEntity | null>;
     deleteMap(mapId: string): Promise<void>;
+    deleteMapCategory(mapId: string, categoryId: string): Promise<void>;
     invalidateMapsCache(): void;
 }

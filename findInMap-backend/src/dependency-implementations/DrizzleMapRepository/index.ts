@@ -269,6 +269,29 @@ export class DrizzleMapRepository implements MapRepository {
         this.invalidateMapsCache();
     }
 
+    async deleteMapCategory(mapId: string, categoryId: string): Promise<void> {
+        await db.transaction(async (transaction) => {
+            await transaction
+                .update(mapPoints)
+                .set({ categoryId: null })
+                .where(
+                    and(
+                        eq(mapPoints.mapId, mapId),
+                        eq(mapPoints.categoryId, categoryId),
+                    ),
+                );
+
+            await transaction
+                .delete(mapCategories)
+                .where(
+                    and(
+                        eq(mapCategories.id, categoryId),
+                        eq(mapCategories.mapId, mapId),
+                    ),
+                );
+        });
+    }
+
     invalidateMapsCache(): void {
         mem.clear(this.memoizedFindMapByGroupId);
     }
