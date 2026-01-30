@@ -261,8 +261,6 @@ export const Home: React.FC = () => {
             categoryId,
         );
         if (success) {
-            resetCategories();
-            resetMapPoints();
             fetchCategories(selectedGroup!.id, selectedMap!.id);
             fetchMapPoints(selectedGroup!.id, selectedMap!.id);
         }
@@ -281,8 +279,6 @@ export const Home: React.FC = () => {
             { description, color },
         );
         if (result) {
-            resetCategories();
-            resetMapPoints();
             fetchCategories(selectedGroup!.id, selectedMap!.id);
             fetchMapPoints(selectedGroup!.id, selectedMap!.id);
         }
