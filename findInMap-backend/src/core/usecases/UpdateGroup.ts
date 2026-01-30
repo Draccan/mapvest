@@ -1,5 +1,5 @@
 import GroupRepository from "../dependencies/GroupRepository";
-import GroupDto from "../dtos/GroupDto";
+import GroupDto, { makeGroupDto } from "../dtos/GroupDto";
 import UpdateGroupDto from "../dtos/UpdateGroupDto";
 import NotAllowedActionError from "../errors/NotAllowedActionError";
 
@@ -26,6 +26,6 @@ export default class UpdateGroup {
             throw new NotAllowedActionError("Group not found or access denied");
         }
 
-        return updatedGroup;
+        return makeGroupDto(updatedGroup);
     }
 }

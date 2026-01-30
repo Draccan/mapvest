@@ -45,18 +45,7 @@ export default (
                 description: "Group updated successfully",
                 content: {
                     "application/json": {
-                        schema: {
-                            type: "object",
-                            properties: {
-                                id: {
-                                    type: "string",
-                                },
-                                name: {
-                                    type: "string",
-                                },
-                            },
-                            required: ["id", "name"],
-                        },
+                        schema: getGroupSchema(),
                     },
                 },
             },
