@@ -95,6 +95,44 @@ export class DrizzleMapRepository implements MapRepository {
         return makeMapPointEntity(createdMapPoint);
     }
 
+    async createMapPoints(
+        data: CreateMapPointDto[],
+        mapId: string,
+    ): Promise<MapPointEntity[]> {
+        if (data.length === 0) {
+            return [];
+        }
+
+        const createdMapPoints = await db
+            .insert(mapPoints)
+            .values(
+                data.map((point) => ({
+                    location: sql`ST_GeomFromText(${`POINT(${point.long} ${point.lat})`}, 4326)`,
+                    description: point.description,
+                    date: point.date,
+                    dueDate: point.dueDate,
+                    notes: point.notes,
+                    categoryId: point.categoryId,
+                    mapId: mapId,
+                })),
+            )
+            .returning({
+                id: mapPoints.id,
+                mapId: mapPoints.mapId,
+                categoryId: mapPoints.categoryId,
+                long: sql<number>`ST_X(${mapPoints.location})`,
+                lat: sql<number>`ST_Y(${mapPoints.location})`,
+                description: mapPoints.description,
+                date: mapPoints.date,
+                dueDate: mapPoints.dueDate,
+                notes: mapPoints.notes,
+                createdAt: mapPoints.createdAt,
+                updatedAt: mapPoints.updatedAt,
+            });
+
+        return createdMapPoints.map(makeMapPointEntity);
+    }
+
     async deleteMapPoints(mapId: string, pointIds: string[]): Promise<void> {
         if (pointIds.length === 0) {
             return;
@@ -171,6 +209,10 @@ export class DrizzleMapRepository implements MapRepository {
 
         return categories.map(makeMapCategoryEntity);
     }
+
+    memoizedFindCategoriesByMapId = mem(this.findCategoriesByMapId, {
+        maxAge: 1000 * 60,
+    });
 
     async updateMapPoint(
         pointId: string,

@@ -37,6 +37,7 @@ export default flattenObject({
         deleteMap: "Error deleting map. Please try again later.",
         deleteMapCategory: "Error deleting category. Please try again later.",
         updateMapCategory: "Error updating category. Please try again later.",
+        importMapPoints: "Error importing map points. Please try again later.",
     },
     messages: {
         userAddedSuccessfully: "User added successfully",
@@ -45,6 +46,11 @@ export default flattenObject({
         mapDeletedSuccessfully: "Map deleted successfully",
         categoryDeletedSuccessfully: "Category deleted successfully",
         categoryUpdatedSuccessfully: "Category updated successfully",
+        importingMapPoints: "Importing points...",
+        importMapPointsSuccess: "{count} points imported successfully",
+        importMapPointsPartialSuccess:
+            "{successCount} points imported, {errorCount} errors",
+        importMapPointsAllFailed: "Import failed. No points were imported.",
     },
     components: {
         Breadcrumb: {
@@ -180,6 +186,34 @@ export default flattenObject({
             confirm: "Delete",
             cancel: "Cancel",
         },
+        ImportMapPointsModal: {
+            title: "Load Points from File",
+            description:
+                "Upload an Excel or CSV file to import multiple points at once. The file must have the columns listed below.",
+            columnsTitle: "Required columns:",
+            columnDescription: "description",
+            columnLatitude: "latitude",
+            columnLongitude: "longitude",
+            columnDate: "date",
+            columnDueDate: "dueDate",
+            columnNotes: "notes",
+            columnCategory: "category",
+            columnRequired: "required",
+            columnOptional: "optional",
+            columnDateHint: "optional, defaults to today",
+            columnCategoryHint: "optional, category name",
+            maxRowsWarning: "Maximum {max} rows per file",
+            selectFile: "Select File",
+            cancel: "Cancel",
+            import: "Import",
+            importing: "Importing...",
+            invalidFileType: "Invalid file type. Allowed types: {types}",
+            successCount: "{count} points imported",
+            errorCount: "{count} errors",
+            errorsTitle: "Errors:",
+            row: "Row {row}:",
+            close: "Close",
+        },
 
         SupportBox: {
             contactSupport: "Contact Support",
@@ -221,6 +255,7 @@ export default flattenObject({
             publicMapToggle: "Public map",
             copyPublicLink: "Copy public link",
             linkCopied: "Link copied to clipboard!",
+            importPoints: "Load points from file",
         },
         User: {
             title: "User Profile",

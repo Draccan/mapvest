@@ -1818,4 +1818,252 @@ describe("DrizzleMapRepository", () => {
             expect(result).toBeNull();
         });
     });
+
+    describe("createMapPoints", () => {
+        it("should create multiple map points in bulk", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const pointsData: CreateMapPointDto[] = [
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Point 1",
+                    date: "2024-01-01",
+                },
+                {
+                    long: 9.19,
+                    lat: 45.4642,
+                    description: "Point 2",
+                    date: "2024-01-02",
+                    notes: "Some notes",
+                },
+                {
+                    long: 11.2558,
+                    lat: 43.7696,
+                    description: "Point 3",
+                    date: "2024-01-03",
+                    dueDate: "2024-02-01",
+                },
+            ];
+
+            const result = await repository.createMapPoints(pointsData, map.id);
+
+            expect(result).toHaveLength(3);
+            expect(result[0].description).toBe("Point 1");
+            expect(result[0].long).toBe(12.4964);
+            expect(result[0].lat).toBe(41.9028);
+            expect(result[1].description).toBe("Point 2");
+            expect(result[1].notes).toBe("Some notes");
+            expect(result[2].description).toBe("Point 3");
+            expect(result[2].due_date).toBe("2024-02-01");
+        });
+
+        it("should return empty array when given empty array", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const result = await repository.createMapPoints([], map.id);
+
+            expect(result).toEqual([]);
+        });
+
+        it("should create map points with category", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const category = await repository.createCategory(map.id, {
+                description: "Test Category",
+                color: "#FF0000",
+            });
+
+            const pointsData: CreateMapPointDto[] = [
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Categorized Point",
+                    date: "2024-01-01",
+                    categoryId: category.id,
+                },
+            ];
+
+            const result = await repository.createMapPoints(pointsData, map.id);
+
+            expect(result).toHaveLength(1);
+            expect(result[0].category_id).toBe(category.id);
+        });
+
+        it("should create all points with correct timestamps", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const pointsData: CreateMapPointDto[] = [
+                {
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Point 1",
+                    date: "2024-01-01",
+                },
+                {
+                    long: 9.19,
+                    lat: 45.4642,
+                    description: "Point 2",
+                    date: "2024-01-02",
+                },
+            ];
+
+            const result = await repository.createMapPoints(pointsData, map.id);
+
+            expect(result[0].created_at).toBeInstanceOf(Date);
+            expect(result[0].updated_at).toBeInstanceOf(Date);
+            expect(result[1].created_at).toBeInstanceOf(Date);
+            expect(result[1].updated_at).toBeInstanceOf(Date);
+        });
+    });
+
+    describe("memoizedFindCategoriesByMapId", () => {
+        it("should return categories for a map", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            await repository.createCategory(map.id, {
+                description: "Category 1",
+                color: "#FF0000",
+            });
+
+            await repository.createCategory(map.id, {
+                description: "Category 2",
+                color: "#00FF00",
+            });
+
+            const result = await repository.memoizedFindCategoriesByMapId(
+                map.id,
+            );
+
+            expect(result).toHaveLength(2);
+            expect(result.map((c) => c.description)).toContain("Category 1");
+            expect(result.map((c) => c.description)).toContain("Category 2");
+        });
+
+        it("should return empty array when no categories exist", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            const result = await repository.memoizedFindCategoriesByMapId(
+                map.id,
+            );
+
+            expect(result).toEqual([]);
+        });
+
+        it("should cache results for subsequent calls", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map = await repository.createMap(group.id, {
+                name: "Test Map",
+            });
+
+            await repository.createCategory(map.id, {
+                description: "Category 1",
+                color: "#FF0000",
+            });
+
+            const result1 = await repository.memoizedFindCategoriesByMapId(
+                map.id,
+            );
+            const result2 = await repository.memoizedFindCategoriesByMapId(
+                map.id,
+            );
+
+            expect(result1).toEqual(result2);
+        });
+    });
 });

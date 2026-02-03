@@ -34,6 +34,8 @@ describe("UpdateMapCategory", () => {
         deleteMapCategory: jest.fn(),
         updateCategory: jest.fn(),
         invalidateMapsCache: jest.fn(),
+        createMapPoints: jest.fn(),
+        memoizedFindCategoriesByMapId: jest.fn(),
     };
 
     beforeEach(() => {

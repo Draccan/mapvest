@@ -57,6 +57,8 @@ export default flattenObject({
             "Errore durante l'eliminazione della categoria. Si prega di riprovare più tardi.",
         updateMapCategory:
             "Errore durante l'aggiornamento della categoria. Si prega di riprovare più tardi.",
+        importMapPoints:
+            "Errore durante l'importazione dei punti. Si prega di riprovare più tardi.",
     },
     messages: {
         userAddedSuccessfully: "Utente aggiunto con successo",
@@ -65,6 +67,12 @@ export default flattenObject({
         mapDeletedSuccessfully: "Mappa eliminata con successo",
         categoryDeletedSuccessfully: "Categoria eliminata con successo",
         categoryUpdatedSuccessfully: "Categoria aggiornata con successo",
+        importingMapPoints: "Importazione punti in corso...",
+        importMapPointsSuccess: "{count} punti importati con successo",
+        importMapPointsPartialSuccess:
+            "{successCount} punti importati, {errorCount} errori",
+        importMapPointsAllFailed:
+            "Importazione fallita. Nessun punto è stato importato.",
     },
     components: {
         Breadcrumb: {
@@ -201,6 +209,35 @@ export default flattenObject({
             confirm: "Elimina",
             cancel: "Annulla",
         },
+        ImportMapPointsModal: {
+            title: "Carica Punti da File",
+            description:
+                "Carica un file Excel o CSV per importare più punti contemporaneamente. Il file deve avere le colonne elencate di seguito.",
+            columnsTitle: "Colonne richieste:",
+            columnDescription: "description",
+            columnLatitude: "latitude",
+            columnLongitude: "longitude",
+            columnDate: "date",
+            columnDueDate: "dueDate",
+            columnNotes: "notes",
+            columnCategory: "category",
+            columnRequired: "obbligatorio",
+            columnOptional: "opzionale",
+            columnDateHint: "opzionale, default oggi",
+            columnCategoryHint: "opzionale, nome categoria",
+            maxRowsWarning: "Massimo {max} righe per file",
+            selectFile: "Seleziona File",
+            cancel: "Annulla",
+            import: "Importa",
+            importing: "Importazione...",
+            invalidFileType:
+                "Tipo di file non valido. Tipi consentiti: {types}",
+            successCount: "{count} punti importati",
+            errorCount: "{count} errori",
+            errorsTitle: "Errori:",
+            row: "Riga {row}:",
+            close: "Chiudi",
+        },
 
         SupportBox: {
             contactSupport: "Contatta il Supporto",
@@ -245,6 +282,7 @@ export default flattenObject({
             publicMapToggle: "Mappa pubblica",
             copyPublicLink: "Copia link pubblico",
             linkCopied: "Link copiato negli appunti!",
+            importPoints: "Carica punti da file",
         },
         User: {
             title: "Profilo Utente",

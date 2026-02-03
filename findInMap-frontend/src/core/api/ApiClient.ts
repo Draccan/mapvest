@@ -6,6 +6,7 @@ import type { CreateMapDto } from "../dtos/CreateMapDto";
 import type { CreateMapPointDto } from "../dtos/CreateMapPointDto";
 import type CreateUserDto from "../dtos/CreateUserDto";
 import type { GroupDto } from "../dtos/GroupDto";
+import type { ImportMapPointsResultDto } from "../dtos/ImportMapPointsResultDto";
 import type LoginResponseDto from "../dtos/LoginResponseDto";
 import type LoginUserDto from "../dtos/LoginUserDto";
 import type { MapDto } from "../dtos/MapDto";
@@ -671,6 +672,33 @@ export default class ApiClient {
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async importMapPoints(
+        groupId: string,
+        mapId: string,
+        fileName: string,
+        base64Content: string,
+    ): Promise<ImportMapPointsResultDto> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/${groupId}/maps/${mapId}/points/import`,
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    file: {
+                        name: fileName,
+                        content: base64Content,
+                    },
+                }),
+            },
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Import failed");
         }
 
         return response.json();

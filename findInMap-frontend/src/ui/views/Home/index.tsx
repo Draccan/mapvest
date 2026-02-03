@@ -1,4 +1,4 @@
-import { Copy, ScanSearch, X } from "lucide-react";
+import { Copy, FileUp, ScanSearch, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 import toast from "react-hot-toast";
@@ -15,6 +15,7 @@ import { useCreateMapPoint } from "../../../core/usecases/useCreateMapPoint";
 import { useDeleteMapCategory } from "../../../core/usecases/useDeleteMapCategory";
 import { useDeleteMapPoints } from "../../../core/usecases/useDeleteMapPoints";
 import { useGetMapCategories } from "../../../core/usecases/useGetMapCategories";
+import { useImportMapPoints } from "../../../core/usecases/useImportMapPoints";
 import { useGetMapPoints } from "../../../core/usecases/useGetMapPoints";
 import { useUpdateMapCategory } from "../../../core/usecases/useUpdateMapCategory";
 import { useUpdateMapPoint } from "../../../core/usecases/useUpdateMapPoint";
@@ -24,6 +25,7 @@ import { AddressSearch } from "../../components/AddressSearch";
 import { AreaAnalysis } from "../../components/AreaAnalysis";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
+import { ImportMapPointsModal } from "../../components/ImportMapPointsModal";
 import {
     DEFAULT_MAP_CLICK_ZOOM,
     MapContainer,
@@ -53,8 +55,10 @@ export const Home: React.FC = () => {
     const [isRouteDetailsModalOpen, setIsRouteDetailsModalOpen] =
         useState(false);
     const [routePoints, setRoutePoints] = useState<MapPointDto[]>([]);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
     const previousSelectedMapId = usePrevious(selectedMap?.id);
+    const { importMapPoints, loading: importingPoints } = useImportMapPoints();
 
     const {
         data: mapPointsData,
@@ -285,6 +289,18 @@ export const Home: React.FC = () => {
         return !!result;
     };
 
+    const handleImportPoints = async (file: File) => {
+        const result = await importMapPoints(
+            selectedGroup!.id,
+            selectedMap!.id,
+            file,
+        );
+        if (result && result.successCount > 0) {
+            fetchMapPoints(selectedGroup!.id, selectedMap!.id);
+        }
+        return result;
+    };
+
     const mapPoints = mapPointsData || [];
     const categories = categoriesData || [];
 
@@ -297,10 +313,30 @@ export const Home: React.FC = () => {
                     <div className="v-home-map-section">
                         <div className="v-home-search-wrapper">
                             {!isAnalysisMode && (
-                                <AddressSearch
-                                    onAddressSelect={handleMapPointSelection}
-                                    className="v-home-address-search"
-                                />
+                                <>
+                                    <Button
+                                        kind="secondary"
+                                        size="icon"
+                                        onClick={() =>
+                                            setIsImportModalOpen(true)
+                                        }
+                                        title={intl.formatMessage({
+                                            id: "views.Home.importPoints",
+                                        })}
+                                        aria-label={intl.formatMessage({
+                                            id: "views.Home.importPoints",
+                                        })}
+                                        className="v-home-import-btn"
+                                    >
+                                        <FileUp size={20} />
+                                    </Button>
+                                    <AddressSearch
+                                        onAddressSelect={
+                                            handleMapPointSelection
+                                        }
+                                        className="v-home-address-search"
+                                    />
+                                </>
                             )}
                             <Button
                                 kind={isAnalysisMode ? "danger" : "primary"}
@@ -424,6 +460,12 @@ export const Home: React.FC = () => {
                     categories={categoriesData || []}
                 />
             )}
+            <ImportMapPointsModal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onImport={handleImportPoints}
+                loading={importingPoints}
+            />
         </div>
     );
 };

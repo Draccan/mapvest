@@ -23,6 +23,7 @@ import GetPublicMapCategories from "../src/core/usecases/GetPublicMapCategories"
 import GetPublicMapPoints from "../src/core/usecases/GetPublicMapPoints";
 import GetUser from "../src/core/usecases/GetUser";
 import GetUserGroups from "../src/core/usecases/GetUserGroups";
+import ImportMapPointsFromFile from "../src/core/usecases/ImportMapPointsFromFile";
 import LoginUser from "../src/core/usecases/LoginUser";
 import LogoutUser from "../src/core/usecases/LogoutUser";
 import RefreshToken from "../src/core/usecases/RefreshToken";
@@ -58,10 +59,12 @@ export const mockMapRepository: jest.Mocked<MapRepository> = {
     findMapByPublicId: jest.fn(),
     findMapByGroupId: jest.fn(),
     createMapPoint: jest.fn(),
+    createMapPoints: jest.fn(),
     findMapPointById: jest.fn(),
     deleteMapPoints: jest.fn(),
     deleteMap: jest.fn(),
     memoizedFindMapByGroupId: jest.fn(),
+    memoizedFindCategoriesByMapId: jest.fn(),
     createMap: jest.fn(),
     createCategory: jest.fn(),
     findCategoriesByMapId: jest.fn(),
@@ -142,6 +145,10 @@ export function createTestApp() {
     const googleRepository = new MockGoogleRepository();
 
     const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+    const importMapPointsFromFile = new ImportMapPointsFromFile(
+        groupRepository,
+        mapRepository,
+    );
     const createUser = new CreateUser(
         userRepository,
         groupRepository,
@@ -219,6 +226,7 @@ export function createTestApp() {
             getPublicMapPoints,
             getUser,
             getUserGroups,
+            importMapPointsFromFile,
             loginUser,
             logoutUser,
             refreshToken,

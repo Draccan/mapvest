@@ -19,6 +19,7 @@ import GetPublicMapCategories from "../core/usecases/GetPublicMapCategories";
 import GetPublicMapPoints from "../core/usecases/GetPublicMapPoints";
 import GetUser from "../core/usecases/GetUser";
 import GetUserGroups from "../core/usecases/GetUserGroups";
+import ImportMapPointsFromFile from "../core/usecases/ImportMapPointsFromFile";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
 import RefreshToken from "../core/usecases/RefreshToken";
@@ -59,6 +60,10 @@ const emailService = new EmailService(
 // Usecases
 const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
 const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+const importMapPointsFromFile = new ImportMapPointsFromFile(
+    groupRepository,
+    mapRepository,
+);
 const deleteMap = new DeleteMap(groupRepository, mapRepository);
 const deleteMapCategory = new DeleteMapCategory(groupRepository, mapRepository);
 const deleteMapPoints = new DeleteMapPoints(groupRepository, mapRepository);
@@ -118,6 +123,7 @@ const restInterface = new RestInterface(
         getPublicMapPoints,
         getUser,
         getUserGroups,
+        importMapPointsFromFile,
         loginUser,
         logoutUser,
         refreshToken,

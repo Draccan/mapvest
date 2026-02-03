@@ -1020,4 +1020,88 @@ export const handlers = [
             return HttpResponse.json(undefined, { status: 204 });
         },
     ),
+    http.post(
+        "http://localhost:3001/:groupId/maps/:mapId/points/import",
+        async ({ params }) => {
+            await delay(2000);
+            const { mapId } = params;
+
+            const europeanLocations = [
+                { name: "Roma", lat: 41.9028, long: 12.4964 },
+                { name: "Milano", lat: 45.4642, long: 9.19 },
+                { name: "Napoli", lat: 40.8518, long: 14.2681 },
+                { name: "Firenze", lat: 43.7696, long: 11.2558 },
+                { name: "Venezia", lat: 45.4408, long: 12.3155 },
+                { name: "Torino", lat: 45.0703, long: 7.6869 },
+                { name: "Bologna", lat: 44.4949, long: 11.3426 },
+                { name: "Palermo", lat: 38.1157, long: 13.3615 },
+                { name: "Parigi", lat: 48.8566, long: 2.3522 },
+                { name: "Barcellona", lat: 41.3851, long: 2.1734 },
+                { name: "Madrid", lat: 40.4168, long: -3.7038 },
+                { name: "Berlino", lat: 52.52, long: 13.405 },
+                { name: "Amsterdam", lat: 52.3676, long: 4.9041 },
+                { name: "Vienna", lat: 48.2082, long: 16.3738 },
+                { name: "Praga", lat: 50.0755, long: 14.4378 },
+                { name: "Lisbona", lat: 38.7223, long: -9.1393 },
+                { name: "Atene", lat: 37.9838, long: 23.7275 },
+                { name: "Bruxelles", lat: 50.8503, long: 4.3517 },
+                { name: "Zurigo", lat: 47.3769, long: 8.5417 },
+                { name: "Monaco", lat: 48.1351, long: 11.582 },
+            ];
+
+            const imported = Array.from({ length: 100 }, (_, i) => {
+                const baseLocation =
+                    europeanLocations[i % europeanLocations.length];
+                const latOffset = (Math.random() - 0.5) * 0.2;
+                const longOffset = (Math.random() - 0.5) * 0.2;
+
+                return {
+                    id: `imported-${mapId}-${Date.now()}-${i}`,
+                    description: `${baseLocation.name} - Point ${i + 1}`,
+                    lat: baseLocation.lat + latOffset,
+                    long: baseLocation.long + longOffset,
+                    date: "2026-02-03",
+                    dueDate: i % 3 === 0 ? "2026-03-01" : undefined,
+                    notes:
+                        i % 2 === 0
+                            ? `Imported point near ${baseLocation.name}`
+                            : undefined,
+                    categoryId: undefined,
+                    createdAt: new Date().toISOString(),
+                };
+            });
+
+            const errorTypes = [
+                "Missing required field: description",
+                "Missing required field: latitude",
+                "Missing required field: longitude",
+                "Invalid latitude value: must be between -90 and 90",
+                "Invalid longitude value: must be between -180 and 180",
+                "Invalid date format: expected YYYY-MM-DD or DD/MM/YYYY",
+                "Invalid dueDate format: expected YYYY-MM-DD or DD/MM/YYYY",
+                "Category not found: 'NonExistentCategory'",
+                "Description exceeds maximum length of 255 characters",
+                "Notes exceed maximum length of 300 characters",
+            ];
+
+            const errors = Array.from({ length: 20 }, (_, i) => ({
+                row: 101 + i,
+                message: errorTypes[i % errorTypes.length],
+            }));
+
+            const currentPoints = getMapPoints(mapId as string);
+            setMapPoints(mapId as string, [...currentPoints, ...imported]);
+
+            return HttpResponse.json(
+                {
+                    imported,
+                    errors,
+                    totalRows: 120,
+                    successCount: 100,
+                    errorCount: 20,
+                },
+                { status: 200 },
+            );
+        },
+    ),
 ];

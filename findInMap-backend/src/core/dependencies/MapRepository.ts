@@ -15,6 +15,10 @@ export default interface MapRepository {
         data: CreateMapPointDto,
         mapId: string,
     ): Promise<MapPointEntity>;
+    createMapPoints(
+        data: CreateMapPointDto[],
+        mapId: string,
+    ): Promise<MapPointEntity[]>;
     deleteMapPoints(mapId: string, pointIds: string[]): Promise<void>;
     findAllMapPoints(mapId: string): Promise<MapPointEntity[]>;
     findMapPointById(id: string): Promise<MapPointEntity | null>;
@@ -30,6 +34,7 @@ export default interface MapRepository {
         data: CreateCategoryDto,
     ): Promise<MapCategoryEntity>;
     findCategoriesByMapId(mapId: string): Promise<MapCategoryEntity[]>;
+    memoizedFindCategoriesByMapId(mapId: string): Promise<MapCategoryEntity[]>;
     updateMapPoint(
         pointId: string,
         mapId: string,
