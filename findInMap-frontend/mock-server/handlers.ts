@@ -1086,7 +1086,7 @@ export const handlers = [
 
             const errors = Array.from({ length: 20 }, (_, i) => ({
                 row: 101 + i,
-                message: errorTypes[i % errorTypes.length],
+                error: errorTypes[i % errorTypes.length],
             }));
 
             const currentPoints = getMapPoints(mapId as string);

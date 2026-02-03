@@ -268,7 +268,7 @@ export const ImportMapPointsModal: React.FC<ImportMapPointsModalProps> = ({
                                                 })}
                                             </span>
                                             <span className="c-import-modal-error-message">
-                                                {error.message}
+                                                {error.error}
                                             </span>
                                         </div>
                                     ))}

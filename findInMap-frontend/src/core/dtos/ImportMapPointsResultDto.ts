@@ -2,7 +2,7 @@ import type { MapPointDto } from "./MapPointDto";
 
 export interface ImportError {
     row: number;
-    message: string;
+    error: string;
 }
 
 export interface ImportMapPointsResultDto {
