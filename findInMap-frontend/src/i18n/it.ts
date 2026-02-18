@@ -96,6 +96,10 @@ export default flattenObject({
                 cancel: "Annulla",
             },
         },
+        FileDropzone: {
+            dropzoneText: "Trascina il tuo file qui, oppure",
+            selectFile: "Seleziona File",
+        },
         LoggedRouteWrapper: {
             loadingData: "Caricamento dati...",
         },
@@ -226,6 +230,7 @@ export default flattenObject({
             columnDateHint: "opzionale, default oggi",
             columnCategoryHint: "opzionale, nome categoria",
             maxRowsWarning: "Massimo {max} righe per file",
+            dropzoneText: "Trascina il tuo file qui, oppure",
             selectFile: "Seleziona File",
             cancel: "Annulla",
             import: "Importa",

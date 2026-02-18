@@ -1,16 +1,11 @@
-import {
-    AlertTriangle,
-    CheckCircle,
-    FileUp,
-    Info,
-    XCircle,
-} from "lucide-react";
-import React, { useRef, useState } from "react";
+import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
+import React, { useState } from "react";
 import { useIntl } from "react-intl";
 
 import type { ImportMapPointsResultDto } from "../../../core/dtos/ImportMapPointsResultDto";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
+import { FileDropzone } from "../FileDropzone";
 import { Modal } from "../Modal";
 import "./style.css";
 
@@ -33,7 +28,6 @@ export const ImportMapPointsModal: React.FC<ImportMapPointsModalProps> = ({
     loading,
 }) => {
     const intl = useIntl();
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [fileError, setFileError] = useState<string | null>(null);
     const [importResult, setImportResult] =
@@ -43,9 +37,6 @@ export const ImportMapPointsModal: React.FC<ImportMapPointsModalProps> = ({
         setSelectedFile(null);
         setFileError(null);
         setImportResult(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
     };
 
     const handleClose = () => {
@@ -70,15 +61,12 @@ export const ImportMapPointsModal: React.FC<ImportMapPointsModalProps> = ({
         return true;
     };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            if (validateFile(file)) {
-                setSelectedFile(file);
-                setImportResult(null);
-            } else {
-                setSelectedFile(null);
-            }
+    const handleFileSelect = (file: File) => {
+        if (validateFile(file)) {
+            setSelectedFile(file);
+            setImportResult(null);
+        } else {
+            setSelectedFile(null);
         }
     };
 
@@ -89,14 +77,7 @@ export const ImportMapPointsModal: React.FC<ImportMapPointsModalProps> = ({
         if (result) {
             setImportResult(result);
             setSelectedFile(null);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
-            }
         }
-    };
-
-    const handleSelectFile = () => {
-        fileInputRef.current?.click();
     };
 
     return (
@@ -178,33 +159,31 @@ export const ImportMapPointsModal: React.FC<ImportMapPointsModalProps> = ({
                             </span>
                         </div>
 
-                        <div className="c-import-modal-file-section">
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept={ALLOWED_EXTENSIONS.join(",")}
-                                onChange={handleFileChange}
-                                className="c-import-modal-file-input"
-                            />
-                            <Button
-                                kind="secondary"
-                                onClick={handleSelectFile}
+                        <div className="c-import-modal-dropzone-wrapper">
+                            <FileDropzone
+                                accept={ALLOWED_EXTENSIONS}
+                                onFileSelect={handleFileSelect}
                                 disabled={loading}
-                            >
-                                <FileUp size={18} />
-                                {fm("selectFile")}
-                            </Button>
-                            {selectedFile && (
+                                buttonText={intl.formatMessage({
+                                    id: "components.ImportMapPointsModal.selectFile",
+                                })}
+                                dropzoneText={intl.formatMessage({
+                                    id: "components.ImportMapPointsModal.dropzoneText",
+                                })}
+                            />
+                        </div>
+                        {selectedFile && (
+                            <div className="c-import-modal-file-info">
                                 <span className="c-import-modal-file-name">
                                     {selectedFile.name}
                                 </span>
-                            )}
-                            {fileError && (
-                                <span className="c-import-modal-file-error">
-                                    {fileError}
-                                </span>
-                            )}
-                        </div>
+                            </div>
+                        )}
+                        {fileError && (
+                            <span className="c-import-modal-file-error">
+                                {fileError}
+                            </span>
+                        )}
 
                         <div className="c-import-modal-actions">
                             <Button

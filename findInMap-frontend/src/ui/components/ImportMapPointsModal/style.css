@@ -79,16 +79,15 @@
     color: var(--color-warning, #ffc107);
 }
 
-.c-import-modal-file-section {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+.c-import-modal-dropzone-wrapper {
+    margin-bottom: 1rem;
 }
 
-.c-import-modal-file-input {
-    display: none;
+.c-import-modal-file-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .c-import-modal-file-name {
@@ -106,7 +105,7 @@
 .c-import-modal-file-error {
     width: 100%;
     font-size: 0.875rem;
-    color: var(--color-error);
+    color: var(--color-error, #dc3545);
 }
 
 .c-import-modal-actions {

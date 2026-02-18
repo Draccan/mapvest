@@ -1,0 +1,49 @@
+.c-filedropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    border: 2px dashed var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background-secondary);
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.c-filedropzone:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-background-tertiary, rgba(0, 0, 0, 0.02));
+}
+
+.c-filedropzone-active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light, rgba(59, 130, 246, 0.1));
+}
+
+.c-filedropzone-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.c-filedropzone-icon {
+    color: var(--color-text-muted);
+}
+
+.c-filedropzone-active .c-filedropzone-icon {
+    color: var(--color-primary);
+}
+
+.c-filedropzone-text {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.c-filedropzone-input {
+    display: none;
+}

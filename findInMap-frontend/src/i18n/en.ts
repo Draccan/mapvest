@@ -74,6 +74,10 @@ export default flattenObject({
                 cancel: "Cancel",
             },
         },
+        FileDropzone: {
+            dropzoneText: "Drag and drop your file here, or",
+            selectFile: "Select File",
+        },
         LoggedRouteWrapper: {
             loadingData: "Loading data...",
         },
@@ -203,6 +207,7 @@ export default flattenObject({
             columnDateHint: "optional, defaults to today",
             columnCategoryHint: "optional, category name",
             maxRowsWarning: "Maximum {max} rows per file",
+            dropzoneText: "Drag and drop your file here, or",
             selectFile: "Select File",
             cancel: "Cancel",
             import: "Import",
