@@ -18,6 +18,7 @@ import GetGroupMaps from "../src/core/usecases/GetGroupMaps";
 import GetGroupUsers from "../src/core/usecases/GetGroupUsers";
 import GetMapCategories from "../src/core/usecases/GetMapCategories";
 import GetMapPoints from "../src/core/usecases/GetMapPoints";
+import GetPlans from "../src/core/usecases/GetPlans";
 import GetPublicMap from "../src/core/usecases/GetPublicMap";
 import GetPublicMapCategories from "../src/core/usecases/GetPublicMapCategories";
 import GetPublicMapPoints from "../src/core/usecases/GetPublicMapPoints";
@@ -52,6 +53,8 @@ export const mockGroupRepository: jest.Mocked<GroupRepository> = {
     removeUserFromGroup: jest.fn(),
     updateGroup: jest.fn(),
     updateUserInGroup: jest.fn(),
+    findPlans: jest.fn(),
+    memoizedFindPlans: jest.fn(),
 };
 
 export const mockMapRepository: jest.Mocked<MapRepository> = {
@@ -177,6 +180,7 @@ export function createTestApp() {
     const getPublicMapCategories = new GetPublicMapCategories(mapRepository);
     const getPublicMapPoints = new GetPublicMapPoints(mapRepository);
     const getUserGroups = new GetUserGroups(groupRepository);
+    const getPlans = new GetPlans(groupRepository);
     const loginUser = new LoginUser(userRepository, jwtService);
     const logoutUser = new LogoutUser(jwtService);
     const refreshToken = new RefreshToken(jwtService);
@@ -221,6 +225,7 @@ export function createTestApp() {
             getGroupUsers,
             getMapCategories,
             getMapPoints,
+            getPlans,
             getPublicMap,
             getPublicMapCategories,
             getPublicMapPoints,

@@ -1,4 +1,4 @@
-import { UserGroupRole } from "../../../src/core/commons/enums";
+import { Plan, UserGroupRole } from "../../../src/core/commons/enums";
 import { db } from "../../../src/db";
 import {
     users,
@@ -1100,6 +1100,43 @@ describe("DrizzleGroupRepository", () => {
                 (u) => u.userId === contributor.id,
             );
             expect(updatedUser?.role).toBe(UserGroupRole.Admin);
+        });
+    });
+
+    describe("findPlans", () => {
+        it("should return all plans from the database", async () => {
+            const plans = await groupRepository.findPlans();
+
+            expect(Array.isArray(plans)).toBe(true);
+            expect(plans.length).toBeGreaterThanOrEqual(2);
+
+            const freePlan = plans.find((p) => p.name === Plan.Free);
+            const proPlan = plans.find((p) => p.name === Plan.Pro);
+
+            expect(freePlan).toBeDefined();
+            expect(freePlan!.id).toBeDefined();
+            expect(freePlan!.maxMapPoints).toBe(50);
+
+            expect(proPlan).toBeDefined();
+            expect(proPlan!.id).toBeDefined();
+            expect(proPlan!.maxMapPoints).toBe(15000);
+        });
+
+        it("should return plans with correct structure", async () => {
+            const plans = await groupRepository.findPlans();
+
+            plans.forEach((plan) => {
+                expect(typeof plan.id).toBe("string");
+                expect(typeof plan.name).toBe("string");
+                expect(typeof plan.maxMapPoints).toBe("number");
+            });
+        });
+
+        it("should return the same result when called via memoizedFindPlans", async () => {
+            const plans = await groupRepository.findPlans();
+            const memoizedPlans = await groupRepository.memoizedFindPlans();
+
+            expect(memoizedPlans).toEqual(plans);
         });
     });
 });

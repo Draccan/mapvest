@@ -11,6 +11,7 @@ const PublicRoutes = [
     "/users/resetPassword",
     "/users/password",
     "/public/maps/*",
+    "/plans",
     "/favicon.ico",
 ];
 

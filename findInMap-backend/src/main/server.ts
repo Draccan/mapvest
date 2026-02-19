@@ -14,6 +14,7 @@ import GetGroupMaps from "../core/usecases/GetGroupMaps";
 import GetGroupUsers from "../core/usecases/GetGroupUsers";
 import GetMapCategories from "../core/usecases/GetMapCategories";
 import GetMapPoints from "../core/usecases/GetMapPoints";
+import GetPlans from "../core/usecases/GetPlans";
 import GetPublicMap from "../core/usecases/GetPublicMap";
 import GetPublicMapCategories from "../core/usecases/GetPublicMapCategories";
 import GetPublicMapPoints from "../core/usecases/GetPublicMapPoints";
@@ -75,6 +76,7 @@ const createUser = new CreateUser(
 const createGroupMap = new CreateGroupMap(mapRepository, groupRepository);
 const getGroupMaps = new GetGroupMaps(mapRepository, groupRepository);
 const getUserGroups = new GetUserGroups(groupRepository);
+const getPlans = new GetPlans(groupRepository);
 const getGroupUsers = new GetGroupUsers(groupRepository, userRepository);
 const loginUser = new LoginUser(userRepository, jwtService);
 const logoutUser = new LogoutUser(jwtService);
@@ -118,6 +120,7 @@ const restInterface = new RestInterface(
         getGroupMaps,
         getGroupUsers,
         getMapPoints,
+        getPlans,
         getPublicMap,
         getPublicMapCategories,
         getPublicMapPoints,

@@ -1,6 +1,7 @@
 import { UserGroupRole } from "../commons/enums";
 import DetailedGroupEntity from "../entities/DetailedGroupEntity";
 import GroupEntity from "../entities/GroupEntity";
+import PlanEntity from "../entities/PlanEntity";
 import { UserGroupRelation } from "../entities/UserGroupRelation";
 import UpdateGroupDto from "../dtos/UpdateGroupDto";
 import DbOrTransaction from "./DatabaseTransaction";
@@ -42,4 +43,6 @@ export default interface GroupRepository {
         role: UserGroupRole,
         dbInstance?: DbOrTransaction,
     ): Promise<void>;
+    findPlans(): Promise<PlanEntity[]>;
+    memoizedFindPlans(): Promise<PlanEntity[]>;
 }

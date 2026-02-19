@@ -7,11 +7,13 @@ import GroupRepository from "../../core/dependencies/GroupRepository";
 import UpdateGroupDto from "../../core/dtos/UpdateGroupDto";
 import DetailedGroupEntity from "../../core/entities/DetailedGroupEntity";
 import GroupEntity from "../../core/entities/GroupEntity";
+import PlanEntity from "../../core/entities/PlanEntity";
 import { UserGroupRelation } from "../../core/entities/UserGroupRelation";
 import { db } from "../../db";
 import { groups, plans, usersGroups } from "../../db/schema";
 import { makeDetailedGroupEntity } from "./converters/makeDetailedGroupEntity";
 import { makeGroupEntity } from "./converters/makeGroupEntity";
+import { makePlanEntity } from "./converters/makePlanEntity";
 import { makeUserGroupRelationEntity } from "./converters/makeUserGroupRelationEntity";
 
 export class DrizzleGroupRepository implements GroupRepository {
@@ -182,4 +184,20 @@ export class DrizzleGroupRepository implements GroupRepository {
                 ),
             );
     }
+
+    async findPlans(): Promise<PlanEntity[]> {
+        const results = await db
+            .select({
+                id: plans.id,
+                name: plans.name,
+                maxMapPoints: plans.maxMapPoints,
+            })
+            .from(plans);
+
+        return results.map((result) => makePlanEntity(result));
+    }
+
+    memoizedFindPlans = mem(this.findPlans, {
+        maxAge: 1000 * 60,
+    });
 }

@@ -15,6 +15,8 @@ describe("UpdateMapCategory", () => {
         updateUserInGroup: jest.fn(),
         updateGroup: jest.fn(),
         addUserToGroup: jest.fn(),
+        findPlans: jest.fn(),
+        memoizedFindPlans: jest.fn(),
     };
 
     const mockMapRepository: jest.Mocked<MapRepository> = {
