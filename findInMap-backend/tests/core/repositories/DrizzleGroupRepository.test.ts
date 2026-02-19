@@ -48,6 +48,8 @@ describe("DrizzleGroupRepository", () => {
             expect(group.createdBy).toBe(user.id);
             expect(group.createdAt).toBeInstanceOf(Date);
             expect(group.updatedAt).toBeInstanceOf(Date);
+            expect(group.planName).toBeNull();
+            expect(group.planEndDate).toBeNull();
         });
 
         it("should automatically add creator to users_groups with owner role", async () => {
@@ -307,6 +309,8 @@ describe("DrizzleGroupRepository", () => {
             expect(result[0].group.createdBy).toBe(user.id);
             expect(result[0].group.createdAt).toBeInstanceOf(Date);
             expect(result[0].group.updatedAt).toBeInstanceOf(Date);
+            expect(result[0].group.planName).toBeNull();
+            expect(result[0].group.planEndDate).toBeNull();
             expect(result[0].role).toBe(UserGroupRole.Owner);
         });
 

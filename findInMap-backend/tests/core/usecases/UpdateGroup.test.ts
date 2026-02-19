@@ -23,6 +23,8 @@ describe("UpdateGroup", () => {
                         createdBy: userId,
                         createdAt: new Date(),
                         updatedAt: new Date(),
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Owner,
                 },
@@ -34,12 +36,15 @@ describe("UpdateGroup", () => {
                 createdBy: userId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                planName: null,
+                planEndDate: null,
             });
 
             const result = await usecase.exec(userId, groupId, data);
 
             expect(result).toBeDefined();
             expect(result.name).toBe("Updated Group Name");
+            expect(result.plan).toBe("free");
             expect(
                 mockGroupRepository.memoizedFindByUserId,
             ).toHaveBeenCalledWith(userId);
@@ -63,6 +68,8 @@ describe("UpdateGroup", () => {
                         createdBy: "other-user",
                         createdAt: new Date(),
                         updatedAt: new Date(),
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Contributor,
                 },
@@ -91,6 +98,8 @@ describe("UpdateGroup", () => {
                         createdBy: userId,
                         createdAt: new Date(),
                         updatedAt: new Date(),
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Owner,
                 },
@@ -125,6 +134,8 @@ describe("UpdateGroup", () => {
                         createdBy: "other-user",
                         createdAt: new Date(),
                         updatedAt: new Date(),
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Admin,
                 },
@@ -136,6 +147,8 @@ describe("UpdateGroup", () => {
                 createdBy: "other-user",
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                planName: null,
+                planEndDate: null,
             });
 
             const result = await usecase.exec(userId, groupId, data);
@@ -157,6 +170,8 @@ describe("UpdateGroup", () => {
                         createdBy: "other-user",
                         createdAt: new Date(),
                         updatedAt: new Date(),
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Contributor,
                 },
@@ -168,6 +183,8 @@ describe("UpdateGroup", () => {
                 createdBy: "other-user",
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                planName: null,
+                planEndDate: null,
             });
 
             const result = await usecase.exec(userId, groupId, data);

@@ -60,6 +60,7 @@ describe("Get Groups Route", () => {
             expect(typeof group.id).toBe("string");
             expect(typeof group.name).toBe("string");
             expect(["owner", "admin", "contributor"]).toContain(group.role);
+            expect(["free", "pro"]).toContain(group.plan);
         }
     });
 

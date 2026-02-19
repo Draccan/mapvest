@@ -102,6 +102,7 @@ describe("Create User Route", () => {
 
         const firstGroup = groupsResponse.body[0];
         expect(firstGroup.name).toBe("First Group");
+        expect(firstGroup.plan).toBe("free");
 
         const mapsResponse = await request(app)
             .get(`/${firstGroup.id}/maps`)

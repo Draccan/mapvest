@@ -37,6 +37,8 @@ describe("ImportMapPointsFromFile", () => {
                     createdBy: userId,
                     createdAt: mockDate,
                     updatedAt: mockDate,
+                    planName: null,
+                    planEndDate: null,
                 },
                 role: UserGroupRole.Admin,
             },

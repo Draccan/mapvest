@@ -9,7 +9,7 @@ import DetailedGroupEntity from "../../core/entities/DetailedGroupEntity";
 import GroupEntity from "../../core/entities/GroupEntity";
 import { UserGroupRelation } from "../../core/entities/UserGroupRelation";
 import { db } from "../../db";
-import { groups, usersGroups } from "../../db/schema";
+import { groups, plans, usersGroups } from "../../db/schema";
 import { makeDetailedGroupEntity } from "./converters/makeDetailedGroupEntity";
 import { makeGroupEntity } from "./converters/makeGroupEntity";
 import { makeUserGroupRelationEntity } from "./converters/makeUserGroupRelationEntity";
@@ -20,13 +20,15 @@ export class DrizzleGroupRepository implements GroupRepository {
             .select({
                 group: groups,
                 role: usersGroups.role,
+                planName: plans.name,
             })
             .from(usersGroups)
             .innerJoin(groups, eq(usersGroups.groupId, groups.id))
+            .leftJoin(plans, eq(groups.planId, plans.id))
             .where(eq(usersGroups.userId, userId));
 
         return results.map((result) =>
-            makeDetailedGroupEntity(result.group, result.role),
+            makeDetailedGroupEntity(result.group, result.role, result.planName),
         );
     }
 
@@ -150,7 +152,16 @@ export class DrizzleGroupRepository implements GroupRepository {
             return null;
         }
 
-        return makeGroupEntity(updatedGroup);
+        let planName: string | null = null;
+        if (updatedGroup.planId) {
+            const [plan] = await db
+                .select({ name: plans.name })
+                .from(plans)
+                .where(eq(plans.id, updatedGroup.planId));
+            planName = plan?.name ?? null;
+        }
+
+        return makeGroupEntity(updatedGroup, planName);
     }
 
     async updateUserInGroup(

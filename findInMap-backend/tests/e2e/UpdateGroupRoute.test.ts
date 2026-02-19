@@ -39,6 +39,7 @@ describe("PUT /groups/:groupId", () => {
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("id", group.id);
         expect(response.body).toHaveProperty("name", "Updated Name");
+        expect(response.body).toHaveProperty("plan", "free");
     });
 
     it("should return 401 when not authenticated", async () => {

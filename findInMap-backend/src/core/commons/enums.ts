@@ -3,3 +3,8 @@ export enum UserGroupRole {
     Admin = "admin",
     Contributor = "contributor",
 }
+
+export enum Plan {
+    Free = "free",
+    Pro = "pro",
+}

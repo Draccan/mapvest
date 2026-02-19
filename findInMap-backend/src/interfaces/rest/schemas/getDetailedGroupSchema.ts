@@ -1,6 +1,6 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import { UserGroupRole } from "../../../core/commons/enums";
+import { Plan, UserGroupRole } from "../../../core/commons/enums";
 import getGroupSchema from "./getGroupSchema";
 
 export default function getDetailedGroupSchema(): OpenAPIV3.SchemaObject {
@@ -12,8 +12,12 @@ export default function getDetailedGroupSchema(): OpenAPIV3.SchemaObject {
                 type: "string",
                 enum: Object.values(UserGroupRole),
             },
+            plan: {
+                type: "string",
+                enum: Object.values(Plan),
+            },
         },
-        required: ["id", "name", "role"],
+        required: ["id", "name", "role", "plan"],
         additionalProperties: false,
     };
 }

@@ -66,6 +66,8 @@ describe("CreateUser", () => {
                 createdBy: "user-123",
                 createdAt: mockDate,
                 updatedAt: mockDate,
+                planName: null,
+                planEndDate: null,
             };
 
             const mockCreatedMap: MapEntity = {
@@ -170,6 +172,8 @@ describe("CreateUser", () => {
                 createdBy: "security-user-456",
                 createdAt: mockDate,
                 updatedAt: mockDate,
+                planName: null,
+                planEndDate: null,
             };
 
             mockUserRepository.findByEmail.mockResolvedValue(null);
@@ -216,6 +220,8 @@ describe("CreateUser", () => {
                 createdBy: "special-user-789",
                 createdAt: mockDate,
                 updatedAt: mockDate,
+                planName: null,
+                planEndDate: null,
             };
 
             mockUserRepository.findByEmail.mockResolvedValue(null);
@@ -257,6 +263,8 @@ describe("CreateUser", () => {
                 createdBy: "private-user-999",
                 createdAt: mockDate,
                 updatedAt: mockDate,
+                planName: null,
+                planEndDate: null,
             };
 
             mockUserRepository.findByEmail.mockResolvedValue(null);
@@ -303,6 +311,8 @@ describe("CreateUser", () => {
                 createdBy: "case-user-111",
                 createdAt: mockDate,
                 updatedAt: mockDate,
+                planName: null,
+                planEndDate: null,
             };
 
             mockUserRepository.create.mockResolvedValue(mockCreatedUser);

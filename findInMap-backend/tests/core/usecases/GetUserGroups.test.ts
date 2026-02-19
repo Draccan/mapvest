@@ -1,4 +1,4 @@
-import { UserGroupRole } from "../../../src/core/commons/enums";
+import { Plan, UserGroupRole } from "../../../src/core/commons/enums";
 import DetailedGroupEntity from "../../../src/core/entities/DetailedGroupEntity";
 import GetUserGroups from "../../../src/core/usecases/GetUserGroups";
 import { mockGroupRepository } from "../../helpers";
@@ -24,6 +24,8 @@ describe("GetUserGroups", () => {
                         createdBy: userId,
                         createdAt: mockDate,
                         updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Owner,
                 },
@@ -34,6 +36,8 @@ describe("GetUserGroups", () => {
                         createdBy: "another-user",
                         createdAt: mockDate,
                         updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Contributor,
                 },
@@ -50,11 +54,13 @@ describe("GetUserGroups", () => {
                     id: "group-1",
                     name: "My Personal Group",
                     role: "owner",
+                    plan: "free",
                 },
                 {
                     id: "group-2",
                     name: "Shared Team Group",
                     role: "contributor",
+                    plan: "free",
                 },
             ]);
             expect(mockGroupRepository.findByUserId).toHaveBeenCalledWith(
@@ -87,6 +93,8 @@ describe("GetUserGroups", () => {
                         createdBy: userId,
                         createdAt: mockDate,
                         updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Owner,
                 },
@@ -97,6 +105,8 @@ describe("GetUserGroups", () => {
                         createdBy: "other-user",
                         createdAt: mockDate,
                         updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Admin,
                 },
@@ -107,6 +117,8 @@ describe("GetUserGroups", () => {
                         createdBy: "another-user",
                         createdAt: mockDate,
                         updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
                     },
                     role: UserGroupRole.Contributor,
                 },
@@ -122,6 +134,145 @@ describe("GetUserGroups", () => {
             expect(result[0].role).toBe("owner");
             expect(result[1].role).toBe("admin");
             expect(result[2].role).toBe("contributor");
+        });
+
+        it("should return plan free when group has no plan", async () => {
+            const userId = "user-123";
+
+            const mockGroupsWithRole: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: "group-1",
+                        name: "Free Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            mockGroupRepository.findByUserId.mockResolvedValue(
+                mockGroupsWithRole,
+            );
+
+            const result = await getUserGroups.exec(userId);
+
+            expect(result[0].plan).toBe(Plan.Free);
+        });
+
+        it("should return plan free when group has free plan", async () => {
+            const userId = "user-123";
+
+            const mockGroupsWithRole: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: "group-1",
+                        name: "Free Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        planName: "free",
+                        planEndDate: null,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            mockGroupRepository.findByUserId.mockResolvedValue(
+                mockGroupsWithRole,
+            );
+
+            const result = await getUserGroups.exec(userId);
+
+            expect(result[0].plan).toBe(Plan.Free);
+        });
+
+        it("should return plan pro when group has pro plan with future end date", async () => {
+            const userId = "user-123";
+            const futureDate = new Date();
+            futureDate.setDate(futureDate.getDate() + 30);
+
+            const mockGroupsWithRole: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: "group-1",
+                        name: "Pro Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        planName: "pro",
+                        planEndDate: futureDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            mockGroupRepository.findByUserId.mockResolvedValue(
+                mockGroupsWithRole,
+            );
+
+            const result = await getUserGroups.exec(userId);
+
+            expect(result[0].plan).toBe(Plan.Pro);
+        });
+
+        it("should return plan free when group has pro plan with past end date", async () => {
+            const userId = "user-123";
+            const pastDate = new Date();
+            pastDate.setDate(pastDate.getDate() - 1);
+
+            const mockGroupsWithRole: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: "group-1",
+                        name: "Expired Pro Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        planName: "pro",
+                        planEndDate: pastDate,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            mockGroupRepository.findByUserId.mockResolvedValue(
+                mockGroupsWithRole,
+            );
+
+            const result = await getUserGroups.exec(userId);
+
+            expect(result[0].plan).toBe(Plan.Free);
+        });
+
+        it("should return plan free when group has pro plan but no end date", async () => {
+            const userId = "user-123";
+
+            const mockGroupsWithRole: DetailedGroupEntity[] = [
+                {
+                    group: {
+                        id: "group-1",
+                        name: "Pro No End Date Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        planName: "pro",
+                        planEndDate: null,
+                    },
+                    role: UserGroupRole.Owner,
+                },
+            ];
+
+            mockGroupRepository.findByUserId.mockResolvedValue(
+                mockGroupsWithRole,
+            );
+
+            const result = await getUserGroups.exec(userId);
+
+            expect(result[0].plan).toBe(Plan.Free);
         });
     });
 });

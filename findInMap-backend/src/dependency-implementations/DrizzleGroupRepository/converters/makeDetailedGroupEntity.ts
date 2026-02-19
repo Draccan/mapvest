@@ -6,9 +6,10 @@ import { makeGroupEntity } from "./makeGroupEntity";
 export const makeDetailedGroupEntity = (
     group: Group,
     role: string,
+    planName: string | null = null,
 ): DetailedGroupEntity => {
     return {
-        group: makeGroupEntity(group),
+        group: makeGroupEntity(group, planName),
         role: role as UserGroupRole,
     };
 };

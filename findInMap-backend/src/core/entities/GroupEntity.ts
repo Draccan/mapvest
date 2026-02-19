@@ -4,4 +4,6 @@ export default interface GroupEntity {
     createdBy: string;
     createdAt: Date;
     updatedAt: Date;
+    planName: string | null;
+    planEndDate: Date | null;
 }
