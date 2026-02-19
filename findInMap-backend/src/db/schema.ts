@@ -55,6 +55,7 @@ export const groups = pgTable("groups", {
         .defaultNow()
         .$onUpdate(() => new Date()),
     planId: uuid("plan_id").references(() => plans.id),
+    planEndDate: timestamp("plan_end_date", { precision: 6 }),
 });
 
 export const usersGroups = pgTable(

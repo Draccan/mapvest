@@ -1,0 +1,1 @@
+ALTER TABLE "groups" ADD COLUMN "plan_end_date" timestamp (6);

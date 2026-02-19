@@ -113,6 +113,13 @@
       "when": 1771514498202,
       "tag": "0015_shiny_nightshade",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1771514717839,
+      "tag": "0016_pink_klaw",
+      "breakpoints": true
     }
   ]
 }
