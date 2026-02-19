@@ -120,6 +120,13 @@
       "when": 1771514717839,
       "tag": "0016_pink_klaw",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1771514757745,
+      "tag": "0017_aspiring_fantastic_four",
+      "breakpoints": true
     }
   ]
 }

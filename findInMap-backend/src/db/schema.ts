@@ -24,7 +24,7 @@ export const userGroupRoleEnum = pgEnum("UserGroupRole", [
     "contributor",
 ]);
 
-export const planEnum = pgEnum("Plan", ["pro"]);
+export const planEnum = pgEnum("Plan", ["free", "pro"]);
 
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
