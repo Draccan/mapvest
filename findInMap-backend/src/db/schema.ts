@@ -9,6 +9,7 @@ import {
     customType,
     primaryKey,
     text,
+    integer,
 } from "drizzle-orm/pg-core";
 
 const geometry = customType<{ data: string; driverData: string }>({
@@ -23,6 +24,8 @@ export const userGroupRoleEnum = pgEnum("UserGroupRole", [
     "contributor",
 ]);
 
+export const planEnum = pgEnum("Plan", ["pro"]);
+
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("name").notNull(),
@@ -35,6 +38,12 @@ export const users = pgTable("users", {
         .$onUpdate(() => new Date()),
 });
 
+export const plans = pgTable("plans", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: planEnum("name").unique().notNull(),
+    maxMapPoints: integer("max_map_points").notNull(),
+});
+
 export const groups = pgTable("groups", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("name").notNull(),
@@ -45,6 +54,7 @@ export const groups = pgTable("groups", {
     updatedAt: timestamp("updated_at", { precision: 6 })
         .defaultNow()
         .$onUpdate(() => new Date()),
+    planId: uuid("plan_id").references(() => plans.id),
 });
 
 export const usersGroups = pgTable(
@@ -129,3 +139,5 @@ export type MapCategory = typeof mapCategories.$inferSelect;
 export type NewMapCategory = typeof mapCategories.$inferInsert;
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 export type NewPasswordResetToken = typeof passwordResetTokens.$inferInsert;
+export type Plan = typeof plans.$inferSelect;
+export type NewPlan = typeof plans.$inferInsert;
