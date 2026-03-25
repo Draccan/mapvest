@@ -7,6 +7,7 @@ import InvalidPasswordError from "../../core/errors/InvalidPasswordError";
 import InvalidResetTokenError from "../../core/errors/InvalidResetTokenError";
 import ItemNotFoundError from "../../core/errors/ItemNotFoundError";
 import NotAllowedActionError from "../../core/errors/NotAllowedActionError";
+import NotAuthorizedError from "../../core/errors/NotAuthorizedError";
 import UserEmailAlreadyRegisteredError from "../../core/errors/UserEmailAlreadyRegisteredError";
 import UserNotFoundError from "../../core/errors/UserNotFoundError";
 import LoggerService from "../../core/services/LoggerService";
@@ -38,7 +39,8 @@ export default function errorHandler(
         });
     } else if (
         error instanceof NotAllowedActionError ||
-        error instanceof IncorrectPasswordError
+        error instanceof IncorrectPasswordError ||
+        error instanceof NotAuthorizedError
     ) {
         res.status(403).json({
             error: error.message,

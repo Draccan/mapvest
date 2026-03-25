@@ -1,8 +1,16 @@
-import { UserGroupRole } from "../../../src/core/commons/enums";
+import {
+    AuthorizableAction,
+    UserGroupRole,
+} from "../../../src/core/commons/enums";
 import CreateMapPointDto from "../../../src/core/dtos/CreateMapPointDto";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
+import NotAuthorizedError from "../../../src/core/errors/NotAuthorizedError";
 import CreateMapPoint from "../../../src/core/usecases/CreateMapPoint";
-import { mockGroupRepository, mockMapRepository } from "../../helpers";
+import {
+    mockAuthorizer,
+    mockGroupRepository,
+    mockMapRepository,
+} from "../../helpers";
 
 describe("CreateMapPoint", () => {
     let createMapPoint: CreateMapPoint;
@@ -14,6 +22,7 @@ describe("CreateMapPoint", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         createMapPoint = new CreateMapPoint(
+            mockAuthorizer,
             mockGroupRepository,
             mockMapRepository,
         );
@@ -92,6 +101,11 @@ describe("CreateMapPoint", () => {
                 mapPointData,
                 mapId,
             );
+            expect(mockAuthorizer.checkAction).toHaveBeenCalledWith(
+                AuthorizableAction.AddMapPoints,
+                expect.objectContaining({ id: groupId }),
+                { count: 1 },
+            );
         });
 
         it("should successfully create a map point with notes", async () => {
@@ -163,6 +177,50 @@ describe("CreateMapPoint", () => {
                 mapPointData,
                 mapId,
             );
+        });
+
+        it("should throw NotAuthorizedError when authorizer rejects", async () => {
+            const mapPointData: CreateMapPointDto = {
+                long: 45.0,
+                lat: 9.0,
+                description: "Theft",
+                date: "2025-10-02",
+            };
+
+            mockGroupRepository.memoizedFindByUserId.mockResolvedValue([
+                {
+                    group: {
+                        id: groupId,
+                        name: "Test Group",
+                        createdBy: userId,
+                        createdAt: mockDate,
+                        updatedAt: mockDate,
+                        planName: null,
+                        planEndDate: null,
+                    },
+                    role: UserGroupRole.Admin,
+                },
+            ]);
+
+            mockMapRepository.memoizedFindMapByGroupId.mockResolvedValue([
+                {
+                    id: mapId,
+                    groupId: groupId,
+                    name: "Test Map",
+                    isPublic: false,
+                    publicId: null,
+                },
+            ]);
+
+            mockAuthorizer.checkAction.mockRejectedValue(
+                new NotAuthorizedError(AuthorizableAction.AddMapPoints),
+            );
+
+            await expect(
+                createMapPoint.exec(mapPointData, userId, groupId, mapId),
+            ).rejects.toThrow(NotAuthorizedError);
+
+            expect(mockMapRepository.createMapPoint).not.toHaveBeenCalled();
         });
     });
 });

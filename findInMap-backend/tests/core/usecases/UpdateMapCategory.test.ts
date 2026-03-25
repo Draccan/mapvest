@@ -38,6 +38,7 @@ describe("UpdateMapCategory", () => {
         invalidateMapsCache: jest.fn(),
         createMapPoints: jest.fn(),
         memoizedFindCategoriesByMapId: jest.fn(),
+        countMapPointsByGroupId: jest.fn(),
     };
 
     beforeEach(() => {

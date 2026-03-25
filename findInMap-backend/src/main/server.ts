@@ -39,6 +39,7 @@ import { DrizzleGroupRepository } from "../dependency-implementations/DrizzleGro
 import { DrizzleMapRepository } from "../dependency-implementations/DrizzleMapRepository";
 import { DrizzleUserRepository } from "../dependency-implementations/DrizzleUserRepository";
 import GoogleRepository from "../dependency-implementations/GoogleRepository";
+import { UserActionsAuthorizer } from "../dependency-implementations/UserActionsAuthorizer";
 import RestInterface from "../interfaces/rest";
 import config from "./config";
 
@@ -59,9 +60,15 @@ const emailService = new EmailService(
 );
 
 // Usecases
+const authorizer = new UserActionsAuthorizer(groupRepository, mapRepository);
 const getMapPoints = new GetMapPoints(groupRepository, mapRepository);
-const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+const createMapPoint = new CreateMapPoint(
+    authorizer,
+    groupRepository,
+    mapRepository,
+);
 const importMapPointsFromFile = new ImportMapPointsFromFile(
+    authorizer,
     groupRepository,
     mapRepository,
 );

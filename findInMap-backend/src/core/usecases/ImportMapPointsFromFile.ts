@@ -1,6 +1,8 @@
 import { format, isValid, parse } from "date-fns";
 import * as XLSX from "xlsx";
 
+import { AuthorizableAction } from "../commons/enums";
+import Authorizer from "../dependencies/Authorizer";
 import GroupRepository from "../dependencies/GroupRepository";
 import MapRepository from "../dependencies/MapRepository";
 import CreateMapPointDto from "../dtos/CreateMapPointDto";
@@ -54,6 +56,7 @@ function parseDate(value: unknown): string | null {
 
 export default class ImportMapPointsFromFile {
     constructor(
+        private authorizer: Authorizer,
         private groupRepository: GroupRepository,
         private mapRepository: MapRepository,
     ) {}
@@ -65,7 +68,8 @@ export default class ImportMapPointsFromFile {
         mapId: string,
     ): Promise<ImportMapPointsResultDto> {
         const groups = await this.groupRepository.memoizedFindByUserId(userId);
-        if (groups.find((group) => group.group.id === groupId) === undefined) {
+        const userGroup = groups.find((group) => group.group.id === groupId);
+        if (userGroup === undefined) {
             throw new NotAllowedActionError(
                 "User cannot access map for this group",
             );
@@ -174,6 +178,12 @@ export default class ImportMapPointsFromFile {
                 categoryId,
             });
         });
+
+        await this.authorizer.checkAction(
+            AuthorizableAction.AddMapPoints,
+            userGroup.group,
+            { count: validPoints.length },
+        );
 
         const createdPoints = await this.mapRepository.createMapPoints(
             validPoints,

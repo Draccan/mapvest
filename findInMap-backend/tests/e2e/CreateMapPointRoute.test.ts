@@ -1,6 +1,7 @@
 import request from "supertest";
 
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
+import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
 import { getTestApp } from "./setup";
 
 describe("Create Map Point Route", () => {
@@ -137,6 +138,33 @@ describe("Create Map Point Route", () => {
             .set("Authorization", "Bearer invalid-token")
             .send(testMapPoint)
             .expect(401);
+        expect(response.body).toHaveProperty("error");
+    });
+
+    it("POST /:groupId/maps/:mapId/points should return 403 when plan limit is exceeded", async () => {
+        const mapRepository = new DrizzleMapRepository();
+        const points = Array.from({ length: 50 }, (_, i) => ({
+            long: 45.0 + i * 0.01,
+            lat: 9.0 + i * 0.01,
+            description: `Bulk Point ${i}`,
+            date: "2025-12-03",
+        }));
+
+        await mapRepository.createMapPoints(points, mapId);
+
+        const testMapPoint = {
+            long: 45.4642,
+            lat: 9.19,
+            description: "OVER LIMIT",
+            date: "2025-12-03",
+        };
+
+        const response = await request(app)
+            .post(`/${groupId}/maps/${mapId}/points`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send(testMapPoint)
+            .expect(403);
+
         expect(response.body).toHaveProperty("error");
     });
 });

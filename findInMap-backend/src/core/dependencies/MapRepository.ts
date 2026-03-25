@@ -52,5 +52,6 @@ export default interface MapRepository {
         categoryId: string,
         data: UpdateCategoryDto,
     ): Promise<MapCategoryEntity | null>;
+    countMapPointsByGroupId(groupId: string): Promise<number>;
     invalidateMapsCache(): void;
 }

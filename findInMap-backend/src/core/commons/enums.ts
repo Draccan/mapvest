@@ -8,3 +8,7 @@ export enum Plan {
     Free = "free",
     Pro = "pro",
 }
+
+export enum AuthorizableAction {
+    AddMapPoints = "addMapPoints",
+}

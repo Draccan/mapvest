@@ -2,6 +2,7 @@ import request from "supertest";
 import * as XLSX from "xlsx";
 
 import { DrizzleGroupRepository } from "../../src/dependency-implementations/DrizzleGroupRepository";
+import { DrizzleMapRepository } from "../../src/dependency-implementations/DrizzleMapRepository";
 import { getTestApp } from "./setup";
 
 function createExcelFile(
@@ -388,5 +389,41 @@ describe("Import Map Points Route", () => {
 
         expect(response.body.successCount).toBe(1);
         expect(response.body.imported[0].dueDate).toBe("2025-12-31");
+    });
+
+    it("POST /:groupId/maps/:mapId/points/import should return 403 when plan limit is exceeded", async () => {
+        const mapRepository = new DrizzleMapRepository();
+        const points = Array.from({ length: 50 }, (_, i) => ({
+            long: 45.0 + i * 0.01,
+            lat: 9.0 + i * 0.01,
+            description: `Bulk Point ${i}`,
+            date: "2025-12-03",
+        }));
+
+        await mapRepository.createMapPoints(points, mapId);
+
+        const excelData = [
+            {
+                description: "Over Limit Point",
+                latitude: 45.4642,
+                longitude: 9.19,
+                date: "2025-12-03",
+            },
+        ];
+
+        const fileContent = createExcelFile(excelData);
+
+        const response = await request(app)
+            .post(`/${groupId}/maps/${mapId}/points/import`)
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({
+                file: {
+                    name: "points.xlsx",
+                    content: fileContent,
+                },
+            })
+            .expect(403);
+
+        expect(response.body).toHaveProperty("error");
     });
 });

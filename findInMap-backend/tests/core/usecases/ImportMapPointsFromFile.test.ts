@@ -1,10 +1,18 @@
 import * as XLSX from "xlsx";
 
-import { UserGroupRole } from "../../../src/core/commons/enums";
+import {
+    AuthorizableAction,
+    UserGroupRole,
+} from "../../../src/core/commons/enums";
 import { MapPointEntity } from "../../../src/core/entities/MapPointEntity";
 import NotAllowedActionError from "../../../src/core/errors/NotAllowedActionError";
+import NotAuthorizedError from "../../../src/core/errors/NotAuthorizedError";
 import ImportMapPointsFromFile from "../../../src/core/usecases/ImportMapPointsFromFile";
-import { mockGroupRepository, mockMapRepository } from "../../helpers";
+import {
+    mockAuthorizer,
+    mockGroupRepository,
+    mockMapRepository,
+} from "../../helpers";
 
 function createExcelBase64(data: Record<string, unknown>[]): string {
     const wb = XLSX.utils.book_new();
@@ -25,6 +33,7 @@ describe("ImportMapPointsFromFile", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         importMapPointsFromFile = new ImportMapPointsFromFile(
+            mockAuthorizer,
             mockGroupRepository,
             mockMapRepository,
         );
@@ -651,6 +660,96 @@ describe("ImportMapPointsFromFile", () => {
                 ]),
                 mapId,
             );
+        });
+
+        it("should call authorizer with correct count of valid points", async () => {
+            const excelData = [
+                {
+                    description: "Point 1",
+                    latitude: 45.4642,
+                    longitude: 9.19,
+                    date: "2025-12-03",
+                },
+                {
+                    description: "Point 2",
+                    latitude: 41.9028,
+                    longitude: 12.4964,
+                    date: "2025-12-04",
+                },
+                {
+                    description: "",
+                    latitude: 45.0,
+                    longitude: 9.0,
+                },
+            ];
+
+            const fileContent = createExcelBase64(excelData);
+
+            const mockCreatedPoints: MapPointEntity[] = [
+                {
+                    id: "point-1",
+                    long: 9.19,
+                    lat: 45.4642,
+                    description: "Point 1",
+                    date: "2025-12-03",
+                    created_at: mockDate,
+                    updated_at: mockDate,
+                },
+                {
+                    id: "point-2",
+                    long: 12.4964,
+                    lat: 41.9028,
+                    description: "Point 2",
+                    date: "2025-12-04",
+                    created_at: mockDate,
+                    updated_at: mockDate,
+                },
+            ];
+
+            mockMapRepository.createMapPoints.mockResolvedValue(
+                mockCreatedPoints,
+            );
+
+            await importMapPointsFromFile.exec(
+                { file: { name: "test.xlsx", content: fileContent } },
+                userId,
+                groupId,
+                mapId,
+            );
+
+            expect(mockAuthorizer.checkAction).toHaveBeenCalledWith(
+                AuthorizableAction.AddMapPoints,
+                expect.objectContaining({ id: groupId }),
+                { count: 2 },
+            );
+        });
+
+        it("should throw NotAuthorizedError when authorizer rejects", async () => {
+            const excelData = [
+                {
+                    description: "Point 1",
+                    latitude: 45.4642,
+                    longitude: 9.19,
+                    date: "2025-12-03",
+                },
+            ];
+
+            const fileContent = createExcelBase64(excelData);
+
+            mockAuthorizer.checkAction.mockRejectedValue(
+                new NotAuthorizedError(AuthorizableAction.AddMapPoints),
+            );
+
+            await expect(
+                importMapPointsFromFile.exec(
+                    { file: { name: "test.xlsx", content: fileContent } },
+                    userId,
+                    groupId,
+                    mapId,
+                ),
+            ).rejects.toThrow(NotAuthorizedError);
+
+            expect(mockMapRepository.createMapPoints).not.toHaveBeenCalled();
         });
     });
 });

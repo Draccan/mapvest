@@ -1,4 +1,5 @@
 import AddressesManagerRepository from "../src/core/dependencies/AddressesManagerRepository";
+import Authorizer from "../src/core/dependencies/Authorizer";
 import GroupRepository from "../src/core/dependencies/GroupRepository";
 import MapRepository from "../src/core/dependencies/MapRepository";
 import UserRepository from "../src/core/dependencies/UserRepository";
@@ -41,6 +42,7 @@ import UpdateUserPassword from "../src/core/usecases/UpdateUserPassword";
 import { DrizzleGroupRepository } from "../src/dependency-implementations/DrizzleGroupRepository";
 import { DrizzleMapRepository } from "../src/dependency-implementations/DrizzleMapRepository";
 import { DrizzleUserRepository } from "../src/dependency-implementations/DrizzleUserRepository";
+import { UserActionsAuthorizer } from "../src/dependency-implementations/UserActionsAuthorizer";
 import RestInterface from "../src/interfaces/rest";
 
 export const mockGroupRepository: jest.Mocked<GroupRepository> = {
@@ -75,7 +77,12 @@ export const mockMapRepository: jest.Mocked<MapRepository> = {
     updateMap: jest.fn(),
     deleteMapCategory: jest.fn(),
     updateCategory: jest.fn(),
+    countMapPointsByGroupId: jest.fn(),
     invalidateMapsCache: jest.fn(),
+};
+
+export const mockAuthorizer: jest.Mocked<Authorizer> = {
+    checkAction: jest.fn(),
 };
 
 export const mockUserRepository: jest.Mocked<UserRepository> = {
@@ -147,8 +154,17 @@ export function createTestApp() {
     const userRepository = new DrizzleUserRepository();
     const googleRepository = new MockGoogleRepository();
 
-    const createMapPoint = new CreateMapPoint(groupRepository, mapRepository);
+    const authorizer = new UserActionsAuthorizer(
+        groupRepository,
+        mapRepository,
+    );
+    const createMapPoint = new CreateMapPoint(
+        authorizer,
+        groupRepository,
+        mapRepository,
+    );
     const importMapPointsFromFile = new ImportMapPointsFromFile(
+        authorizer,
         groupRepository,
         mapRepository,
     );

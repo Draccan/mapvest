@@ -364,4 +364,14 @@ export class DrizzleMapRepository implements MapRepository {
     invalidateMapsCache(): void {
         mem.clear(this.memoizedFindMapByGroupId);
     }
+
+    async countMapPointsByGroupId(groupId: string): Promise<number> {
+        const [result] = await db
+            .select({ count: sql<number>`count(*)::int` })
+            .from(mapPoints)
+            .innerJoin(maps, eq(mapPoints.mapId, maps.id))
+            .where(eq(maps.groupId, groupId));
+
+        return result?.count ?? 0;
+    }
 }

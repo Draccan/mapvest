@@ -2066,4 +2066,99 @@ describe("DrizzleMapRepository", () => {
             expect(result1).toEqual(result2);
         });
     });
+
+    describe("countMapPointsByGroupId", () => {
+        it("should return 0 when no map points exist", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            await repository.createMap(group.id, { name: "Test Map" });
+
+            const count = await repository.countMapPointsByGroupId(group.id);
+            expect(count).toBe(0);
+        });
+
+        it("should count all map points across all maps in a group", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group = await groupRepository.createGroup(
+                "Test Group",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group.id, {
+                name: "Map 1",
+            });
+            const map2 = await repository.createMap(group.id, {
+                name: "Map 2",
+            });
+
+            await repository.createMapPoint(
+                { long: 10, lat: 20, description: "P1", date: "2024-01-01" },
+                map1.id,
+            );
+            await repository.createMapPoint(
+                { long: 11, lat: 21, description: "P2", date: "2024-01-02" },
+                map1.id,
+            );
+            await repository.createMapPoint(
+                { long: 12, lat: 22, description: "P3", date: "2024-01-03" },
+                map2.id,
+            );
+
+            const count = await repository.countMapPointsByGroupId(group.id);
+            expect(count).toBe(3);
+        });
+
+        it("should not count map points from other groups", async () => {
+            const user = await userRepository.create({
+                name: "Test",
+                surname: "User",
+                email: "test@example.com",
+                password: "password123",
+            });
+
+            const group1 = await groupRepository.createGroup(
+                "Group 1",
+                user.id,
+            );
+            const group2 = await groupRepository.createGroup(
+                "Group 2",
+                user.id,
+            );
+
+            const map1 = await repository.createMap(group1.id, {
+                name: "Map 1",
+            });
+            const map2 = await repository.createMap(group2.id, {
+                name: "Map 2",
+            });
+
+            await repository.createMapPoint(
+                { long: 10, lat: 20, description: "P1", date: "2024-01-01" },
+                map1.id,
+            );
+            await repository.createMapPoint(
+                { long: 11, lat: 21, description: "P2", date: "2024-01-02" },
+                map2.id,
+            );
+
+            const count = await repository.countMapPointsByGroupId(group1.id);
+            expect(count).toBe(1);
+        });
+    });
 });
