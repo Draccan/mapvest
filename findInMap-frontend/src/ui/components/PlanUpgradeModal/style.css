@@ -1,0 +1,174 @@
+.c-planupgrademodal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.c-planupgrademodal-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.c-planupgrademodal-header-icon {
+    color: var(--color-warning);
+}
+
+.c-planupgrademodal-header-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.c-planupgrademodal-header-subtitle {
+    margin: 0;
+    font-size: 0.938rem;
+    color: var(--color-text-muted);
+    max-width: 360px;
+}
+
+.c-planupgrademodal-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.c-planupgrademodal-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 2px solid var(--color-border);
+    background-color: var(--color-background-primary);
+}
+
+.c-planupgrademodal-card-active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-alpha);
+}
+
+.c-planupgrademodal-card-pro {
+    border-color: var(--color-warning);
+    background: linear-gradient(
+        135deg,
+        var(--color-background-primary) 0%,
+        var(--color-warning-background) 100%
+    );
+}
+
+.c-planupgrademodal-card-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-primary);
+    color: #ffffff;
+    font-size: 0.688rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.c-planupgrademodal-card-badge-recommended {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    color: var(--color-warning);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.c-planupgrademodal-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.c-planupgrademodal-card-icon-free {
+    color: var(--color-primary);
+}
+
+.c-planupgrademodal-card-icon-pro {
+    color: var(--color-warning);
+}
+
+.c-planupgrademodal-card-name {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.c-planupgrademodal-card-price {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.c-planupgrademodal-card-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.c-planupgrademodal-card-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.813rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+.c-planupgrademodal-feature-check {
+    color: var(--color-success);
+    flex-shrink: 0;
+}
+
+.c-planupgrademodal-feature-check-pro {
+    color: var(--color-warning);
+    flex-shrink: 0;
+}
+
+.c-planupgrademodal-card-action {
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+@media (max-width: 540px) {
+    .c-planupgrademodal-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .c-planupgrademodal-header-title {
+        font-size: 1.25rem;
+    }
+
+    .c-planupgrademodal-header-subtitle {
+        font-size: 0.813rem;
+    }
+
+    .c-planupgrademodal-card {
+        padding: 1rem;
+    }
+
+    .c-planupgrademodal-card-name {
+        font-size: 1.125rem;
+    }
+}

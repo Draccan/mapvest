@@ -4,7 +4,9 @@ import {
     GroupsMapsProvider,
     useGroupsMaps,
 } from "../../../core/contexts/GroupsMapsContext";
+import { PlanUpgradeProvider } from "../../../core/contexts/PlanUpgradeContext";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
+import { PlanUpgradeModal } from "../PlanUpgradeModal";
 import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.LoggedRouteWrapper");
@@ -41,7 +43,12 @@ export const LoggedRouteWrapper: React.FC<LoggedRouteWrapperProps> = ({
 }) => {
     return (
         <GroupsMapsProvider>
-            <LoggedRouteWrapperContent>{children}</LoggedRouteWrapperContent>
+            <PlanUpgradeProvider>
+                <LoggedRouteWrapperContent>
+                    {children}
+                </LoggedRouteWrapperContent>
+                <PlanUpgradeModal />
+            </PlanUpgradeProvider>
         </GroupsMapsProvider>
     );
 };

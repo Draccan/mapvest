@@ -20,6 +20,7 @@ import type UpdateUserDto from "../dtos/UpdateUserDto";
 import type { UpdateUserInGroupDto } from "../dtos/UpdateUserInGroupDto";
 import type UserDto from "../dtos/UserDto";
 import type UserGroupDto from "../dtos/UserGroupDto";
+import { NotAuthorizedError } from "./errors/NotAuthorizedError";
 import { UnauthorizedError } from "./errors/UnauthorizedError";
 
 export default class ApiClient {
@@ -83,7 +84,14 @@ export default class ApiClient {
             },
             body: options.body,
         }).then(async (res) => {
-            if (res.status === 401 && withCredentials) {
+            if (res.status === 403) {
+                const errorData = await res.json();
+                const message = errorData.error || "";
+                if (message.startsWith("Action not authorized:")) {
+                    throw new NotAuthorizedError(message);
+                }
+                throw new Error(message || "Forbidden");
+            } else if (res.status === 401 && withCredentials) {
                 if (options.headers && isRetry) {
                     console.error(
                         "Unable to perform the request after token refresh",

@@ -1,7 +1,10 @@
 import { useState, useCallback } from "react";
 import toast from "react-hot-toast";
 
+import { NotAuthorizedError } from "../../api/errors/NotAuthorizedError";
 import { UnauthorizedError } from "../../api/errors/UnauthorizedError";
+
+export const PLAN_UPGRADE_EVENT = "plan-upgrade-required";
 
 interface UseRequestWrapper<T> {
     fetch: (...args: any[]) => Promise<T | null>;
@@ -31,6 +34,10 @@ export function useRequestWrapper<T, Args extends any[]>(
                 if (err instanceof UnauthorizedError) {
                     throw err;
                 }
+                if (err instanceof NotAuthorizedError) {
+                    window.dispatchEvent(new CustomEvent(PLAN_UPGRADE_EVENT));
+                    return null;
+                }
                 const serverErrorMessage =
                     err instanceof Error
                         ? err.message
@@ -39,7 +46,6 @@ export function useRequestWrapper<T, Args extends any[]>(
                           : "An unexpected error occurred";
                 setError(serverErrorMessage);
 
-                // Show toast notification with custom error message if provided
                 if (errorMessage) {
                     toast.error(errorMessage, { duration: 7000 });
                 }
