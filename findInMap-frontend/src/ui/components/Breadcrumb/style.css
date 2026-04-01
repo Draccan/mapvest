@@ -319,3 +319,35 @@
     justify-content: flex-end;
     gap: 0.75rem;
 }
+
+@media (max-width: 768px) {
+    .c-breadcrumb {
+        gap: 2px;
+    }
+
+    .c-breadcrumb-trigger {
+        padding: 5px 8px;
+        font-size: 13px;
+        gap: 2px;
+    }
+
+    .c-breadcrumb-name {
+        max-width: 90px;
+    }
+
+    .c-breadcrumb-separator {
+        width: 12px;
+        height: 12px;
+    }
+
+    .c-breadcrumb-input {
+        min-width: 80px;
+        max-width: 120px;
+        font-size: 13px;
+        padding: 5px 8px;
+    }
+
+    .c-breadcrumb-dropdown {
+        min-width: 200px;
+    }
+}

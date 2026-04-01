@@ -17,9 +17,117 @@
     display: flex;
     align-items: center;
     gap: 24px;
+    min-width: 0;
 }
 
 .c-header-logo img {
     height: 50px;
     width: auto;
+}
+
+.c-header-mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--color-border-light);
+    border-radius: 10px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.c-header-mobile-toggle:hover {
+    background: var(--color-background-tertiary);
+    border-color: var(--color-border);
+}
+
+.c-header-mobile-fullscreen {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .c-header {
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        flex-wrap: nowrap;
+    }
+
+    .c-header-left {
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .c-header-logo img {
+        height: 36px;
+    }
+
+    .c-header-desktop-nav {
+        display: none;
+    }
+
+    .c-header-mobile-toggle {
+        display: flex;
+    }
+
+    .c-header-mobile-fullscreen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        background: var(--gradient-background);
+        animation: c-header-fade-in 0.2s ease-out;
+    }
+
+    .c-header-mobile-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid var(--color-border-light);
+        border-radius: 12px;
+        background: var(--color-background-primary);
+        color: var(--color-text-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .c-header-mobile-close:hover {
+        background: var(--color-background-tertiary);
+    }
+
+    .c-header-mobile-logo {
+        margin-bottom: 2.5rem;
+    }
+
+    .c-header-mobile-logo img {
+        height: 48px;
+        width: auto;
+    }
+
+    @keyframes c-header-fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
 }

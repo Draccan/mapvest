@@ -9,25 +9,38 @@ import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.NavigationBar");
 
-export const NavigationBar: React.FC = () => {
+interface NavigationBarProps {
+    onNavigate?: () => void;
+}
+
+export const NavigationBar: React.FC<NavigationBarProps> = ({ onNavigate }) => {
     const { loading, logout } = useLogoutUser();
+
+    const handleLinkClick = () => {
+        onNavigate?.();
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        onNavigate?.();
+    };
 
     return (
         <nav className="c-navigation-bar">
-            <Link to={routes.home()} kind="nav">
+            <Link to={routes.home()} kind="nav" onClick={handleLinkClick}>
                 {fm("home")}
             </Link>
-            <Link to={routes.dashboard()} kind="nav">
+            <Link to={routes.dashboard()} kind="nav" onClick={handleLinkClick}>
                 {fm("dashboard")}
             </Link>
-            <Link to={routes.settings()} kind="nav">
+            <Link to={routes.settings()} kind="nav" onClick={handleLinkClick}>
                 {fm("settings")}
             </Link>
-            <Link to={routes.user()} kind="nav">
+            <Link to={routes.user()} kind="nav" onClick={handleLinkClick}>
                 {fm("user")}
             </Link>
             <Button
-                onClick={logout}
+                onClick={handleLogout}
                 type="button"
                 kind="danger"
                 size="small"
