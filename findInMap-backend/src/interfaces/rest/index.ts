@@ -83,6 +83,7 @@ import UpdateMapCategoryRoute from "./routes/UpdateMapCategoryRoute";
 import UpdateUserInGroupRoute from "./routes/UpdateUserInGroupRoute";
 import UpdateUserPasswordRoute from "./routes/UpdateUserPasswordRoute";
 import UpdateUserRoute from "./routes/UpdateUserRoute";
+import PaymentWebhookRoute from "./routes/webhooks/PaymentWebhookRoute";
 
 export default class RestInterface {
     private routes: Route[];
@@ -217,47 +218,15 @@ export default class RestInterface {
         this.app.use(compression());
         // Stripe webhook — must be registered before express.json()
         // because Stripe signature verification requires the raw body
+        const webhookRoute = PaymentWebhookRoute(
+            this.handlePaymentWebhook,
+            this.stripe,
+            this.stripeWebhookSecret,
+        );
         this.app.post(
-            "/payments/webhook",
-            express.raw({ type: "application/json" }),
-            async (req, res) => {
-                const sig = req.headers["stripe-signature"];
-                if (!sig) {
-                    res.status(400).json({
-                        error: "Missing stripe-signature header",
-                    });
-                    return;
-                }
-
-                let event: Stripe.Event;
-                try {
-                    event = this.stripe.webhooks.constructEvent(
-                        req.body,
-                        sig,
-                        this.stripeWebhookSecret,
-                    );
-                } catch (err: any) {
-                    LoggerService.error(
-                        `Webhook signature verification failed: ${err.message}`,
-                    );
-                    res.status(400).json({
-                        error: `Webhook Error: ${err.message}`,
-                    });
-                    return;
-                }
-
-                try {
-                    await this.handlePaymentWebhook.exec(event);
-                    res.status(200).json({ received: true });
-                } catch (err: any) {
-                    LoggerService.error(
-                        `Webhook processing error: ${err.message}`,
-                    );
-                    res.status(500).json({
-                        error: "Webhook processing failed",
-                    });
-                }
-            },
+            webhookRoute.path,
+            webhookRoute.middleware,
+            webhookRoute.handler,
         );
 
         this.app.use(express.json({ limit: "10mb" }));
