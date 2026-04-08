@@ -37,6 +37,7 @@ interface GroupsMapsContextType {
     updateSelectedMap: (data: UpdateMapDto) => Promise<MapDto | null>;
     createNewMap: (data: CreateMapDto) => Promise<MapDto | null>;
     deleteSelectedMap: () => Promise<boolean>;
+    refreshGroups: () => Promise<void>;
     isInitialized: boolean;
 }
 
@@ -208,6 +209,7 @@ export const GroupsMapsProvider: React.FC<GroupsMapsProviderProps> = ({
                 updateSelectedMap,
                 createNewMap,
                 deleteSelectedMap,
+                refreshGroups: fetchGroups,
                 isInitialized,
             }}
         >

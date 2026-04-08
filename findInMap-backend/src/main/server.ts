@@ -1,8 +1,11 @@
+import Stripe from "stripe";
+
 import EmailService from "../core/services/EmailService";
 import LoggerService from "../core/services/LoggerService";
 import JwtService from "../core/services/JwtService";
 import TokenBlacklistService from "../core/services/TokenBlacklistService";
 import AddUsersToGroup from "../core/usecases/AddUsersToGroup";
+import CreateCheckoutSession from "../core/usecases/CreateCheckoutSession";
 import CreateGroupMap from "../core/usecases/CreateGroupMap";
 import CreateMapCategory from "../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../core/usecases/CreateMapPoint";
@@ -20,6 +23,7 @@ import GetPublicMapCategories from "../core/usecases/GetPublicMapCategories";
 import GetPublicMapPoints from "../core/usecases/GetPublicMapPoints";
 import GetUser from "../core/usecases/GetUser";
 import GetUserGroups from "../core/usecases/GetUserGroups";
+import HandlePaymentWebhook from "../core/usecases/HandlePaymentWebhook";
 import ImportMapPointsFromFile from "../core/usecases/ImportMapPointsFromFile";
 import LoginUser from "../core/usecases/LoginUser";
 import LogoutUser from "../core/usecases/LogoutUser";
@@ -58,6 +62,9 @@ const emailService = new EmailService(
     config.resendFromEmail,
     config.resendFromName,
 );
+
+// Stripe
+const stripe = new Stripe(config.stripeSecretKey);
 
 // Usecases
 const authorizer = new UserActionsAuthorizer(groupRepository, mapRepository);
@@ -109,6 +116,13 @@ const resetPassword = new ResetPassword(
     config.frontendUrl,
 );
 const updateUserPassword = new UpdateUserPassword(userRepository);
+const createCheckoutSession = new CreateCheckoutSession(
+    groupRepository,
+    stripe,
+    config.stripeProPriceId,
+    config.frontendUrl,
+);
+const handlePaymentWebhook = new HandlePaymentWebhook(groupRepository);
 
 const restInterface = new RestInterface(
     config.publicUrl,
@@ -120,6 +134,7 @@ const restInterface = new RestInterface(
     {
         createGroupMap,
         createMapPoint,
+        createCheckoutSession,
         createUser,
         deleteMap,
         deleteMapCategory,
@@ -152,6 +167,9 @@ const restInterface = new RestInterface(
         updateUserPassword,
     },
     jwtService,
+    handlePaymentWebhook,
+    stripe,
+    config.stripeWebhookSecret,
 );
 
 process.on("SIGINT", async () => {

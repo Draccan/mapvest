@@ -185,6 +185,37 @@ export class DrizzleGroupRepository implements GroupRepository {
             );
     }
 
+    async findById(groupId: string): Promise<GroupEntity | null> {
+        const results = await db
+            .select({
+                group: groups,
+                planName: plans.name,
+            })
+            .from(groups)
+            .leftJoin(plans, eq(groups.planId, plans.id))
+            .where(eq(groups.id, groupId));
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return makeGroupEntity(results[0].group, results[0].planName);
+    }
+
+    async updateGroupPlan(
+        groupId: string,
+        planId: string,
+        planEndDate: Date,
+    ): Promise<void> {
+        await db
+            .update(groups)
+            .set({
+                planId: planId,
+                planEndDate: planEndDate,
+            })
+            .where(eq(groups.id, groupId));
+    }
+
     async findPlans(): Promise<PlanEntity[]> {
         const results = await db
             .select({

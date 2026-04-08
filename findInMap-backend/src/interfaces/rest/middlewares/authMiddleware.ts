@@ -12,6 +12,7 @@ const PublicRoutes = [
     "/users/password",
     "/public/maps/*",
     "/plans",
+    "/payments/webhook",
     "/favicon.ico",
 ];
 

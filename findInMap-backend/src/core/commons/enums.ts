@@ -12,3 +12,7 @@ export enum Plan {
 export enum AuthorizableAction {
     AddMapPoints = "addMapPoints",
 }
+
+export enum StripeEvent {
+    CheckoutSessionCompleted = "checkout.session.completed",
+}

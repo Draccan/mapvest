@@ -52,7 +52,9 @@ export const Header: React.FC = () => {
                     <div className="c-header-mobile-logo">
                         <img src={LogoSvg} alt="MapVest" />
                     </div>
-                    <NavigationBar onNavigate={() => setIsMobileMenuOpen(false)} />
+                    <NavigationBar
+                        onNavigate={() => setIsMobileMenuOpen(false)}
+                    />
                 </div>
             )}
         </>

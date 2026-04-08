@@ -14,6 +14,7 @@ import { Dashboard } from "./Dashboard";
 import { Home } from "./Home";
 import { Login } from "./Login";
 import NotFound from "./NotFound";
+import { PaymentResult, PaymentResultVariant } from "./PaymentResult";
 import { PublicMap } from "./PublicMap";
 import { Register } from "./Register";
 import { ResetPassword } from "./ResetPassword";
@@ -90,6 +91,30 @@ const App: React.FC = () => {
                                             element={
                                                 <LoggedRouteWrapper>
                                                     <User />
+                                                </LoggedRouteWrapper>
+                                            }
+                                        />
+                                        <Route
+                                            path={routes.paymentSuccess()}
+                                            element={
+                                                <LoggedRouteWrapper>
+                                                    <PaymentResult
+                                                        variant={
+                                                            PaymentResultVariant.Success
+                                                        }
+                                                    />
+                                                </LoggedRouteWrapper>
+                                            }
+                                        />
+                                        <Route
+                                            path={routes.paymentCancelled()}
+                                            element={
+                                                <LoggedRouteWrapper>
+                                                    <PaymentResult
+                                                        variant={
+                                                            PaymentResultVariant.Cancelled
+                                                        }
+                                                    />
                                                 </LoggedRouteWrapper>
                                             }
                                         />

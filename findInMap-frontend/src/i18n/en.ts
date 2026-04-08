@@ -29,6 +29,8 @@ export default flattenObject({
         removeUserFromGroup:
             "Error removing user from group. Please try again later.",
         updateUserInGroup: "Error updating user role. Please try again later.",
+        createCheckoutSession:
+            "Error starting payment. Please try again later.",
         getPublicMap: "Error loading public map. Please try again later.",
         getPublicMapPoints:
             "Error loading public map points. Please try again later.",
@@ -224,12 +226,12 @@ export default flattenObject({
             subtitle:
                 "Upgrade your plan to unlock the full potential of MapVest",
             currentPlan: "Current Plan",
-            upgradeTo: "Upgrade to",
+            upgradeToPro: "Upgrade to Pro",
             freePlanName: "Free",
             proPlanName: "Pro",
             freePlanPrice: "Free",
-            proPlanPrice: "Coming Soon",
-            featureMapPoints: "Up to {count} map points per group",
+            proPlanPrice: "$9.99/month",
+            featureMapPoints: "Up to 50 map points per group",
             featureUnlimitedMapPoints: "Unlimited map points",
             featureSupport: "Email support",
             featurePrioritySupport: "Priority support",
@@ -239,6 +241,8 @@ export default flattenObject({
             featureDashboard: "Dashboard & analytics",
             featureAllFreeFeatures: "Everything in Free",
             upgradeButton: "Upgrade to Pro",
+            upgradeButtonLoading: "Redirecting to payment...",
+            onlyOwnerCanUpgrade: "Only the group owner can upgrade the plan",
             close: "Close",
         },
         SupportBox: {
@@ -320,6 +324,15 @@ export default flattenObject({
                 "Password reset link sent! Please check your email.",
             passwordResetSuccessToast:
                 "Password successfully reset! You can now login with your new password.",
+        },
+        PaymentResult: {
+            successTitle: "Payment Successful!",
+            successMessage:
+                "Your group has been upgraded to the Pro plan. Enjoy unlimited map points and all premium features!",
+            cancelledTitle: "Payment Cancelled",
+            cancelledMessage:
+                "Your payment was cancelled. You can try again anytime from the plan upgrade modal.",
+            backToMap: "Back to Map",
         },
         NotFound: {
             title: "Oops! You're lost!",

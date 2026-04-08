@@ -43,6 +43,12 @@ export default interface GroupRepository {
         role: UserGroupRole,
         dbInstance?: DbOrTransaction,
     ): Promise<void>;
+    findById(groupId: string): Promise<GroupEntity | null>;
+    updateGroupPlan(
+        groupId: string,
+        planId: string,
+        planEndDate: Date,
+    ): Promise<void>;
     findPlans(): Promise<PlanEntity[]>;
     memoizedFindPlans(): Promise<PlanEntity[]>;
 }

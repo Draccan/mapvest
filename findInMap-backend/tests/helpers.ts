@@ -1,3 +1,5 @@
+import Stripe from "stripe";
+
 import AddressesManagerRepository from "../src/core/dependencies/AddressesManagerRepository";
 import Authorizer from "../src/core/dependencies/Authorizer";
 import GroupRepository from "../src/core/dependencies/GroupRepository";
@@ -8,6 +10,7 @@ import EmailService, { EmailOptions } from "../src/core/services/EmailService";
 import JwtService from "../src/core/services/JwtService";
 import TokenBlacklistService from "../src/core/services/TokenBlacklistService";
 import AddUsersToGroup from "../src/core/usecases/AddUsersToGroup";
+import CreateCheckoutSession from "../src/core/usecases/CreateCheckoutSession";
 import CreateGroupMap from "../src/core/usecases/CreateGroupMap";
 import CreateMapCategory from "../src/core/usecases/CreateMapCategory";
 import CreateMapPoint from "../src/core/usecases/CreateMapPoint";
@@ -25,6 +28,7 @@ import GetPublicMapCategories from "../src/core/usecases/GetPublicMapCategories"
 import GetPublicMapPoints from "../src/core/usecases/GetPublicMapPoints";
 import GetUser from "../src/core/usecases/GetUser";
 import GetUserGroups from "../src/core/usecases/GetUserGroups";
+import HandlePaymentWebhook from "../src/core/usecases/HandlePaymentWebhook";
 import ImportMapPointsFromFile from "../src/core/usecases/ImportMapPointsFromFile";
 import LoginUser from "../src/core/usecases/LoginUser";
 import LogoutUser from "../src/core/usecases/LogoutUser";
@@ -55,6 +59,8 @@ export const mockGroupRepository: jest.Mocked<GroupRepository> = {
     removeUserFromGroup: jest.fn(),
     updateGroup: jest.fn(),
     updateUserInGroup: jest.fn(),
+    findById: jest.fn(),
+    updateGroupPlan: jest.fn(),
     findPlans: jest.fn(),
     memoizedFindPlans: jest.fn(),
 };
@@ -221,6 +227,14 @@ export function createTestApp() {
         "http://localhost:3000",
     );
     const updateUserPassword = new UpdateUserPassword(userRepository);
+    const stripe = new Stripe("sk_test_placeholder");
+    const createCheckoutSession = new CreateCheckoutSession(
+        groupRepository,
+        stripe,
+        "price_test_placeholder",
+        "http://localhost:3000",
+    );
+    const handlePaymentWebhook = new HandlePaymentWebhook(groupRepository);
 
     const restInterface = new RestInterface(
         "http://localhost:3002",
@@ -233,6 +247,7 @@ export function createTestApp() {
             createGroupMap,
             createMapCategory,
             createMapPoint,
+            createCheckoutSession,
             createUser,
             deleteMap,
             deleteMapCategory,
@@ -264,6 +279,9 @@ export function createTestApp() {
             updateUserPassword,
         },
         jwtService,
+        handlePaymentWebhook,
+        stripe,
+        "whsec_test_placeholder",
     );
 
     return restInterface;

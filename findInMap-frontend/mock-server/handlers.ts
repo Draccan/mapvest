@@ -266,11 +266,13 @@ let mockGroups = [
         id: "group-1",
         name: "First Group",
         role: "owner",
+        plan: "free",
     },
     {
         id: "group-2",
         name: "Second Group",
         role: "contributor",
+        plan: "free",
     },
 ];
 
@@ -480,6 +482,14 @@ export const handlers = [
         "http://localhost:3001/:groupId/maps/:mapId/points",
         async ({ params, request }) => {
             await delay(1000);
+            if (Math.random() < 0.1) {
+                return HttpResponse.json(
+                    { error: "Action not authorized:" },
+                    {
+                        status: 403,
+                    },
+                );
+            }
             const { mapId } = params;
             const newPoint = (await request.json()) as Omit<
                 MapPointDto,
@@ -596,6 +606,7 @@ export const handlers = [
             id: `group-${groupIdCounter}`,
             name: "First Group",
             role: "owner",
+            plan: "free",
         };
         mockGroups.push(newGroup);
 
@@ -1102,6 +1113,30 @@ export const handlers = [
                 },
                 { status: 200 },
             );
+        },
+    ),
+    http.post(
+        "http://localhost:3001/payments/checkout-session",
+        async ({ request }) => {
+            await delay(1000);
+            const { groupId } = (await request.json()) as {
+                groupId: string;
+            };
+
+            const group = mockGroups.find((g) => g.id === groupId);
+
+            if (!group) {
+                return HttpResponse.json(
+                    { error: "Group not found" },
+                    { status: 404 },
+                );
+            }
+
+            group.plan = "pro";
+
+            return HttpResponse.json({
+                url: `${window.location.origin}/payment/success`,
+            });
         },
     ),
 ];

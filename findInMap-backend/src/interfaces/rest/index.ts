@@ -6,11 +6,13 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import expressWinston from "express-winston";
 import helmet from "helmet";
 import * as http from "http";
+import Stripe from "stripe";
 import * as swaggerUi from "swagger-ui-express";
 
 import JwtService from "../../core/services/JwtService";
 import LoggerService from "../../core/services/LoggerService";
 import AddUsersToGroup from "../../core/usecases/AddUsersToGroup";
+import CreateCheckoutSession from "../../core/usecases/CreateCheckoutSession";
 import CreateGroupMap from "../../core/usecases/CreateGroupMap";
 import CreateMapCategory from "../../core/usecases/CreateMapCategory";
 import CreateMapPoint from "../../core/usecases/CreateMapPoint";
@@ -28,6 +30,7 @@ import GetPublicMapCategories from "../../core/usecases/GetPublicMapCategories";
 import GetPublicMapPoints from "../../core/usecases/GetPublicMapPoints";
 import GetUser from "../../core/usecases/GetUser";
 import GetUserGroups from "../../core/usecases/GetUserGroups";
+import HandlePaymentWebhook from "../../core/usecases/HandlePaymentWebhook";
 import ImportMapPointsFromFile from "../../core/usecases/ImportMapPointsFromFile";
 import LoginUser from "../../core/usecases/LoginUser";
 import LogoutUser from "../../core/usecases/LogoutUser";
@@ -46,6 +49,7 @@ import errorHandler from "./errorHandler";
 import authMiddleware from "./middlewares/authMiddleware";
 import Route from "./Route";
 import AddUsersToGroupRoute from "./routes/AddUsersToGroupRoute";
+import CreateCheckoutSessionRoute from "./routes/CreateCheckoutSessionRoute";
 import CreateMapCategoryRoute from "./routes/CreateMapCategoryRoute";
 import CreateMapRoute from "./routes/CreateMapRoute";
 import CreateMapPointRoute from "./routes/CreateMapPointRoute";
@@ -94,6 +98,7 @@ export default class RestInterface {
         usecases: {
             createGroupMap: CreateGroupMap;
             createMapPoint: CreateMapPoint;
+            createCheckoutSession: CreateCheckoutSession;
             createUser: CreateUser;
             deleteMap: DeleteMap;
             deleteMapCategory: DeleteMapCategory;
@@ -126,6 +131,9 @@ export default class RestInterface {
             updateUserPassword: UpdateUserPassword;
         },
         private jwtService: JwtService,
+        private handlePaymentWebhook: HandlePaymentWebhook,
+        private stripe: Stripe,
+        private stripeWebhookSecret: string,
     ) {
         this.routes = [
             HealthRoute(),
@@ -134,6 +142,7 @@ export default class RestInterface {
             GetPublicMapCategoriesRoute(usecases.getPublicMapCategories),
             GetPublicMapPointsRoute(usecases.getPublicMapPoints),
             AddUsersToGroupRoute(usecases.addUsersToGroup),
+            CreateCheckoutSessionRoute(usecases.createCheckoutSession),
             RemoveUserFromGroupRoute(usecases.removeUserFromGroup),
             CreateMapRoute(usecases.createGroupMap),
             CreateMapPointRoute(usecases.createMapPoint),
@@ -206,6 +215,51 @@ export default class RestInterface {
         );
         this.app.use(helmet());
         this.app.use(compression());
+        // Stripe webhook — must be registered before express.json()
+        // because Stripe signature verification requires the raw body
+        this.app.post(
+            "/payments/webhook",
+            express.raw({ type: "application/json" }),
+            async (req, res) => {
+                const sig = req.headers["stripe-signature"];
+                if (!sig) {
+                    res.status(400).json({
+                        error: "Missing stripe-signature header",
+                    });
+                    return;
+                }
+
+                let event: Stripe.Event;
+                try {
+                    event = this.stripe.webhooks.constructEvent(
+                        req.body,
+                        sig,
+                        this.stripeWebhookSecret,
+                    );
+                } catch (err: any) {
+                    LoggerService.error(
+                        `Webhook signature verification failed: ${err.message}`,
+                    );
+                    res.status(400).json({
+                        error: `Webhook Error: ${err.message}`,
+                    });
+                    return;
+                }
+
+                try {
+                    await this.handlePaymentWebhook.exec(event);
+                    res.status(200).json({ received: true });
+                } catch (err: any) {
+                    LoggerService.error(
+                        `Webhook processing error: ${err.message}`,
+                    );
+                    res.status(500).json({
+                        error: "Webhook processing failed",
+                    });
+                }
+            },
+        );
+
         this.app.use(express.json({ limit: "10mb" }));
         this.app.use(express.urlencoded({ limit: "10mb", extended: true }));
         this.app.use(authMiddleware(this.jwtService));
@@ -213,7 +267,8 @@ export default class RestInterface {
             openapiValidator({
                 apiSpec: apiSpec,
                 validateResponses: this.validateResponses,
-                ignorePaths: (path: string) => path.startsWith("/swagger"),
+                ignorePaths: (path: string) =>
+                    path.startsWith("/swagger") || path === "/payments/webhook",
             }),
         );
 

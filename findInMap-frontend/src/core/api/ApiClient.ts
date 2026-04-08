@@ -685,6 +685,25 @@ export default class ApiClient {
         return response.json();
     }
 
+    async createCheckoutSession(groupId: string): Promise<{ url: string }> {
+        const response = await this.fetchWithInterceptors(
+            `${API_URL}/payments/checkout-session`,
+            {
+                method: "POST",
+                body: JSON.stringify({ groupId }),
+            },
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+                errorData.error || "Failed to create checkout session",
+            );
+        }
+
+        return response.json();
+    }
+
     async importMapPoints(
         groupId: string,
         mapId: string,

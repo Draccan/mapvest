@@ -233,7 +233,9 @@ describe("Update Map Category Route", () => {
         const nonExistentCategoryId = "00000000-0000-0000-0000-000000000000";
 
         await request(app)
-            .put(`/${groupId}/maps/${mapId}/categories/${nonExistentCategoryId}`)
+            .put(
+                `/${groupId}/maps/${mapId}/categories/${nonExistentCategoryId}`,
+            )
             .set("Authorization", `Bearer ${accessToken}`)
             .send({ description: "Updated", color: "#00FF00" })
             .expect(404);

@@ -45,6 +45,8 @@ export default flattenObject({
             "Errore durante la rimozione dell'utente dal gruppo. Si prega di riprovare più tardi.",
         updateUserInGroup:
             "Errore durante l'aggiornamento del ruolo utente. Si prega di riprovare più tardi.",
+        createCheckoutSession:
+            "Errore durante l'avvio del pagamento. Si prega di riprovare più tardi.",
         getPublicMap:
             "Errore durante il caricamento della mappa pubblica. Si prega di riprovare più tardi.",
         getPublicMapPoints:
@@ -248,12 +250,12 @@ export default flattenObject({
             subtitle:
                 "Passa a un piano superiore per sbloccare tutto il potenziale di MapVest",
             currentPlan: "Piano Attuale",
-            upgradeTo: "Passa a",
+            upgradeToPro: "Passa a Pro",
             freePlanName: "Free",
             proPlanName: "Pro",
             freePlanPrice: "Gratuito",
-            proPlanPrice: "In arrivo",
-            featureMapPoints: "Fino a {count} punti mappa per gruppo",
+            proPlanPrice: "9,99 $/mese",
+            featureMapPoints: "Fino a 50 punti mappa per gruppo",
             featureUnlimitedMapPoints: "Punti mappa illimitati",
             featureSupport: "Supporto via email",
             featurePrioritySupport: "Supporto prioritario",
@@ -263,6 +265,9 @@ export default flattenObject({
             featureDashboard: "Dashboard e analisi",
             featureAllFreeFeatures: "Tutto del piano Free",
             upgradeButton: "Passa al Pro",
+            upgradeButtonLoading: "Reindirizzamento al pagamento...",
+            onlyOwnerCanUpgrade:
+                "Solo il proprietario del gruppo può aggiornare il piano",
             close: "Chiudi",
         },
         SupportBox: {
@@ -348,6 +353,15 @@ export default flattenObject({
                 "Link di recupero inviato! Controlla la tua email.",
             passwordResetSuccessToast:
                 "Password reimpostata con successo! Ora puoi accedere con la tua nuova password.",
+        },
+        PaymentResult: {
+            successTitle: "Pagamento completato!",
+            successMessage:
+                "Il tuo gruppo è stato aggiornato al piano Pro. Goditi punti mappa illimitati e tutte le funzionalità premium!",
+            cancelledTitle: "Pagamento annullato",
+            cancelledMessage:
+                "Il pagamento è stato annullato. Puoi riprovare in qualsiasi momento dalla modale di upgrade del piano.",
+            backToMap: "Torna alla Mappa",
         },
         NotFound: {
             title: "Oops! Ti sei perso!",

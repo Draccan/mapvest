@@ -4,6 +4,7 @@ import React from "react";
 import { Plan } from "../../../core/commons/enums";
 import { usePlanUpgrade } from "../../../core/contexts/PlanUpgradeContext";
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
+import { useCreateCheckoutSession } from "../../../core/usecases/useCreateCheckoutSession";
 import getFormattedMessageWithScope from "../../../utils/getFormattedMessageWithScope";
 import { Button } from "../Button";
 import { Modal } from "../Modal";
@@ -11,11 +12,11 @@ import "./style.css";
 
 const fm = getFormattedMessageWithScope("components.PlanUpgradeModal");
 
-const FREE_MAX_POINTS = 50;
-
 export const PlanUpgradeModal: React.FC = () => {
     const { isOpen, hidePlanUpgrade } = usePlanUpgrade();
     const { selectedGroup } = useGroupsMaps();
+    const { createCheckoutSession, loading: checkoutLoading } =
+        useCreateCheckoutSession();
 
     const currentPlan = selectedGroup?.plan ?? Plan.Free;
 
@@ -23,7 +24,10 @@ export const PlanUpgradeModal: React.FC = () => {
         <Modal isOpen={isOpen} onClose={hidePlanUpgrade}>
             <div className="c-planupgrademodal">
                 <div className="c-planupgrademodal-header">
-                    <Crown size={32} className="c-planupgrademodal-header-icon" />
+                    <Crown
+                        size={32}
+                        className="c-planupgrademodal-header-icon"
+                    />
                     <h2 className="c-planupgrademodal-header-title">
                         {fm("title")}
                     </h2>
@@ -41,7 +45,10 @@ export const PlanUpgradeModal: React.FC = () => {
                             </div>
                         )}
                         <div className="c-planupgrademodal-card-header">
-                            <MapPin size={24} className="c-planupgrademodal-card-icon-free" />
+                            <MapPin
+                                size={24}
+                                className="c-planupgrademodal-card-icon-free"
+                            />
                             <h3 className="c-planupgrademodal-card-name">
                                 {fm("freePlanName")}
                             </h3>
@@ -51,30 +58,45 @@ export const PlanUpgradeModal: React.FC = () => {
                         </div>
                         <ul className="c-planupgrademodal-card-features">
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check" />
-                                {fm({
-                                    id: "featureMapPoints",
-                                    values: { count: FREE_MAX_POINTS },
-                                })}
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check"
+                                />
+                                {fm("featureMapPoints")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check"
+                                />
                                 {fm("featureSupport")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check"
+                                />
                                 {fm("featureRouteCalculation")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check"
+                                />
                                 {fm("featurePublicLink")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check"
+                                />
                                 {fm("featureMultipleMaps")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check"
+                                />
                                 {fm("featureDashboard")}
                             </li>
                         </ul>
@@ -87,10 +109,13 @@ export const PlanUpgradeModal: React.FC = () => {
                         )}
                         <div className="c-planupgrademodal-card-badge-recommended">
                             <Crown size={14} />
-                            {fm("upgradeTo")} Pro
+                            {fm("upgradeToPro")}
                         </div>
                         <div className="c-planupgrademodal-card-header">
-                            <Crown size={24} className="c-planupgrademodal-card-icon-pro" />
+                            <Crown
+                                size={24}
+                                className="c-planupgrademodal-card-icon-pro"
+                            />
                             <h3 className="c-planupgrademodal-card-name">
                                 {fm("proPlanName")}
                             </h3>
@@ -100,21 +125,40 @@ export const PlanUpgradeModal: React.FC = () => {
                         </div>
                         <ul className="c-planupgrademodal-card-features">
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check-pro" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check-pro"
+                                />
                                 {fm("featureAllFreeFeatures")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check-pro" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check-pro"
+                                />
                                 {fm("featureUnlimitedMapPoints")}
                             </li>
                             <li>
-                                <Check size={16} className="c-planupgrademodal-feature-check-pro" />
+                                <Check
+                                    size={16}
+                                    className="c-planupgrademodal-feature-check-pro"
+                                />
                                 {fm("featurePrioritySupport")}
                             </li>
                         </ul>
                         <div className="c-planupgrademodal-card-action">
-                            <Button kind="primary" disabled>
-                                {fm("upgradeButton")}
+                            <Button
+                                kind="primary"
+                                disabled={
+                                    checkoutLoading || currentPlan === Plan.Pro
+                                }
+                                onClick={() =>
+                                    createCheckoutSession(selectedGroup!.id)
+                                }
+                            >
+                                {checkoutLoading
+                                    ? fm("upgradeButtonLoading")
+                                    : fm("upgradeButton")}
                             </Button>
                         </div>
                     </div>

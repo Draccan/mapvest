@@ -7,6 +7,8 @@ const routes = {
     login: () => "/login",
     register: () => "/register",
     resetPassword: () => "/reset-password",
+    paymentSuccess: () => "/payment/success",
+    paymentCancelled: () => "/payment/cancelled",
     publicMap: (mapId?: string) =>
         mapId ? `/public/map/${mapId}` : "/public/map/:mapId",
 };

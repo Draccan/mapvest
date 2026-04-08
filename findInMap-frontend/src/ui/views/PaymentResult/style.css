@@ -1,0 +1,112 @@
+.v-paymentresult-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        var(--color-primary) 0%,
+        var(--color-primary-hover) 100%
+    );
+    background-size: 400% 400%;
+    animation: paymentGradientShift 8s ease infinite;
+}
+
+@keyframes paymentGradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.v-paymentresult-content {
+    max-width: 500px;
+    text-align: center;
+    background: var(--color-background-primary);
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px var(--color-shadow-strong);
+    border: 1px solid var(--color-border-light);
+}
+
+.v-paymentresult-icon {
+    margin-bottom: 1.5rem;
+}
+
+.v-paymentresult-icon-success {
+    color: var(--color-success);
+}
+
+.v-paymentresult-icon-cancelled {
+    color: var(--color-danger);
+}
+
+.v-paymentresult-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem 0;
+}
+
+.v-paymentresult-description {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin: 0 0 2rem 0;
+    line-height: 1.6;
+}
+
+.v-paymentresult-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.v-paymentresult-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-success)
+    );
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.v-paymentresult-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+}
+
+.v-paymentresult-button:active {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .v-paymentresult-container {
+        padding: 1rem;
+    }
+
+    .v-paymentresult-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .v-paymentresult-title {
+        font-size: 1.6rem;
+    }
+
+    .v-paymentresult-description {
+        font-size: 1rem;
+    }
+}

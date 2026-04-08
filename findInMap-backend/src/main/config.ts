@@ -113,4 +113,18 @@ export default {
         required: true,
         nonProductionDefault: "http://localhost:3000",
     }),
+
+    // Stripe
+    stripeSecretKey: env("STRIPE_SECRET_KEY", {
+        required: true,
+        nonProductionDefault: "sk_test_placeholder",
+    }),
+    stripeWebhookSecret: env("STRIPE_WEBHOOK_SECRET", {
+        required: true,
+        nonProductionDefault: "whsec_test_placeholder",
+    }),
+    stripeProPriceId: env("STRIPE_PRO_PRICE_ID", {
+        required: true,
+        nonProductionDefault: "price_test_placeholder",
+    }),
 };
