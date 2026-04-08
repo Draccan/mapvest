@@ -81,7 +81,9 @@
     padding: 0.8rem 1.8rem;
     border-radius: 50px;
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
 }
 
 .v-paymentresult-button:hover {
