@@ -395,6 +395,13 @@ export const MapPointForm: React.FC<MapPointFormProps> = ({
                     kind="primary"
                     disabled={!isEditMode && !selectedCoordinates}
                     loading={loading}
+                    title={
+                        !isEditMode && !selectedCoordinates
+                            ? intl.formatMessage({
+                                  id: "components.MapPointForm.clickOnMapInstructions",
+                              })
+                            : undefined
+                    }
                 >
                     <span key="button-text">
                         {loading
