@@ -1,151 +1,191 @@
 # MapVest
 
-A full-stack application for mapping and tracking points with an interactive map
-interface.
+A full-stack SaaS platform for visualizing clients, suppliers, and points of
+interest on interactive maps, optimizing visit routes, and managing territory
+assignments for field teams. Built with a monorepo architecture.
 
-You can find it [here](https://mapvest-test.up.railway.app/)
+**Live**: [map-vest.com](https://www.map-vest.com/)
 
 ## Project Structure
 
-This is a monorepo setup with pnpm containing:
+```
+findInMap/
+├── findInMap-backend/      # Express API (TypeScript, PostgreSQL + PostGIS)
+├── findInMap-frontend/     # React SPA (TypeScript, Vite, Leaflet)
+├── findInMap-website/      # Static marketing site (GitHub Pages)
+└── scripts/                # Utility scripts
+```
 
-- **findInMap-frontend**: React + TypeScript + Vite frontend application
-- **findInMap-backend**: Node.js + Express + TypeScript + PostgreSQL + PostGIS
-  backend API + JWT handling
+This is a **pnpm workspaces** monorepo.
 
 ## Features
 
-### Frontend
+- **Interactive maps** with Leaflet, drawing tools (Geoman), and heatmap
+  visualization
+- **Route optimization** for planning efficient visit sequences
+- **Territory management** with drawable zones on the map
+- **Multi-tenant model** with groups, role-based access (owner / admin /
+  contributor), and per-group plans
+- **Custom categories** with color coding for map points
+- **Data import** from Excel and CSV files
+- **Public map sharing** via unique links
+- **Address search** powered by Google Maps API
+- **Charts and analytics** with Recharts
+- **Payments** via Stripe (checkout, webhooks, plan upgrades)
+- **Email notifications** via Resend (password reset, etc.)
+- **JWT authentication** with access/refresh token rotation and automatic
+  blacklist cleanup
+- **Internationalization** (i18n) with React Intl
+- **Swagger / OpenAPI** documentation at `/swagger`
 
-- Interactive map using React-Leaflet
-- Form for adding crime incidents with:
-  - X/Y coordinates (auto-filled when clicking on map)
-  - Crime type selector
-  - Date input
-  - Save button
-- Real-time map updates after adding new points
-- Complete authentication system with JWT tokens
-- Protected routes and automatic token refresh
-- MSW (Mock Service Worker) for local API mocking
-- Clean architecture with separated layers:
-  - `src/core/usecases`: Business logic and API calls
-  - `src/core/dtos`: Data transfer objects
-  - `src/ui/views`: Page components
-  - `src/ui/components`: Reusable components
+## Tech Stack
+
+| Layer    | Technology                                               |
+| -------- | -------------------------------------------------------- |
+| Frontend | React, TypeScript, Vite, React Router, Leaflet, Recharts |
+| Backend  | Node.js, Express, TypeScript, Drizzle ORM                |
+| Database | PostgreSQL + PostGIS                                     |
+| Auth     | JWT (jsonwebtoken), Helmet, CORS                         |
+| Payments | Stripe                                                   |
+| Email    | Resend                                                   |
+| Testing  | Jest, Supertest                                          |
+| Tooling  | pnpm, Prettier, tsx, Docker Compose                      |
+| CI/CD    | GitHub Actions (website deploy to GitHub Pages)          |
+
+## Architecture
+
+Both frontend and backend follow **Clean Architecture** principles:
 
 ### Backend
 
-- RESTful API endpoints:
-  - `GET /api/map-points`: Retrieve all map points
-  - `POST /api/map-points`: Create new map point
-  - `POST /users`: User registration
-  - `POST /users/login`: User authentication
-  - `POST /users/logout`: Secure logout with token invalidation
-  - `POST /token/refresh`: JWT token refresh
-- JWT authentication with access/refresh token rotation
-- **Automatic token blacklist cleanup**: Expired tokens are automatically
-  removed from memory every 5 minutes to prevent memory leaks
-- Rate limiting for API protection
-- PostgreSQL + PostGIS for spatial data
-- Drizzle ORM for type-safe database operations
-- Comprehensive testing suite with Jest
-- Clean architecture with dependency injection
+```
+src/
+├── main/              # Entry point, config, DI container
+├── core/
+│   ├── entities/      # Domain models
+│   ├── dtos/          # Data transfer objects
+│   ├── usecases/      # Business logic
+│   ├── services/      # JWT, logging, email, token blacklist
+│   ├── errors/        # Custom error classes
+│   └── dependencies/  # Dependency injection interfaces
+├── db/                # Drizzle ORM schema & client
+├── dependency-implementations/  # Repository implementations
+└── interfaces/rest/   # Express routes, middlewares, OpenAPI schemas
+```
+
+### Frontend
+
+```
+src/
+├── core/
+│   ├── api/           # API client
+│   ├── usecases/      # Business logic hooks
+│   ├── dtos/          # Data transfer objects
+│   └── contexts/      # React context providers
+├── ui/
+│   ├── views/         # Page components
+│   ├── components/    # Reusable components
+│   └── styles/        # Global theme
+└── i18n/              # Translations
+```
+
+## API Overview
+
+36 REST endpoints organized by resource:
+
+| Resource       | Endpoints                                                    |
+| -------------- | ------------------------------------------------------------ |
+| Users          | Register, login, logout, get profile, update, password reset |
+| Token          | Refresh                                                      |
+| Groups         | Get, update, add/remove users, change roles                  |
+| Maps           | CRUD, public access                                          |
+| Map Points     | CRUD, bulk import (Excel/CSV)                                |
+| Map Categories | CRUD                                                         |
+| Plans          | List available plans                                         |
+| Payments       | Stripe checkout, webhook                                     |
+| Search         | Address search (Google Maps)                                 |
+| System         | Health check, info                                           |
+
+Full Swagger documentation is available at `/swagger`.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- pnpm (latest version)
+- Node.js >= 20
+- pnpm >= 10
+- Docker (for the PostgreSQL + PostGIS database)
 
 ### Installation
 
-1. Clone the repository and navigate to the project root
-2. Install dependencies for all packages:
-   ```bash
-   pnpm install
-   ```
+```bash
+# Install all dependencies
+pnpm install
+
+# Start the database
+cd findInMap-backend && pnpm docker:up
+
+# Run migrations
+pnpm db:migrate
+```
 
 ### Development
 
-#### Start both frontend and backend simultaneously:
-
 ```bash
+# Start both frontend and backend
 pnpm dev
+
+# Or individually
+pnpm backend    # http://localhost:3001
+pnpm frontend   # http://localhost:3000
 ```
 
-#### Or start them individually:
-
-**Backend only:**
+### Database Commands
 
 ```bash
-pnpm backend
+cd findInMap-backend
+
+pnpm docker:up       # Start PostgreSQL container
+pnpm docker:down     # Stop PostgreSQL container
+pnpm db:generate     # Generate migrations from schema changes
+pnpm db:migrate      # Apply pending migrations
+pnpm db:push         # Push schema directly (development)
+pnpm db:studio       # Open Drizzle Studio (visual DB browser)
 ```
 
-The backend will be available at http://localhost:3001
-
-**Frontend only:**
+### Testing
 
 ```bash
-pnpm frontend
+cd findInMap-backend
+
+pnpm test             # Run all tests
+pnpm test:watch       # Watch mode
+pnpm test:coverage    # Coverage report
+pnpm test:e2e         # End-to-end tests
 ```
 
-The frontend will be available at http://localhost:3000
+### Mock Server
 
-### Usage
+The frontend includes **MSW** (Mock Service Worker) for offline development.
+When running in development mode without a backend, the app uses mock data.
 
-1. Open http://localhost:3000 in your browser
-2. Click anywhere on the map to select coordinates
-3. Fill in the crime type and date in the form
-4. Click "Save" to add the point to the map
-5. The map will automatically refresh and show the new point
+## Deployment
 
-### API Endpoints
+The backend is containerized with Docker and deployed to **Railway**. The
+`deploy` script builds, migrates, and starts the server:
 
-#### GET /api/map-points
+```bash
+cd findInMap-backend
+pnpm deploy
+```
 
-Returns all map points.
-
-#### POST /api/map-points
-
-Creates a new map point.
-
-## Mock Server
-
-The frontend includes MSW (Mock Service Worker) for local development. When
-running in development mode, the application will use mock data instead of the
-real backend. This allows you to develop the frontend independently.
-
-To disable mocking and use the real backend:
-
-1. Ensure the backend is running on port 3001
-2. Edit the `enableMocking` function
-
-## Technology Stack
-
-### Frontend
-
-- React 19
-- TypeScript
-- Vite
-- React-Leaflet (for maps)
-- MSW (for API mocking)
-
-### Backend
-
-- Node.js
-- Express
-- TypeScript
-- Nodemon (for development)
-- dotenv (for environment variables)
-- Prisma
-- PostgreSQL
-- OpenAPI
+The marketing website is deployed to **GitHub Pages** via a GitHub Actions
+workflow on push to `main`.
 
 ## License
 
-CC-BY-NC-SA-4.0
+CC-BY-NC-ND-4.0
 
-## Owner
+## Author
 
 Paolo Dell'Aguzzo
