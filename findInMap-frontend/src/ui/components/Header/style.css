@@ -50,7 +50,7 @@
     display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
     .c-header {
         padding: 0.75rem 1rem;
         margin-bottom: 1rem;
@@ -59,9 +59,10 @@
     }
 
     .c-header-left {
-        gap: 12px;
+        gap: 8px 12px;
         flex: 1;
         min-width: 0;
+        flex-wrap: wrap;
     }
 
     .c-header-logo img {

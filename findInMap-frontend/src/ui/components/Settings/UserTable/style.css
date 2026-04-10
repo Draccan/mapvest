@@ -93,10 +93,15 @@
     min-width: 150px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1150px) {
     .c-settings-user-table-wrapper {
         overflow-x: auto;
         overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .c-settings-user-table {
+        min-width: 700px;
     }
 
     .c-settings-user-table th,

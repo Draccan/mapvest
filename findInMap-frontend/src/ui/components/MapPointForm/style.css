@@ -59,13 +59,16 @@
 .c-map-point-form-date-input,
 .c-map-point-form-notes-textarea {
     width: 100%;
+    max-width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid var(--color-border);
     border-radius: 12px;
-    font-size: 0.95rem;
+    font-size: 1rem;
     background-color: var(--color-background-primary);
     color: var(--color-text-primary);
     box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .c-map-point-form-description-input:focus,
