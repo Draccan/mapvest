@@ -389,6 +389,39 @@ nav {
     background: var(--bg-light);
 }
 
+/* Non-Profit Section */
+.nonprofit-section {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--bg-light);
+}
+
+.nonprofit-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.nonprofit-content h3 {
+    font-size: 1.4rem;
+    color: var(--text-dark);
+    margin-bottom: 0.8rem;
+}
+
+.nonprofit-content p {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+.nonprofit-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.nonprofit-content a:hover {
+    text-decoration: underline;
+}
+
 /* Footer */
 footer {
     background: var(--text-dark);
