@@ -25,6 +25,7 @@ import { AddressSearch } from "../../components/AddressSearch";
 import { AreaAnalysis } from "../../components/AreaAnalysis";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
+import { HomeTour } from "../../components/HomeTour";
 import { ImportMapPointsModal } from "../../components/ImportMapPointsModal";
 import {
     DEFAULT_MAP_CLICK_ZOOM,
@@ -465,6 +466,13 @@ export const Home: React.FC = () => {
                 onClose={() => setIsImportModalOpen(false)}
                 onImport={handleImportPoints}
                 loading={importingPoints}
+            />
+            <HomeTour
+                ready={
+                    hasFetched && hasFetchedCategories && !isAnalysisMode
+                }
+                isAnalysisMode={isAnalysisMode}
+                onEnterAnalysisMode={() => setIsAnalysisMode(true)}
             />
         </div>
     );

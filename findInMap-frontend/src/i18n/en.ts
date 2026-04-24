@@ -255,6 +255,41 @@ export default flattenObject({
             switchToDark: "Switch to dark mode",
             switchToLight: "Switch to light mode",
         },
+        HomeTour: {
+            welcomeTitle: "Welcome to MapVest",
+            welcome:
+                "Let's take a quick tour of the main features. You can skip at any time.",
+            mapClickTitle: "Click on the map",
+            mapClick:
+                "Click anywhere on the map to pick the coordinates of a new point.",
+            fillFormTitle: "Fill in the details",
+            fillForm:
+                "Use the form on the right to add a description, a date and any extra details for the point you selected.",
+            categoriesTitle: "Create and assign categories",
+            categories:
+                "From the same form you can create a new category or pick an existing one to organize your points by color.",
+            importExcelTitle: "Import from Excel",
+            importExcel:
+                "Got many points already? Use this button to import them all at once from an Excel file.",
+            analysisModeTitle: "Analyze an area",
+            analysisMode:
+                "Switch to analysis mode to draw an area, inspect the points inside it and calculate the optimized route.",
+            drawAreaTitle: "Draw on the map",
+            drawArea:
+                "Use these tools (rectangle, polygon or circle) to draw an area on the map. All points falling inside will be selected for analysis.",
+            optimizeRouteTitle: "Calculate the optimized route",
+            optimizeRoute:
+                "With at least two points in the area, pick a start and an end point, then press the navigation button in this panel to compute the optimized route.",
+            routeDetailsTitle: "See the route details",
+            routeDetails:
+                "Once the route is computed, a list button appears here: click it to open a modal with the full step-by-step breakdown.",
+            doneTitle: "You're ready",
+            done: "That's it — you know the basics. Enjoy MapVest!",
+            back: "Back",
+            next: "Next",
+            skip: "Skip",
+            last: "Finish",
+        },
         Settings: {
             UserTable: {
                 name: "Name",

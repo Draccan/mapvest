@@ -1,0 +1,8 @@
+.c-home-tour {
+    display: contents;
+}
+
+.c-home-tour [class*="floater__body"] {
+    border-radius: 12px;
+    box-shadow: 0 12px 32px var(--color-shadow-strong);
+}

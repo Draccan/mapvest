@@ -280,6 +280,41 @@ export default flattenObject({
             switchToDark: "Passa alla modalità scura",
             switchToLight: "Passa alla modalità chiara",
         },
+        HomeTour: {
+            welcomeTitle: "Benvenuto in MapVest",
+            welcome:
+                "Facciamo un tour veloce delle funzionalità principali. Puoi saltarlo in qualsiasi momento.",
+            mapClickTitle: "Clicca sulla mappa",
+            mapClick:
+                "Clicca su un punto qualsiasi della mappa per scegliere le coordinate di un nuovo punto.",
+            fillFormTitle: "Compila i dati",
+            fillForm:
+                "Usa il form a destra per aggiungere descrizione, data ed eventuali dettagli del punto selezionato.",
+            categoriesTitle: "Crea e assegna le categorie",
+            categories:
+                "Dallo stesso form puoi creare una nuova categoria o selezionarne una esistente per organizzare i punti per colore.",
+            importExcelTitle: "Importa da Excel",
+            importExcel:
+                "Hai già molti punti? Usa questo pulsante per importarli tutti in una volta da un file Excel.",
+            analysisModeTitle: "Analizza un'area",
+            analysisMode:
+                "Attiva la modalità analisi per disegnare un'area, vedere i punti al suo interno e calcolare il percorso ottimizzato.",
+            drawAreaTitle: "Disegna sulla mappa",
+            drawArea:
+                "Usa questi strumenti (rettangolo, poligono o cerchio) per disegnare un'area sulla mappa. Tutti i punti al suo interno saranno selezionati per l'analisi.",
+            optimizeRouteTitle: "Calcola il percorso ottimizzato",
+            optimizeRoute:
+                "Con almeno due punti nell'area, scegli un punto di partenza e uno di arrivo, poi premi il pulsante di navigazione in questo pannello per calcolare il percorso ottimizzato.",
+            routeDetailsTitle: "Vedi i dettagli del percorso",
+            routeDetails:
+                "Quando il percorso è pronto, qui compare un pulsante 'lista': cliccalo per aprire una modale con il dettaglio della rotta ottimizzata passo per passo.",
+            doneTitle: "Tutto pronto",
+            done: "Ecco fatto — ora conosci le basi. Buon MapVest!",
+            back: "Indietro",
+            next: "Avanti",
+            skip: "Salta",
+            last: "Fine",
+        },
         Settings: {
             UserTable: {
                 name: "Nome",
