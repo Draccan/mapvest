@@ -254,7 +254,7 @@ export default flattenObject({
             freePlanName: "Free",
             proPlanName: "Pro",
             freePlanPrice: "Gratuito",
-            proPlanPrice: "9,99 $/mese",
+            proPlanPrice: "29,90 €/mese",
             featureMapPoints: "Fino a 50 punti mappa per gruppo",
             featureUnlimitedMapPoints: "Punti mappa illimitati",
             featureSupport: "Supporto via email",
