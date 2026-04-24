@@ -48,9 +48,7 @@ export default (
                 await handlePaymentWebhook.exec(event);
                 res.status(200).json({ received: true });
             } catch (err: any) {
-                LoggerService.error(
-                    `Webhook processing error: ${err.message}`,
-                );
+                LoggerService.error(`Webhook processing error: ${err.message}`);
                 res.status(500).json({
                     error: "Webhook processing failed",
                 });

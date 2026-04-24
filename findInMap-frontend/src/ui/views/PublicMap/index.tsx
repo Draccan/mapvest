@@ -12,6 +12,7 @@ import { ThemeToggle } from "../../components/ThemeToggle";
 import "./style.css";
 
 export const PublicMap: React.FC = () => {
+    const browserLanguage = navigator.language;
     const intl = useIntl();
     const { mapId } = useParams<{ mapId: string }>();
 
@@ -96,7 +97,17 @@ export const PublicMap: React.FC = () => {
             <div className="v-public-map-container">
                 <header className="v-public-map-header">
                     <div className="v-public-map-logo">
-                        <img src={LogoSvg} alt="MapVest" />
+                        <img
+                            src={LogoSvg}
+                            alt="MapVest"
+                            className="v-public-map-logo-image"
+                            onClick={() =>
+                                window.open(
+                                    `https://www.map-vest.com/${browserLanguage !== "it-IT" ? "" : "en"}`,
+                                    "_blank",
+                                )
+                            }
+                        />
                     </div>
                     {isReady && publicMapData && (
                         <h1 className="v-public-map-title">

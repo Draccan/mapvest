@@ -39,6 +39,7 @@
 .v-public-map-logo img {
     height: 50px;
     width: auto;
+    cursor: pointer;
 }
 
 .v-public-map-title {
