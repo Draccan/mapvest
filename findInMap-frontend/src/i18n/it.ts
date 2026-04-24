@@ -309,7 +309,7 @@ export default flattenObject({
             routeDetails:
                 "Quando il percorso è pronto, qui compare un pulsante 'lista': cliccalo per aprire una modale con il dettaglio della rotta ottimizzata passo per passo.",
             doneTitle: "Tutto pronto",
-            done: "Ecco fatto — ora conosci le basi. Buon MapVest!",
+            done: "Ecco fatto — ora conosci le basi. Divertiti con MapVest!",
             back: "Indietro",
             next: "Avanti",
             skip: "Salta",
