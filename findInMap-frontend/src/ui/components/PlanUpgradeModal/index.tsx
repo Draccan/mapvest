@@ -21,7 +21,7 @@ export const PlanUpgradeModal: React.FC = () => {
     const currentPlan = selectedGroup?.plan ?? Plan.Free;
 
     return (
-        <Modal isOpen={isOpen || true} onClose={hidePlanUpgrade}>
+        <Modal isOpen={isOpen} onClose={hidePlanUpgrade}>
             <div className="c-planupgrademodal">
                 <div className="c-planupgrademodal-header">
                     <Crown
