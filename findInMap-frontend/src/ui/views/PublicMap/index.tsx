@@ -103,7 +103,7 @@ export const PublicMap: React.FC = () => {
                             className="v-public-map-logo-image"
                             onClick={() =>
                                 window.open(
-                                    `https://www.map-vest.com/${browserLanguage !== "it-IT" ? "" : "en"}`,
+                                    `https://www.map-vest.com/${browserLanguage === "it-IT" ? "" : "en"}`,
                                     "_blank",
                                 )
                             }
