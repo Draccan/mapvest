@@ -3,3 +3,4 @@ export const API_URL =
 
 export const MAX_TRIP_CALCULATION_MAP_POINTS =
     parseInt(import.meta.env.VITE_MAX_TRIP_CALCULATION_MAP_POINTS) || 100;
+export const PAYMENT_ENABLED = import.meta.env.VITE_PAYMENT_ENABLED === "true";

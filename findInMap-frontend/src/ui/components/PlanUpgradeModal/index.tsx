@@ -1,6 +1,8 @@
 import { Check, Crown, MapPin } from "lucide-react";
 import React from "react";
+import { useIntl } from "react-intl";
 
+import { PAYMENT_ENABLED } from "../../../config";
 import { Plan } from "../../../core/commons/enums";
 import { usePlanUpgrade } from "../../../core/contexts/PlanUpgradeContext";
 import { useGroupsMaps } from "../../../core/contexts/GroupsMapsContext";
@@ -13,12 +15,25 @@ import "./style.css";
 const fm = getFormattedMessageWithScope("components.PlanUpgradeModal");
 
 export const PlanUpgradeModal: React.FC = () => {
+    const intl = useIntl();
     const { isOpen, hidePlanUpgrade } = usePlanUpgrade();
     const { selectedGroup } = useGroupsMaps();
     const { createCheckoutSession, loading: checkoutLoading } =
         useCreateCheckoutSession();
 
     const currentPlan = selectedGroup?.plan ?? Plan.Free;
+
+    const forwardMail = () => {
+        const subject = encodeURIComponent(
+            intl.formatMessage({
+                id: "components.PlanUpgradeModal.emailSubject",
+            }),
+        );
+        const body = encodeURIComponent(
+            intl.formatMessage({ id: "components.PlanUpgradeModal.emailBody" }),
+        );
+        window.location.href = `mailto:info@map-vest.com?subject=${subject}&body=${body}`;
+    };
 
     return (
         <Modal isOpen={isOpen} onClose={hidePlanUpgrade}>
@@ -153,12 +168,18 @@ export const PlanUpgradeModal: React.FC = () => {
                                     checkoutLoading || currentPlan === Plan.Pro
                                 }
                                 onClick={() =>
-                                    createCheckoutSession(selectedGroup!.id)
+                                    PAYMENT_ENABLED
+                                        ? createCheckoutSession(
+                                              selectedGroup!.id,
+                                          )
+                                        : forwardMail()
                                 }
                             >
                                 {checkoutLoading
                                     ? fm("upgradeButtonLoading")
-                                    : fm("upgradeButton")}
+                                    : PAYMENT_ENABLED
+                                      ? fm("upgradeButton")
+                                      : fm("upgradeForFreeButton")}
                             </Button>
                         </div>
                     </div>

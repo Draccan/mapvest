@@ -265,10 +265,14 @@ export default flattenObject({
             featureDashboard: "Dashboard e analisi",
             featureAllFreeFeatures: "Tutto del piano Free",
             upgradeButton: "Passa al Pro",
+            upgradeForFreeButton: "Aggiorna gratuitamente",
             upgradeButtonLoading: "Reindirizzamento al pagamento...",
             onlyOwnerCanUpgrade:
                 "Solo il proprietario del gruppo può aggiornare il piano",
             close: "Chiudi",
+            emailSubject: "Aggiornamento piano - MapVest",
+            emailBody:
+                "Desidero aggiornare il mio piano per avere tutte le funzionalità del piano PRO gratuitamente. Per favore fornitemi le istruzioni necessarie.",
         },
         SupportBox: {
             contactSupport: "Contatta il Supporto",

@@ -241,9 +241,13 @@ export default flattenObject({
             featureDashboard: "Dashboard & analytics",
             featureAllFreeFeatures: "Everything in Free",
             upgradeButton: "Upgrade to Pro",
+            upgradeForFreeButton: "Upgrade for Free",
             upgradeButtonLoading: "Redirecting to payment...",
             onlyOwnerCanUpgrade: "Only the group owner can upgrade the plan",
             close: "Close",
+            emailSubject: "Plan Upgrade - MapVest",
+            emailBody:
+                "I would like to upgrade my plan to have all the features of the PRO plan for free. Please provide me with the necessary instructions.",
         },
         SupportBox: {
             contactSupport: "Contact Support",
